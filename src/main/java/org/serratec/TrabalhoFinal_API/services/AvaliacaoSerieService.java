@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
-
 import org.serratec.TrabalhoFinal_API.domain.AvaliacaoSerie;
-import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoSerieDTO;
+import org.serratec.TrabalhoFinal_API.domain.Usuario;
+import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoSerieResponseDTO;
+import org.serratec.TrabalhoFinal_API.exception.RecursoNaoEncontradoException;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoSerieRepository;
+import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -18,72 +19,77 @@ import jakarta.transaction.Transactional;
 @Service
 public class AvaliacaoSerieService {
 
-    @Autowired AvaliacaoSerieRepository avaliacaoSerieRepository;
+    @Autowired
+    AvaliacaoSerieRepository avaliacaoSerieRepository;
 
-    @Autowired UsuarioRepository usuarioRepository;
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
-    @Autowired SerieRepository serieRepository;
+    @Autowired
+    SerieRepository serieRepository;
 
-    public List <AvaliacaoSerieDTO> findAll(){
+    public List<AvaliacaoSerieResponseDTO> findAll() {
 
         List<AvaliacaoSerie> avaliacoes = avaliacaoSerieRepository.findAll();
 
-        List<AvaliacaoSerieDTO> avaliacoesDTO = new ArrayList<>();
+        List<AvaliacaoSerieResponseDTO> avaliacoesDTO = new ArrayList<>();
 
-        for(AvaliacaoSerie avaliacao:avaliacoes){
-            avaliacoesDTO.add(new AvaliacaoSerieDTO(avaliacao));
+        for (AvaliacaoSerie avaliacao : avaliacoes) {
+            avaliacoesDTO.add(new AvaliacaoSerieResponseDTO(avaliacao));
         }
-            return avaliacoesDTO;
+        return avaliacoesDTO;
     }
 
-    public AvaliacaoSerieDTO findById(UUID id){
+    public AvaliacaoSerieResponseDTO findById(UUID id) {
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
-            .orElseThrow(()-> new NotFoundExeption("Serie não encontrada"));
-         
-        return new AvaliacaoSerieDTO(avaliacaoSerie);
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
+
+        return new AvaliacaoSerieResponseDTO(avaliacaoSerie);
     }
 
     @Transactional
-    public AvaliacaoSerieDTO inserir (org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieDTO dto){
+    public AvaliacaoSerieResponseDTO inserir(org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieRequestDTO dto) {
 
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-            .orElseThrow(()-> new NotFoundExeption("Usuairio não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuairio não encontrado"));
 
+        // Falta a classe Serie
         Serie serie = serieRepository.findById(dto.getSerieId())
-            .orElseThrow(()-> new NotFoundExeption("Serie não Encontrada"));
-            
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
+
         AvaliacaoSerie avaliacaoSerie = new AvaliacaoSerie();
         avaliacaoSerie.setNota(dto.getNota());
         avaliacaoSerie.setComentario(dto.getComentario());
         avaliacaoSerie.setUsuario(usuario);
         avaliacaoSerie.setSerie(serie);
-        
+
         avaliacaoSerie = avaliacaoSerieRepository.save(avaliacaoSerie);
 
-        return new AvaliacaoSerieDTO(avaliacaoSerie);
+        return new AvaliacaoSerieResponseDTO(avaliacaoSerie);
     }
 
     @Transactional
-    public AvaliacaoSerieDTO atualizar(UUID id, org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieDTO dto){
+    public AvaliacaoSerieResponseDTO atualizar(UUID id,
+            org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieRequestDTO dto) {
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
-            .orElseThrow(()-> new NotFoundException("Avaliação não encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Avaliação não encontrada"));
 
         avaliacaoSerie.setNota(dto.getNota());
         avaliacaoSerie.setComentario(dto.getComentario());
-        
+
         avaliacaoSerie = avaliacaoSerieRepository.save(avaliacaoSerie);
 
-        return new AvaliacaoSerieDTO(avaliacaoSerie);
+        return new AvaliacaoSerieResponseDTO(avaliacaoSerie);
     }
 
     @Transactional
-    public void deletar(UUID id){
+    public void deletar(UUID id) {
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
-            .orElseThrow(()-> NotFoundExeption("Avaliação não encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Avaliação não encontrada"));
 
-        avaliacaoSerieRepository.delete(avaliacaoSerie);  
+        avaliacaoSerieRepository.delete(avaliacaoSerie);
     }
 }

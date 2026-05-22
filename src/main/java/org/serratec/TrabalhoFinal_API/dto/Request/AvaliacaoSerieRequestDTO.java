@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AvaliacaoFilmeDTO {
+public class AvaliacaoSerieRequestDTO {
 
     @NotNull
     @DecimalMin(value = "0.0")
@@ -25,5 +25,5 @@ public class AvaliacaoFilmeDTO {
     private UUID usuarioId;
 
     @NotNull
-    private UUID filmeId;
+    private UUID serieId;
 }

@@ -43,11 +43,7 @@ public class Filme {
     private ClassificacaoIndicativa classificacaoIndicativa;
 
     @ManyToMany
-    @JoinTable(
-            name = "filme_categoria",
-            joinColumns = @JoinColumn(name = "filme_id"),
-            inverseJoinColumns = @JoinColumn(name = "categoria_id")
-    )
+    @JoinTable(name = "filme_categoria", joinColumns = @JoinColumn(name = "filme_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     private List<Categoria> categorias = new ArrayList<>();
 
     @OneToMany(mappedBy = "filme")
