@@ -10,7 +10,7 @@ public class Categoria {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false, unique=true, length = 50)
+	@Column(nullable = false, unique=true, length = 40)
 	private String nome;
 	
 	@Column(nullable = true, length = 300)
