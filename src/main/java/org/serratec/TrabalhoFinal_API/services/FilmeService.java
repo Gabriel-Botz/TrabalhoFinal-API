@@ -3,6 +3,7 @@ package org.serratec.TrabalhoFinal_API.services;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 import org.serratec.TrabalhoFinal_API.dto.request.FilmeRequestDTO;
 import org.serratec.TrabalhoFinal_API.dto.response.FilmeResponseDTO;
+import org.serratec.TrabalhoFinal_API.exceptions.ResourceNotFoundException;
 import org.serratec.TrabalhoFinal_API.repository.FilmeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class FilmeService {
 
     public FilmeResponseDTO atualizarFilme(UUID id, FilmeRequestDTO dto) {
         Filme filme = filmeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Filme não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Filme não encontrado"));
 
         filme.setTitulo(dto.getTitulo());
         filme.setDescricao(dto.getDescricao());
@@ -43,7 +44,7 @@ public class FilmeService {
 
     public FilmeResponseDTO buscarFilmePorId(UUID id) {
         Filme filme = filmeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Filme não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Filme não encontrado"));
 
         return new FilmeResponseDTO(filme);
     }
@@ -62,7 +63,7 @@ public class FilmeService {
 
     public void deletarFilme(UUID id) {
         if (!filmeRepository.existsById(id)) {
-            throw new RuntimeException("Filme não encontrado");
+            throw new ResourceNotFoundException("Filme não encontrado");
         }
         filmeRepository.deleteById(id);
     }
