@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class ListaFavoritos {
     private UUID id;
     
     @NotBlank(message = "O nome da lista é obrigatório")
+    @Size(max = 120, message = "O nome da lista deve ter no máximo 120 caracteres")
     private String nomeLista;
     
     @NotBlank(message = "O status de privacidade é obrigatório")
