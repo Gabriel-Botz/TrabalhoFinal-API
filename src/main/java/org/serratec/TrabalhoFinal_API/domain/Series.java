@@ -31,4 +31,5 @@ public class Series {
     private LocalDate dataLancamento;
     @Column(name = "notaMedia",nullable = false)
     private Double notaMedia;
+
 }

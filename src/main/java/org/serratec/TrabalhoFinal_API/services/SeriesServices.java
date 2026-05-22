@@ -6,8 +6,10 @@ import org.serratec.TrabalhoFinal_API.dto.rquestDTO.SeriesRequestDTO;
 import org.serratec.TrabalhoFinal_API.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SeriesServices {
@@ -25,6 +27,14 @@ public class SeriesServices {
         }
         return seriesDTO;
     }
+
+    public SeriesResponseDTO ListarPorIdSeries(@PathVariable UUID id) {
+        Series series = (Series) seriesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Serie não encontrada"));
+
+        return new SeriesResponseDTO(series);
+    }
+
 
     //GET por titulo
     public SeriesResponseDTO ListarSeriePorTitulo(String titulo){
