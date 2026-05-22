@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,12 +24,11 @@ import lombok.Setter;
 @Table(name = "lista_favoritos")
 public class ListaFavoritos {
 
-    
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     
-    @NotBlank(message = "O nome da lista é obrigatório")
+    @NotNull(message = "O nome da lista não pode ser nulo")
     @Size(max = 120, message = "O nome da lista deve ter no máximo 120 caracteres")
     private String nomeLista;
     

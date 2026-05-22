@@ -11,6 +11,8 @@ import org.serratec.TrabalhoFinal_API.repository.ListaFavoritosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ListaFavoritosService {
 
@@ -38,6 +40,7 @@ public class ListaFavoritosService {
     public ListaFavoritosResponseDTO buscarPorId(UUID id) {
 
         ListaFavoritos lista = listaFavoritosRepository.findById(id).orElse(null);
+        // .orElseThrow(() -> new NotFoundException("Lista de favoritos não encontrada com ID: " + id));
 
         if(lista != null) {
             return new ListaFavoritosResponseDTO(
@@ -52,6 +55,7 @@ public class ListaFavoritosService {
 
     }
 
+    @Transactional
     public ListaFavoritosResponseDTO criar(ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
         ListaFavoritos lista = new ListaFavoritos();
@@ -71,9 +75,11 @@ public class ListaFavoritosService {
 
     }
 
+    @Transactional
     public ListaFavoritosResponseDTO atualizar(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
         ListaFavoritos listaExistente = listaFavoritosRepository.findById(id).orElse(null);
+        // .orElseThrow(() -> new NotFoundException("Lista de favoritos não encontrada com ID: " + id));
 
         if(listaExistente != null) {
             listaExistente.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
@@ -94,10 +100,12 @@ public class ListaFavoritosService {
 
     }
 
+    @Transactional
     public boolean deletarListaFavoritos(UUID id) {
 
         if(listaFavoritosRepository.existsById(id)) {
             listaFavoritosRepository.deleteById(id);
+            // .orElseThrow(() -> new NotFoundException("Lista de favoritos não encontrada com ID: " + id));
             return true;
         }
 
