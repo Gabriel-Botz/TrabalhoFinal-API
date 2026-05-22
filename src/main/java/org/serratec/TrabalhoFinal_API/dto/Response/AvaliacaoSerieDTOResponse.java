@@ -1,4 +1,4 @@
-package org.serratec.TrabalhoFinal_API.dto.Response;
+package org.serratec.TrabalhoFinal_API.dto.response;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -24,13 +24,13 @@ public class AvaliacaoSerieDTOResponse {
 
     private LocalDate dataAvaliacao;
 
-    public AvaliacaoSerieDTOResponse(AvaliacaoSerie avaliacaoSerie){
+    public AvaliacaoSerieDTOResponse(AvaliacaoSerie avaliacao){
 
-        this.id = avaliacaoSerie.getId();
-        this.nomeUsuario = avaliacaoSerie.getUsuario().getNome();
-        this.nomeFilme = avaliacaoSerie.getSerie().getTitulo();
-        this.nota = avaliacaoSerie.getNota();
-        this.comentario = avaliacaoSerie.getComentario();
-        this.dataAvaliacao = avaliacaoSerie.getDataAvaliacao();
+        this.id = avaliacao.getId();
+        this.nomeUsuario = avaliacao.getUsuario().getNome();
+        this.nomeFilme = avaliacao.getSerie().getTitulo();
+        this.nota = avaliacao.getNota();
+        this.comentario = avaliacao.getComentario();
+        this.dataAvaliacao = avaliacao.getDataAvaliacao();
     }
 }

@@ -7,8 +7,8 @@ import java.util.UUID;
 import javax.naming.NameNotFoundException;
 
 import org.serratec.TrabalhoFinal_API.domain.AvaliacaoFilme;
-import org.serratec.TrabalhoFinal_API.dto.Request.AvaliacaoFilmeDTORequest;
-import org.serratec.TrabalhoFinal_API.dto.Response.AvaliacaoFilmeDTOResponse;
+import org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeDTORequest;
+import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoFilmeDTOResponse;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoFilmeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package org.serratec.TrabalhoFinal_API.dto.Request;
+package org.serratec.TrabalhoFinal_API.dto.request;
 
 import java.util.UUID;
 

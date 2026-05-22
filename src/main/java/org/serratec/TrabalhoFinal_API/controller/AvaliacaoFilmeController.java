@@ -3,8 +3,8 @@ package org.serratec.TrabalhoFinal_API.controller;
 import java.util.List;
 import java.util.UUID;
 
-import org.serratec.TrabalhoFinal_API.dto.Request.AvaliacaoFilmeDTORequest;
-import org.serratec.TrabalhoFinal_API.dto.Response.AvaliacaoFilmeDTOResponse;
+import org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeDTORequest;
+import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoFilmeDTOResponse;
 import org.serratec.TrabalhoFinal_API.services.AvaliacaoFilmeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
