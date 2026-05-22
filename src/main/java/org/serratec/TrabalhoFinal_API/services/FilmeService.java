@@ -53,4 +53,11 @@ public class FilmeService {
         return new FilmeResponseDTO(filmeSalvo);
     }
 
+    public void deletarFilme(UUID id) {
+        if (!filmeRepository.existsById(id)) {
+            throw new RuntimeException("Filme não encontrado");
+        }
+        filmeRepository.deleteById(id);
+    }
+
 }
