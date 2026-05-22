@@ -1,4 +1,4 @@
-package org.serratec.TrabalhoFinal_API.dto.Request;
+package org.serratec.TrabalhoFinal_API.dto.request;
 
 import java.util.UUID;
 
@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AvaliacaoFilmeDTORequest {
+public class AvaliacaoSerieDTO {
 
     @NotNull
     @DecimalMin(value = "0.0")
@@ -25,5 +25,5 @@ public class AvaliacaoFilmeDTORequest {
     private UUID usuarioId;
 
     @NotNull
-    private UUID filmeId;
+    private UUID serieId;
 }

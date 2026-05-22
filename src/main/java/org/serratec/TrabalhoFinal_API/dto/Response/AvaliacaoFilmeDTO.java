@@ -1,4 +1,4 @@
-package org.serratec.TrabalhoFinal_API.dto.Response;
+package org.serratec.TrabalhoFinal_API.dto.response;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AvaliacaoFilmeDTOResponse {
+public class AvaliacaoFilmeDTO {
 
     private UUID id;
 
@@ -24,7 +24,7 @@ public class AvaliacaoFilmeDTOResponse {
 
     private LocalDate dataAvaliacao;
 
-    public AvaliacaoFilmeDTOResponse(AvaliacaoFilme avaliacaoFilme){
+    public AvaliacaoFilmeDTO(AvaliacaoFilme avaliacaoFilme){
 
         this.id = avaliacaoFilme.getId();
         this.nomeUsuario = avaliacaoFilme.getUsuario().getNome();

@@ -29,20 +29,30 @@ public class ListaFavoritosController {
     @Autowired
     private ListaFavoritosService listaFavoritosService;
 
-    @Operation(summary = "Listar todas as listas de favoritos", description = "Retorna uma lista de todas as listas de favoritos criadas pelos usuários.")
-    @ApiResponse(responseCode = "200", description = "Lista de favoritos retornada com sucesso")
+    @Operation(
+        summary = "Listar todas as listas de favoritos", 
+        description = "Retorna uma lista de todas as listas de favoritos criadas pelos usuários.")
+    @ApiResponse(
+        responseCode = "200", 
+        description = "Lista de favoritos retornada com sucesso")
     @GetMapping
     public ResponseEntity<List<ListaFavoritosResponseDTO>> listarListaFavoritos() {
-        List<ListaFavoritosResponseDTO> listaFavoritos = listaFavoritosService.listarListaFavoritos();
+        List<ListaFavoritosResponseDTO> listaFavoritos = listaFavoritosService.listar();
         return ResponseEntity.ok(listaFavoritos);
     }
 
-    @Operation(summary = "Buscar lista de favoritos por ID", description = "Retorna uma lista de favoritos específica com base no ID fornecido.")
-    @ApiResponse(responseCode = "200", description = "Lista de favoritos retornada com sucesso")
-    @ApiResponse(responseCode = "404", description = "Lista de favoritos não encontrada")
+    @Operation(
+        summary = "Buscar lista de favoritos por ID", 
+        description = "Retorna uma lista de favoritos específica com base no ID fornecido.")
+    @ApiResponse(
+        responseCode = "200", 
+        description = "Lista de favoritos retornada com sucesso")
+    @ApiResponse(
+        responseCode = "404", 
+        description = "Lista de favoritos não encontrada")
     @GetMapping("/{id}")
     public ResponseEntity<ListaFavoritosResponseDTO> buscarListaFavoritosPorId(@PathVariable UUID id) {
-        ListaFavoritosResponseDTO listaFavoritos = listaFavoritosService.buscarListaFavoritosPorId(id);
+        ListaFavoritosResponseDTO listaFavoritos = listaFavoritosService.buscarPorId(id);
         if(listaFavoritos != null) {
             return ResponseEntity.ok(listaFavoritos);
         } else {
@@ -50,11 +60,17 @@ public class ListaFavoritosController {
         }
     }
 
-    @Operation(summary = "Criar nova lista de favoritos", description = "Cria uma nova lista de favoritos com os dados fornecidos.")
-    @ApiResponse(responseCode = "201", description = "Lista de favoritos criada com sucesso")
+    @Operation(
+        summary = "Criar nova lista de favoritos", 
+        description = "Cria uma nova lista de favoritos com os dados fornecidos.")
+    @ApiResponse(
+        responseCode = "201", 
+        description = "Lista de favoritos criada com sucesso")
     @PostMapping
-    public ResponseEntity<ListaFavoritosResponseDTO> criarListaFavoritos(@RequestBody ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
-        ListaFavoritosResponseDTO novaLista = listaFavoritosService.criarListaFavoritos(listaFavoritosRequestDTO);
+    public ResponseEntity<ListaFavoritosResponseDTO> criarListaFavoritos(
+        @RequestBody ListaFavoritosRequestDTO listaFavoritosRequestDTO
+    ) {
+        ListaFavoritosResponseDTO novaLista = listaFavoritosService.criar(listaFavoritosRequestDTO);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(novaLista.getId()).toUri();
@@ -62,12 +78,20 @@ public class ListaFavoritosController {
         return ResponseEntity.created(location).body(novaLista);
     }
 
-    @Operation(summary = "Atualizar lista de favoritos", description = "Atualiza uma lista de favoritos existente com os dados fornecidos.")
-    @ApiResponse(responseCode = "200", description = "Lista de favoritos atualizada com sucesso")
-    @ApiResponse(responseCode = "404", description = "Lista de favoritos não encontrada")
+    @Operation(
+        summary = "Atualizar lista de favoritos", 
+        description = "Atualiza uma lista de favoritos existente com os dados fornecidos.")
+    @ApiResponse(
+        responseCode = "200", 
+        description = "Lista de favoritos atualizada com sucesso")
+    @ApiResponse(
+        responseCode = "404", 
+        description = "Lista de favoritos não encontrada")
     @PutMapping("/{id}")
-    public ResponseEntity<ListaFavoritosResponseDTO> atualizarListaFavoritos(@PathVariable UUID id, @RequestBody ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
-        ListaFavoritosResponseDTO listaAtualizada = listaFavoritosService.atualizarListaFavoritos(id, listaFavoritosRequestDTO);
+    public ResponseEntity<ListaFavoritosResponseDTO> atualizarListaFavoritos(
+        @PathVariable UUID id, @RequestBody ListaFavoritosRequestDTO listaFavoritosRequestDTO
+    ) {
+        ListaFavoritosResponseDTO listaAtualizada = listaFavoritosService.atualizar(id, listaFavoritosRequestDTO);
         if(listaAtualizada != null) {
             return ResponseEntity.ok(listaAtualizada);
         } else {
@@ -75,9 +99,15 @@ public class ListaFavoritosController {
         }
     }
 
-    @Operation(summary = "Deletar lista de favoritos", description = "Deleta uma lista de favoritos existente com base no ID fornecido.")
-    @ApiResponse(responseCode = "204", description = "Lista de favoritos deletada com sucesso")
-    @ApiResponse(responseCode = "404", description = "Lista de favoritos não encontrada")
+    @Operation(
+        summary = "Deletar lista de favoritos", 
+        description = "Deleta uma lista de favoritos existente com base no ID fornecido.")
+    @ApiResponse(
+        responseCode = "204", 
+        description = "Lista de favoritos deletada com sucesso")
+    @ApiResponse(
+        responseCode = "404", 
+        description = "Lista de favoritos não encontrada")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarListaFavoritos(@PathVariable UUID id) {
         boolean deletado = listaFavoritosService.deletarListaFavoritos(id);

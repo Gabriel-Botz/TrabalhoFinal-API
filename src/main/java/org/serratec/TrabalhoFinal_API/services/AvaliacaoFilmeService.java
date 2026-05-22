@@ -1,60 +1,65 @@
 package org.serratec.TrabalhoFinal_API.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
-import javax.naming.NameNotFoundException;
-
+import jakarta.transaction.Transactional;
 import org.serratec.TrabalhoFinal_API.domain.AvaliacaoFilme;
-import org.serratec.TrabalhoFinal_API.dto.Request.AvaliacaoFilmeDTORequest;
-import org.serratec.TrabalhoFinal_API.dto.Response.AvaliacaoFilmeDTOResponse;
+import org.serratec.TrabalhoFinal_API.domain.Filme;
+import org.serratec.TrabalhoFinal_API.domain.Usuario;
+import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoFilmeDTO;
+import org.serratec.TrabalhoFinal_API.exception.ErroResposta;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoFilmeRepository;
+import org.serratec.TrabalhoFinal_API.repository.FilmeRepository;
+import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AvaliacaoFilmeService {
 
 
-    @Autowired AvaliacaoFilmeRepository avaliacaoFilmeRepository;
+    @Autowired
+    AvaliacaoFilmeRepository avaliacaoFilmeRepository;
 
-    @Autowired UsuarioRepository usuarioRepository;
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
-    @Autowired FilmeRepository filmeRepository;
+    @Autowired
+    FilmeRepository filmeRepository;
 
-    public List<AvaliacaoFilmeDTOResponse> findAll(){
+    public List<AvaliacaoFilmeDTO> findAll(){
 
         List<AvaliacaoFilme> avaliacoes = avaliacaoFilmeRepository.findAll();
 
-        List<AvaliacaoFilmeDTOResponse> avaliacoesDTO = new ArrayList<>();
+        List<AvaliacaoFilmeDTO> avaliacoesDTO = new ArrayList<>();
 
         for(AvaliacaoFilme avaliacao:avaliacoes){
-            avaliacoesDTO.add(new AvaliacaoFilmeDTOResponse(avaliacao));
+            avaliacoesDTO.add(new AvaliacaoFilmeDTO(avaliacao));
 
         }
             return avaliacoesDTO;
     }
 
 
-    public AvaliacaoFilmeDTOResponse findById(UUID id){
+    public AvaliacaoFilmeDTO findById(UUID id){
 
         AvaliacaoFilme avaliacaoFilme = avaliacaoFilmeRepository.findById(id)
-            .orElseThrow(()-> new NotFoundExeption("Avaliação não encontrada"));
+            .orElseThrow(()-> new RuntimeException("Avaliação não encontrada"));
 
-        return new AvaliacaoFilmeDTOResponse(avaliacaoFilme);    
+        return new AvaliacaoFilmeDTO(avaliacaoFilme);
     }
 
     @Transactional
-    public AvaliacaoFilmeDTOResponse inserir (AvaliacaoFilmeDTORequest dto){
+    public AvaliacaoFilmeDTO inserir (org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeDTO dto){
 
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-            .orElseThrow(()-> new NotFoundExeption("Usuairio não encontrado"));
+            .orElseThrow(()-> new RuntimeException("Usuairio não encontrado"));
 
         Filme filme = filmeRepository.findById(dto.getFilmeId())
-            .orElseThrow(()-> new NotFoundExeption("Filme não encontrado"));   
+            .orElseThrow(()-> new RuntimeException("Filme não encontrado"));
     
         
         AvaliacaoFilme avaliacaoFilme = new AvaliacaoFilme();
@@ -65,28 +70,28 @@ public class AvaliacaoFilmeService {
 
         avaliacaoFilme = avaliacaoFilmeRepository.save(avaliacaoFilme);
 
-        return new AvaliacaoFilmeDTOResponse(avaliacaoFilme);
+        return new AvaliacaoFilmeDTO(avaliacaoFilme);
     }
 
     @Transactional
-    public AvaliacaoFilmeDTOResponse atualizar (UUID id, AvaliacaoFilmeDTORequest dto){
+    public AvaliacaoFilmeDTO atualizar (UUID id, org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeDTO dto){
         
         AvaliacaoFilme avaliacaoFilme = avaliacaoFilmeRepository.findById(id)
-            .orElseThrow(()-> new NotFoundExeption("Avaliação não encontrada"));
+            .orElseThrow(()-> new RuntimeException("Avaliação não encontrada"));
 
         avaliacaoFilme.setNota(dto.getNota());
         avaliacaoFilme.setComentario(dto.getComentario());
         
         avaliacaoFilme = avaliacaoFilmeRepository.save(avaliacaoFilme);
 
-        return new AvaliacaoFilmeDTOResponse(avaliacaoFilme);
+        return new AvaliacaoFilmeDTO(avaliacaoFilme);
     }
     
     @Transactional
     public void deletar(UUID id){
 
         AvaliacaoFilme avaliacaoFilme = avaliacaoFilmeRepository.findById(id)
-            .orElseThrow(()-> new NotFoundException("Avaliação não encontrada"));
+            .orElseThrow(()-> new ErroResposta.ResourceNotFoundException("Avaliação não encontrada"));
 
         avaliacaoFilmeRepository.delete(avaliacaoFilme);    
     }
