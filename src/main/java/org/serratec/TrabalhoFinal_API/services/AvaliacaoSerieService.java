@@ -7,10 +7,12 @@ import java.util.UUID;
 
 
 import org.serratec.TrabalhoFinal_API.domain.AvaliacaoSerie;
+import org.serratec.TrabalhoFinal_API.domain.Usuario;
 import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoSerieDTO;
+import org.serratec.TrabalhoFinal_API.exceptions.ResourceNotFoundException;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoSerieRepository;
+import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -39,7 +41,7 @@ public class AvaliacaoSerieService {
     public AvaliacaoSerieDTO findById(UUID id){
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
-            .orElseThrow(()-> new NotFoundExeption("Serie não encontrada"));
+            .orElseThrow(()-> new ResourceNotFoundException("Serie não encontrada"));
          
         return new AvaliacaoSerieDTO(avaliacaoSerie);
     }
@@ -48,10 +50,10 @@ public class AvaliacaoSerieService {
     public AvaliacaoSerieDTO inserir (org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieDTO dto){
 
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-            .orElseThrow(()-> new NotFoundExeption("Usuairio não encontrado"));
+            .orElseThrow(()-> new ResourceNotFoundException("Usuairio não encontrado"));
 
         Serie serie = serieRepository.findById(dto.getSerieId())
-            .orElseThrow(()-> new NotFoundExeption("Serie não Encontrada"));
+            .orElseThrow(()-> new ResourceNotFoundException("Serie não Encontrada"));
             
         AvaliacaoSerie avaliacaoSerie = new AvaliacaoSerie();
         avaliacaoSerie.setNota(dto.getNota());
@@ -68,7 +70,7 @@ public class AvaliacaoSerieService {
     public AvaliacaoSerieDTO atualizar(UUID id, org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieDTO dto){
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
-            .orElseThrow(()-> new NotFoundException("Avaliação não encontrada"));
+            .orElseThrow(()-> new ResourceNotFoundException("Avaliação não encontrada"));
 
         avaliacaoSerie.setNota(dto.getNota());
         avaliacaoSerie.setComentario(dto.getComentario());
@@ -82,7 +84,7 @@ public class AvaliacaoSerieService {
     public void deletar(UUID id){
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
-            .orElseThrow(()-> NotFoundExeption("Avaliação não encontrada"));
+            .orElseThrow(()-> new ResourceNotFoundException ("Avaliação não encontrada"));
 
         avaliacaoSerieRepository.delete(avaliacaoSerie);  
     }
