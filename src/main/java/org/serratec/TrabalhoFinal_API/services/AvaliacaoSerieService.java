@@ -7,8 +7,7 @@ import java.util.UUID;
 
 
 import org.serratec.TrabalhoFinal_API.domain.AvaliacaoSerie;
-import org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieDTORequest;
-import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoSerieDTOResponse;
+import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoSerieDTO;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoSerieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,28 +24,28 @@ public class AvaliacaoSerieService {
 
     @Autowired SerieRepository serieRepository;
 
-    public List <AvaliacaoSerieDTOResponse> findAll(){
+    public List <AvaliacaoSerieDTO> findAll(){
 
         List<AvaliacaoSerie> avaliacoes = avaliacaoSerieRepository.findAll();
 
-        List<AvaliacaoSerieDTOResponse> avaliacoesDTO = new ArrayList<>();
+        List<AvaliacaoSerieDTO> avaliacoesDTO = new ArrayList<>();
 
         for(AvaliacaoSerie avaliacao:avaliacoes){
-            avaliacoesDTO.add(new AvaliacaoSerieDTOResponse(avaliacao));
+            avaliacoesDTO.add(new AvaliacaoSerieDTO(avaliacao));
         }
             return avaliacoesDTO;
     }
 
-    public AvaliacaoSerieDTOResponse findById(UUID id){
+    public AvaliacaoSerieDTO findById(UUID id){
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
             .orElseThrow(()-> new NotFoundExeption("Serie não encontrada"));
          
-        return new AvaliacaoSerieDTOResponse(avaliacaoSerie);  
+        return new AvaliacaoSerieDTO(avaliacaoSerie);
     }
 
     @Transactional
-    public AvaliacaoSerieDTOResponse inserir (AvaliacaoSerieDTORequest dto){
+    public AvaliacaoSerieDTO inserir (org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieDTO dto){
 
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
             .orElseThrow(()-> new NotFoundExeption("Usuairio não encontrado"));
@@ -62,11 +61,11 @@ public class AvaliacaoSerieService {
         
         avaliacaoSerie = avaliacaoSerieRepository.save(avaliacaoSerie);
 
-        return new AvaliacaoSerieDTOResponse(avaliacaoSerie);
+        return new AvaliacaoSerieDTO(avaliacaoSerie);
     }
 
     @Transactional
-    public AvaliacaoSerieDTOResponse atualizar(UUID id, AvaliacaoSerieDTORequest dto){
+    public AvaliacaoSerieDTO atualizar(UUID id, org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieDTO dto){
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
             .orElseThrow(()-> new NotFoundException("Avaliação não encontrada"));
@@ -76,7 +75,7 @@ public class AvaliacaoSerieService {
         
         avaliacaoSerie = avaliacaoSerieRepository.save(avaliacaoSerie);
 
-        return new AvaliacaoSerieDTOResponse(avaliacaoSerie);
+        return new AvaliacaoSerieDTO(avaliacaoSerie);
     }
 
     @Transactional
