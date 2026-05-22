@@ -2,11 +2,14 @@ package org.serratec.TrabalhoFinal_API.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.serratec.TrabalhoFinal_API.domain.ClassificacaoIndicativa;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
+@NoArgsConstructor
 @Getter
 @Schema(description = "DTO para resposta de filme")
 public class FilmeResponseDTO {
