@@ -1,10 +1,8 @@
 package org.serratec.TrabalhoFinal_API.dto.response;
 
-import java.util.UUID;
-
 public class CategoriaResponseDTO {
 
-	private UUID id;
+	private Long id;
 	private String nome;
 	private String descricao;
 
@@ -14,7 +12,7 @@ public class CategoriaResponseDTO {
 	
 	
 	//Constutor Lotado ↓
-	public CategoriaResponseDTO(UUID id, String nome, String descricao) {
+	public CategoriaResponseDTO(Long id, String nome, String descricao) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -23,8 +21,8 @@ public class CategoriaResponseDTO {
 	
 	
 	//Getters e Setters ↓
-	public UUID getId() {return id;}
-	public void setId(UUID id) {this.id = id;}
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
 	
 	public String getNome() {return nome;}
 	public void setNome(String nome) {this.nome = nome;}
