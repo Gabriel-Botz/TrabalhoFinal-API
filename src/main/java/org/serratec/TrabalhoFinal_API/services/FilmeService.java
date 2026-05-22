@@ -41,6 +41,13 @@ public class FilmeService {
         return new FilmeResponseDTO(filmeRepository.save(filme));
     }
 
+    public FilmeResponseDTO buscarFilmePorId(UUID id) {
+        Filme filme = filmeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Filme não encontrado"));
+
+        return new FilmeResponseDTO(filme);
+    }
+
     public FilmeResponseDTO criarFilme(FilmeRequestDTO dto){
         var novoFilme = new Filme();
         novoFilme.setTitulo(dto.getTitulo());
