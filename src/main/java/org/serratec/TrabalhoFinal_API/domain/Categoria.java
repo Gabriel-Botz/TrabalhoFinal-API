@@ -1,5 +1,7 @@
 package org.serratec.TrabalhoFinal_API.domain;
 
+import java.util.UUID;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,8 +9,8 @@ import jakarta.persistence.*;
 public class Categoria {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
 	
 	@Column(nullable = false, unique=true, length = 40)
 	private String nome;
@@ -22,8 +24,8 @@ public class Categoria {
 	}
 	
 	//Getters e Setters ↓
-	public Long getId() {return id;}
-	public void setId(Long id) {this.id = id;}
+	public UUID getId() {return id;}
+	public void setId(UUID id) {this.id = id;}
 
 	public String getNome() {return nome;}
 	public void setNome(String nome) {this.nome = nome;}
