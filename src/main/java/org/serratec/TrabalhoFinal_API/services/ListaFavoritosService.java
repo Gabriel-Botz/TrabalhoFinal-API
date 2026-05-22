@@ -36,13 +36,13 @@ public class ListaFavoritosService {
 
     public ListaFavoritosResponseDTO buscarListaFavoritosPorId(UUID id) {
 
-        ListaFavoritos listaFavoritos = listaFavoritosRepository.findById(id).orElse(null);
+        ListaFavoritos lista = listaFavoritosRepository.findById(id).orElse(null);
 
-        if(listaFavoritos != null) {
+        if(lista != null) {
             return new ListaFavoritosResponseDTO(
-                listaFavoritos.getNomeLista(), 
-                listaFavoritos.getPrivada(), 
-                listaFavoritos.getDataCriacao()
+                lista.getNomeLista(), 
+                lista.getPrivada(), 
+                lista.getDataCriacao()
             );
         }
 
@@ -52,32 +52,32 @@ public class ListaFavoritosService {
 
     public ListaFavoritosResponseDTO criarListaFavoritos(ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
-        ListaFavoritos listafavoritos = new ListaFavoritos();
+        ListaFavoritos lista = new ListaFavoritos();
 
-        listafavoritos.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
-        listafavoritos.setPrivada(listaFavoritosRequestDTO.getPrivada());
-        listafavoritos.setDataCriacao(listaFavoritosRequestDTO.getDataCriacao());
+        lista.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
+        lista.setPrivada(listaFavoritosRequestDTO.getPrivada());
+        lista.setDataCriacao(listaFavoritosRequestDTO.getDataCriacao());
 
-        ListaFavoritos novaListaFavoritos = listaFavoritosRepository.save(listafavoritos);
+        ListaFavoritos novaLista = listaFavoritosRepository.save(lista);
 
         return new ListaFavoritosResponseDTO(
-            novaListaFavoritos.getNomeLista(), 
-            novaListaFavoritos.getPrivada(), 
-            novaListaFavoritos.getDataCriacao()
+            novaLista.getNomeLista(), 
+            novaLista.getPrivada(), 
+            novaLista.getDataCriacao()
         );
 
     }
 
     public ListaFavoritosResponseDTO atualizarListaFavoritos(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
-        ListaFavoritos listaFavoritosExistente = listaFavoritosRepository.findById(id).orElse(null);
+        ListaFavoritos listaExistente = listaFavoritosRepository.findById(id).orElse(null);
 
-        if(listaFavoritosExistente != null) {
-            listaFavoritosExistente.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
-            listaFavoritosExistente.setPrivada(listaFavoritosRequestDTO.getPrivada());
-            listaFavoritosExistente.setDataCriacao(listaFavoritosRequestDTO.getDataCriacao());
+        if(listaExistente != null) {
+            listaExistente.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
+            listaExistente.setPrivada(listaFavoritosRequestDTO.getPrivada());
+            listaExistente.setDataCriacao(listaFavoritosRequestDTO.getDataCriacao());
 
-            ListaFavoritos listaAtualizada = listaFavoritosRepository.save(listaFavoritosExistente);
+            ListaFavoritos listaAtualizada = listaFavoritosRepository.save(listaExistente);
 
             return new ListaFavoritosResponseDTO(
                 listaAtualizada.getNomeLista(), 
