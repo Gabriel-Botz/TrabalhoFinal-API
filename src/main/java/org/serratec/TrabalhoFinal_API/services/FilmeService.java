@@ -1,6 +1,5 @@
 package org.serratec.TrabalhoFinal_API.services;
 
-import org.hibernate.validator.constraints.UUID;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 import org.serratec.TrabalhoFinal_API.dto.request.FilmeRequestDTO;
 import org.serratec.TrabalhoFinal_API.dto.response.FilmeResponseDTO;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FilmeService {
