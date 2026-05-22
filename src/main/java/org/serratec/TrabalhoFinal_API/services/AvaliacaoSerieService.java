@@ -85,6 +85,6 @@ public class AvaliacaoSerieService {
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
             .orElseThrow(()-> NotFoundExeption("Avaliação não encontrada"));
 
-        avaliacaoSerieRepository.delete(avaliacaoSerie);    
+        avaliacaoSerieRepository.delete(avaliacaoSerie);  
     }
 }
