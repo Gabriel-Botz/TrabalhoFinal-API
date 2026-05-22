@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.serratec.TrabalhoFinal_API.domain.ListaFavoritos;
 import org.serratec.TrabalhoFinal_API.dto.request.ListaFavoritosRequestDTO;
 import org.serratec.TrabalhoFinal_API.dto.response.ListaFavoritosResponseDTO;
+import org.serratec.TrabalhoFinal_API.exceptions.ResourceNotFoundException;
 import org.serratec.TrabalhoFinal_API.repository.ListaFavoritosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,8 @@ public class ListaFavoritosService {
 
     public ListaFavoritosResponseDTO buscarPorId(UUID id) {
 
-        ListaFavoritos lista = listaFavoritosRepository.findById(id).orElse(null);
-        // .orElseThrow(() -> new NotFoundException("Lista de favoritos não encontrada com ID: " + id));
+        ListaFavoritos lista = listaFavoritosRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Lista de favoritos não encontrada com ID: " + id));
 
         if(lista != null) {
             return new ListaFavoritosResponseDTO(
@@ -78,8 +79,8 @@ public class ListaFavoritosService {
     @Transactional
     public ListaFavoritosResponseDTO atualizar(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
-        ListaFavoritos listaExistente = listaFavoritosRepository.findById(id).orElse(null);
-        // .orElseThrow(() -> new NotFoundException("Lista de favoritos não encontrada com ID: " + id));
+        ListaFavoritos listaExistente = listaFavoritosRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Lista de favoritos não encontrada com ID: " + id));
 
         if(listaExistente != null) {
             listaExistente.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
@@ -105,7 +106,6 @@ public class ListaFavoritosService {
 
         if(listaFavoritosRepository.existsById(id)) {
             listaFavoritosRepository.deleteById(id);
-            // .orElseThrow(() -> new NotFoundException("Lista de favoritos não encontrada com ID: " + id));
             return true;
         }
 
