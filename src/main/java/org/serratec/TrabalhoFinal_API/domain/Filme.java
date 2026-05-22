@@ -34,7 +34,7 @@ public class Filme {
     private LocalDate dataLancamento;
 
     @Column(name = "nota_media")
-    private Double notaMedia;
+    private Double notaMedia = 0.0;
 
     @Enumerated(EnumType.STRING)
     private ClassificacaoIndicativa classificacaoIndicativa;
