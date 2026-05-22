@@ -1,0 +1,44 @@
+package org.serratec.TrabalhoFinal_API.dto.response;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.serratec.TrabalhoFinal_API.domain.ClassificacaoIndicativa;
+import org.serratec.TrabalhoFinal_API.domain.Filme;
+
+import java.time.LocalDate;
+
+@NoArgsConstructor
+@Getter
+@Schema(description = "DTO para resposta de filme")
+public class FilmeResponseDTO {
+
+    public FilmeResponseDTO(Filme filme) {
+        this.titulo = filme.getTitulo();
+        this.descricao = filme.getDescricao();
+        this.duracao = filme.getDuracao();
+        this.dataLancamento = filme.getDataLancamento();
+        this.notaMedia = filme.getNotaMedia();
+        this.classificacaoIndicativa = filme.getClassificacaoIndicativa();
+    }
+
+    @Schema(description = "Titulo do filme", example = "O Poderoso Chefão")
+    private String titulo;
+
+    @Schema(description = "Descrição do filme", example = "Um drama épico sobre uma família mafiosa")
+    private String descricao;
+
+    @Schema(description = "Duração do filme em minutos")
+    private Integer duracao;
+
+    @Schema(description = "Data de lançamento do filme")
+    private LocalDate dataLancamento;
+
+    @Schema(description = "Nota média do filme")
+    private Double notaMedia;
+
+    @Schema(description = "Classificação indicativa do filme")
+    private ClassificacaoIndicativa classificacaoIndicativa;
+
+
+}
