@@ -10,8 +10,8 @@ import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoSerieResponseDTO;
 import org.serratec.TrabalhoFinal_API.exception.RecursoNaoEncontradoException;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoSerieRepository;
 import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;

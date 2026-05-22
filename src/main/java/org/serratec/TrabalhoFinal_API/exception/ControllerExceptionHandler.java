@@ -126,19 +126,16 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     private String extrairMensagemDoBanco(DataIntegrityViolationException ex) {
 
-        if (ex.getMostSpecificCause() == null) {
+        if (ex.getMostSpecificCause() == null)
             return ex.getMessage();
-        }
 
         String mensagem = ex.getMostSpecificCause().getMessage();
 
-        if (mensagem.contains("Duplicate entry")) {
+        if (mensagem.contains("Duplicate entry"))
             return "Atenção, dados duplicado!";
-        }
 
-        if (mensagem.contains("foreign key constraint fails")) {
+        if (mensagem.contains("foreign key constraint fails"))
             return "Este registro não pode ser excluído ou alterado pois está sendo usado em outro lugar!";
-        }
 
         return "Erro de integridade de dados: " + mensagem;
     }

@@ -16,7 +16,7 @@ public class AvaliacaoSerieResponseDTO {
 
     private String nomeUsuario;
 
-    private String nomeFilme;
+    private String nomeSerie;
 
     private Double nota;
 
@@ -28,7 +28,7 @@ public class AvaliacaoSerieResponseDTO {
 
         this.id = avaliacao.getId();
         this.nomeUsuario = avaliacao.getUsuario().getNome();
-        this.nomeFilme = avaliacao.getSerie().getTitulo();
+        this.nomeSerie = avaliacao.getSerie().getTitulo();
         this.nota = avaliacao.getNota();
         this.comentario = avaliacao.getComentario();
         this.dataAvaliacao = avaliacao.getDataAvaliacao();
