@@ -1,0 +1,55 @@
+package org.serratec.TrabalhoFinal_API.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.serratec.TrabalhoFinal_API.dto.request.FilmeRequestDTO;
+import org.serratec.TrabalhoFinal_API.dto.response.FilmeResponseDTO;
+import org.serratec.TrabalhoFinal_API.services.FilmeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/filmes")
+@Tag(name = "Filmes", description = "Endpoints para gerenciamento de filmes")
+public class FilmeController {
+
+    @Autowired
+    private FilmeService filmeService;
+
+    @GetMapping
+    @Operation(summary = "Lista todos os filmes")
+    public ResponseEntity<List<FilmeResponseDTO>> listarFilmes() {
+        return ResponseEntity.ok(filmeService.listarFilmes());
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Busca filme por ID")
+    public ResponseEntity<FilmeResponseDTO> buscarFilmePorId(@PathVariable UUID id) {
+        return ResponseEntity.ok(filmeService.buscarFilmePorId(id));
+    }
+
+    @PostMapping
+    @Operation(summary = "Cadastra um novo filme")
+    public ResponseEntity<FilmeResponseDTO> criarFilme(@RequestBody @Valid FilmeRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(filmeService.criarFilme(dto));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Atualiza um filme")
+    public ResponseEntity<FilmeResponseDTO> atualizarFilme(@PathVariable UUID id, @RequestBody @Valid FilmeRequestDTO dto) {
+        return ResponseEntity.ok(filmeService.atualizarFilme(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Remove um filme")
+    public ResponseEntity<Void> deletarFilme(@PathVariable UUID id) {
+        filmeService.deletarFilme(id);
+        return ResponseEntity.noContent().build();
+    }
+}
