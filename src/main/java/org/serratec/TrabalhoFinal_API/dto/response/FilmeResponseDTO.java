@@ -1,19 +1,24 @@
-package org.serratec.TrabalhoFinal_API.dto.request;
+package org.serratec.TrabalhoFinal_API.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.serratec.TrabalhoFinal_API.domain.ClassificacaoIndicativa;
+import org.serratec.TrabalhoFinal_API.domain.Filme;
 
 import java.time.LocalDate;
 
 @Getter
-@AllArgsConstructor
 @Schema(description = "DTO para resposta de filme")
 public class FilmeResponseDTO {
+
+    public FilmeResponseDTO(Filme filme) {
+        this.titulo = filme.getTitulo();
+        this.descricao = filme.getDescricao();
+        this.duracao = filme.getDuracao();
+        this.dataLancamento = filme.getDataLancamento();
+        this.notaMedia = filme.getNotaMedia();
+        this.classificacaoIndicativa = filme.getClassificacaoIndicativa();
+    }
 
     @Schema(description = "Titulo do filme", example = "O Poderoso Chefão")
     private String titulo;
@@ -31,7 +36,6 @@ public class FilmeResponseDTO {
     private Double notaMedia;
 
     @Schema(description = "Classificação indicativa do filme")
-    @Enumerated(EnumType.STRING)
     private ClassificacaoIndicativa classificacaoIndicativa;
 
 
