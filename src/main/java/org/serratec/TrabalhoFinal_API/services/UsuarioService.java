@@ -6,17 +6,22 @@ import java.util.UUID;
 import org.serratec.TrabalhoFinal_API.domain.Usuario;
 import org.serratec.TrabalhoFinal_API.dto.request.UsuarioRequestDTO;
 import org.serratec.TrabalhoFinal_API.dto.response.UsuarioResponseDTO;
+import org.serratec.TrabalhoFinal_API.exception.DataConflictException;
+import org.serratec.TrabalhoFinal_API.exception.RecursoNaoEncontradoException;
 import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UsuarioService {
 
     @Autowired
     private UsuarioRepository repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /* --> Métodos GETs */
 
@@ -28,7 +33,7 @@ public class UsuarioService {
     @Transactional
     public UsuarioResponseDTO buscar(UUID id) {
         return repository.findById(id).map(UsuarioResponseDTO::toUsuarioResponseDTO)
-                .orElseThrow(() -> null); // -> new Exception("Usuario de ID '" + id + "' não encontrado")
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
     }
 
     /* Métodos POSTs */
@@ -36,16 +41,26 @@ public class UsuarioService {
     @Transactional
     public List<UsuarioResponseDTO> salvarList(List<UsuarioRequestDTO> requests) {
 
-        List<Usuario> usuarios = requests.stream().map(UsuarioRequestDTO::toUsuario).toList();
-        List<Usuario> salvos = repository.saveAll(usuarios);
+        List<Usuario> Usuario = requests.stream().map(UsuarioRequestDTO::toUsuario).toList();
+        List<Usuario> salvos = repository.saveAll(Usuario);
 
         return salvos.stream().map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UsuarioResponseDTO salvar(UsuarioRequestDTO request) {
 
-        return UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(request.toUsuario()));
+        if (repository.existsByUsername(request.username()))
+            throw new DataConflictException("O nome de usuário '" + request.username() + "' já está em uso.");
+
+        if (repository.existsByEmail(request.email()))
+            throw new DataConflictException("O e-mail '" + request.email() + "' já está cadastrado.");
+
+        Usuario usuario = request.toUsuario();
+        String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(senhaCriptografada);
+
+        return UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(usuario));
     }
 
     /* Métodos PUT */
@@ -53,8 +68,7 @@ public class UsuarioService {
     @Transactional
     public UsuarioResponseDTO atualizar(UUID id, UsuarioRequestDTO request) {
         Usuario existe = repository.findById(id)
-                .orElseThrow(() -> null); // -> new Exception("Usuario de ID '" + id +
-                                          // "' não encontrado")
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
 
         if (request.nome() != null && !request.nome().isBlank())
             existe.setNome(request.nome());
@@ -74,8 +88,8 @@ public class UsuarioService {
     @Transactional
     public void excluir(UUID id) {
         if (!repository.existsById(id))
-            // throw new Exception("Usuario de ID '" + id + "' não encontrado");
+            throw new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado");
 
-            repository.deleteById(id);
+        repository.deleteById(id);
     }
 }
