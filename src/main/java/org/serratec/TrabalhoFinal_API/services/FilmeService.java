@@ -1,5 +1,6 @@
 package org.serratec.TrabalhoFinal_API.services;
 
+import org.hibernate.validator.constraints.UUID;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 import org.serratec.TrabalhoFinal_API.dto.request.FilmeRequestDTO;
 import org.serratec.TrabalhoFinal_API.dto.response.FilmeResponseDTO;
@@ -25,6 +26,19 @@ public class FilmeService {
         }
 
         return listaResponse;
+    }
+
+    public FilmeResponseDTO atualizarFilme(UUID id, FilmeRequestDTO dto) {
+        Filme filme = filmeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Filme não encontrado"));
+
+        filme.setTitulo(dto.getTitulo());
+        filme.setDescricao(dto.getDescricao());
+        filme.setDuracao(dto.getDuracao());
+        filme.setDataLancamento(dto.getDataLancamento());
+        filme.setClassificacaoIndicativa(dto.getClassificacaoIndicativa());
+
+        return new FilmeResponseDTO(filmeRepository.save(filme));
     }
 
     public FilmeResponseDTO criarFilme(FilmeRequestDTO dto){
