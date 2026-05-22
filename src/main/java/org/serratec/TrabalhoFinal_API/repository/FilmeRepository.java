@@ -1,6 +1,6 @@
 package org.serratec.TrabalhoFinal_API.repository;
 
-import org.hibernate.validator.constraints.UUID;
+import java.util.UUID;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
