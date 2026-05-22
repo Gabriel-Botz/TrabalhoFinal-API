@@ -63,7 +63,7 @@ public class SeriesServices {
     }
 
     public SeriesResponseDTO atualizarSeries(SeriesRequestDTO seriesRequest, UUID id){
-        Series series = seriesRepository.findById(id)
+        Series series = (Series) seriesRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Serie não Encontrada"));
 
         series.setTitulo(seriesRequest.getTitulo());
@@ -78,7 +78,7 @@ public class SeriesServices {
     }
 
     public void removerSeries(UUID id){
-        Series series = seriesRepository.findById(id)
+        Series series = (Series) seriesRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Serie não encontrada"));
         seriesRepository.delete(series);
     }

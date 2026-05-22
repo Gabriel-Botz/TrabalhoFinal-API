@@ -61,13 +61,4 @@ public class SeriesController {
         return ResponseEntity.noContent().build();
     }
 
-
-
-
-
-
-
-
-
-
 }
