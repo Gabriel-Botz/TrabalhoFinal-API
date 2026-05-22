@@ -4,9 +4,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
-import org.serratec.TrabalhoFinal_API.dto.request.UsuariosRequestDTO;
-import org.serratec.TrabalhoFinal_API.dto.response.UsuariosResponseDTO;
-import org.serratec.TrabalhoFinal_API.services.UsuariosService;
+import org.serratec.TrabalhoFinal_API.dto.request.UsuarioRequestDTO;
+import org.serratec.TrabalhoFinal_API.dto.response.UsuarioResponseDTO;
+import org.serratec.TrabalhoFinal_API.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,20 +28,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-@Tag(name = "Usuarios", description = "Endpoints para gerenciamento de Usuarios")
+@Tag(name = "Usuario", description = "Endpoints para gerenciamento de Usuario")
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/Usuario")
 public class UsuarioController {
 
         @Autowired
-        private UsuariosService service;
+        private UsuarioService service;
 
         /* Métodos GETs */
 
-        @Operation(summary = "Listar todos os usuários", description = "Retorna uma lista contendo todos os usuarios cadastrados no sistema.")
+        @Operation(summary = "Listar todos os usuários", description = "Retorna uma lista contendo todos os Usuario cadastrados no sistema.")
         @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
         @GetMapping
-        public List<UsuariosResponseDTO> listar() {
+        public List<UsuarioResponseDTO> listar() {
                 return service.listarTodos();
         }
 
@@ -51,7 +51,7 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "404", description = "Nenhum animal encontrado com o ID informado")
         })
         @GetMapping("/id")
-        public UsuariosResponseDTO buscar(
+        public UsuarioResponseDTO buscar(
                         @Parameter(description = "ID único do usuario", example = "1") @Valid @RequestParam UUID id) { // trows
                                                                                                                        // Exception
                 return service.buscar(id);
@@ -65,8 +65,8 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "400", description = "Dados da requisição inválidos ou mal formatados")
         })
         @PostMapping
-        public ResponseEntity<UsuariosResponseDTO> salvar(@Valid @RequestBody UsuariosRequestDTO request) {
-                UsuariosResponseDTO response = service.salvar(request);
+        public ResponseEntity<UsuarioResponseDTO> salvar(@Valid @RequestBody UsuarioRequestDTO request) {
+                UsuarioResponseDTO response = service.salvar(request);
 
                 URI uri = ServletUriComponentsBuilder
                                 .fromCurrentRequest()
@@ -77,15 +77,15 @@ public class UsuarioController {
                 return ResponseEntity.created(uri).body(response);
         }
 
-        @Operation(summary = "Cadastrar múltiplos usuarios", description = "Recebe uma lista de usuarios em lote e realiza o cadastro em massa de uma única vez.")
+        @Operation(summary = "Cadastrar múltiplos Usuario", description = "Recebe uma lista de Usuario em lote e realiza o cadastro em massa de uma única vez.")
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "201", description = "Lista de usuarios processada e cadastrada com sucesso"),
+                        @ApiResponse(responseCode = "201", description = "Lista de Usuario processada e cadastrada com sucesso"),
                         @ApiResponse(responseCode = "400", description = "Um ou mais elementos da lista contêm dados inválidos")
         })
         @PostMapping("/salvar-lista")
-        public ResponseEntity<List<UsuariosResponseDTO>> salvarVarios(
-                        @Valid @RequestBody List<UsuariosRequestDTO> request) {
-                List<UsuariosResponseDTO> response = service.salvarList(request);
+        public ResponseEntity<List<UsuarioResponseDTO>> salvarVarios(
+                        @Valid @RequestBody List<UsuarioRequestDTO> request) {
+                List<UsuarioResponseDTO> response = service.salvarList(request);
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }
 
@@ -98,9 +98,9 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "404", description = "Usuario não localizado para atualização")
         })
         @PutMapping("/{id}")
-        public UsuariosResponseDTO atualizar(
+        public UsuarioResponseDTO atualizar(
                         @Parameter(description = "ID do animal a ser modificado", example = "1") @Valid @PathVariable UUID id,
-                        @Valid @RequestBody UsuariosRequestDTO request) {// throws RecursoNaoEncontradoException
+                        @Valid @RequestBody UsuarioRequestDTO request) {// throws RecursoNaoEncontradoException
 
                 return service.atualizar(id, request);
         }

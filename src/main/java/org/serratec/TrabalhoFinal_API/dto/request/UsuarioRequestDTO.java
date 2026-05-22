@@ -1,6 +1,6 @@
 package org.serratec.TrabalhoFinal_API.dto.request;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.serratec.TrabalhoFinal_API.domain.Usuario;
 
@@ -19,8 +19,9 @@ public record UsuarioRequestDTO(
 
         @Schema(description = "Senha do usuario cadastrado", example = "********", requiredMode = Schema.RequiredMode.REQUIRED) @NotBlank(message = "O campo não pode estar em branco") String senha,
 
-        @Schema(description = "Data e hora em que o pedido de adoção foi feito", example = "2026-05-21T15:00:00", requiredMode = Schema.RequiredMode.REQUIRED) @PastOrPresent(message = "Data de pedido inválido.") LocalDate dataCriacao
-// FotoPerfil fotoPerfil,
+        @Schema(description = "Data e hora em que o pedido de adoção foi feito", example = "2026-05-21T15:00:00", requiredMode = Schema.RequiredMode.REQUIRED) @PastOrPresent(message = "Data de pedido inválido.") LocalDateTime dataCriacao,
+
+        String fotoPerfil
 
 ) {
 
@@ -31,8 +32,7 @@ public record UsuarioRequestDTO(
         usuario.setEmail(this.email());
         usuario.setUsername(this.username());
         usuario.setSenha(this.senha());
-        usuario.setDataCriacao(this.dataCriacao());
-        // fotoPerfil.setFotoPerfil(this.fotoPerfil());
+        usuario.setFotoPerfil(this.fotoPerfil());
 
         return usuario;
     }
