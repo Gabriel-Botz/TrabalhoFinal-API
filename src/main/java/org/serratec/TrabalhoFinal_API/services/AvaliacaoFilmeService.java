@@ -6,7 +6,7 @@ import org.serratec.TrabalhoFinal_API.domain.AvaliacaoFilme;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 import org.serratec.TrabalhoFinal_API.domain.Usuario;
 import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoFilmeDTO;
-import org.serratec.TrabalhoFinal_API.exceptions.ResourceNotFoundException;
+import org.serratec.TrabalhoFinal_API.exception.ErroResposta;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoFilmeRepository;
 import org.serratec.TrabalhoFinal_API.repository.FilmeRepository;
 import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
@@ -91,7 +91,7 @@ public class AvaliacaoFilmeService {
     public void deletar(UUID id){
 
         AvaliacaoFilme avaliacaoFilme = avaliacaoFilmeRepository.findById(id)
-            .orElseThrow(()-> new ResourceNotFoundException("Avaliação não encontrada"));
+            .orElseThrow(()-> new ErroResposta.ResourceNotFoundException("Avaliação não encontrada"));
 
         avaliacaoFilmeRepository.delete(avaliacaoFilme);    
     }
