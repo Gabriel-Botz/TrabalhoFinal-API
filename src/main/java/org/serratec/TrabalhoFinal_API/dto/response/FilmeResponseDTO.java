@@ -42,4 +42,6 @@ public class FilmeResponseDTO {
     private ClassificacaoIndicativa classificacaoIndicativa;
 
 
+    public FilmeResponseDTO(UUID id, String titulo, String descricao, Integer duracao, LocalDate dataLancamento, Double notaMedia, ClassificacaoIndicativa classificacaoIndicativa) {
+    }
 }
