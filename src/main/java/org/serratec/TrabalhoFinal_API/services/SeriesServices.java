@@ -28,13 +28,12 @@ public class SeriesServices {
         return seriesDTO;
     }
 
-    public SeriesResponseDTO ListarPorIdSeries(@PathVariable UUID id) {
+    public SeriesResponseDTO ListarSeriesPorId(@PathVariable UUID id) {
         Series series = (Series) seriesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Serie não encontrada"));
 
         return new SeriesResponseDTO(series);
     }
-
 
     //GET por titulo
     public SeriesResponseDTO ListarSeriePorTitulo(String titulo){
@@ -63,7 +62,7 @@ public class SeriesServices {
          return new SeriesResponseDTO(seriesRepository.save(serie));
     }
 
-    public SeriesResponseDTO atualizarSeries(SeriesRequestDTO seriesRequest, Long id){
+    public SeriesResponseDTO atualizarSeries(SeriesRequestDTO seriesRequest, UUID id){
         Series series = seriesRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Serie não Encontrada"));
 
@@ -78,7 +77,7 @@ public class SeriesServices {
         return new SeriesResponseDTO(series);
     }
 
-    public void removerSeries(Long id){
+    public void removerSeries(UUID id){
         Series series = seriesRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Serie não encontrada"));
         seriesRepository.delete(series);
