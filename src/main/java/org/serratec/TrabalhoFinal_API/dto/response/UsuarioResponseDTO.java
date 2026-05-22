@@ -1,6 +1,7 @@
 package org.serratec.TrabalhoFinal_API.dto.response;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.serratec.TrabalhoFinal_API.domain.Usuario;
@@ -16,8 +17,8 @@ public record UsuarioResponseDTO(
         @Schema(description = "Nome do usuario cadastrado", example = "Luna") String nome,
         @Schema(description = "Endereço de e-mail cadastrado", example = "marcia.silva@email.com") String email,
         @Schema(description = "Login do usuario cadastrado", example = "LinaPhon") String username,
-        @Schema(description = "Endereço de e-mail cadastrado", example = "marcia.silva@email.com") LocalDate dataCriacao) {
-    // FotoPerfil fotoPerfil,
+        @Schema(description = "Endereço de e-mail cadastrado", example = "marcia.silva@email.com") LocalDateTime dataCriacao,
+        String fotoPerfil) {
 
     public static UsuarioResponseDTO toUsuarioResponseDTO(Usuario usuario) {
         return new UsuarioResponseDTO(
@@ -25,8 +26,7 @@ public record UsuarioResponseDTO(
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getUsername(),
-                usuario.getDataCriacao()
-        // usuario.getFotoPerfil()
-        );
+                usuario.getDataCriacao(),
+                usuario.getFotoPerfil());
     }
 }
