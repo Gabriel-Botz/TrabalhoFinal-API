@@ -52,4 +52,16 @@ public class FilmeController {
         filmeService.deletarFilme(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{filmeId}/categorias/{categoriaId}")
+    @Operation(summary = "Vincula uma categoria a um filme")
+    public ResponseEntity<FilmeResponseDTO> vincularCategoria(@PathVariable UUID filmeId, @PathVariable UUID categoriaId) {
+        return ResponseEntity.ok(filmeService.vincularCategoria(filmeId, categoriaId));
+    }
+
+    @GetMapping("/categoria/{categoriaId}")
+    @Operation(summary = "Busca filmes por categoria")
+    public ResponseEntity<List<FilmeResponseDTO>> buscarFilmesPorCategoria(@PathVariable UUID categoriaId) {
+        return ResponseEntity.ok(filmeService.buscarFilmesPorCategoria(categoriaId));
+    }
 }
