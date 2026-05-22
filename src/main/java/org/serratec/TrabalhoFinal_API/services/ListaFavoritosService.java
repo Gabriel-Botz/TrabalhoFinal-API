@@ -7,9 +7,12 @@ import java.util.UUID;
 import org.serratec.TrabalhoFinal_API.domain.ListaFavoritos;
 import org.serratec.TrabalhoFinal_API.dto.request.ListaFavoritosRequestDTO;
 import org.serratec.TrabalhoFinal_API.dto.response.ListaFavoritosResponseDTO;
+import org.serratec.TrabalhoFinal_API.exceptions.ResourceNotFoundException;
 import org.serratec.TrabalhoFinal_API.repository.ListaFavoritosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ListaFavoritosService {
@@ -17,42 +20,42 @@ public class ListaFavoritosService {
     @Autowired
     private ListaFavoritosRepository listaFavoritosRepository;
 
-    public List<ListaFavoritosResponseDTO> listarListaFavoritos() {
+    public List<ListaFavoritosResponseDTO> listar() {
 
         List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
         List<ListaFavoritosResponseDTO> listaFavoritosDTO = new ArrayList<>();
 
-        for(ListaFavoritos lista : listaFavoritos) {
+        for (ListaFavoritos lista : listaFavoritos) {
             listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
-                lista.getId(),
-                lista.getNomeLista(), 
-                lista.getPrivada(), 
-                lista.getDataCriacao()
-            ));
+                    lista.getId(),
+                    lista.getNomeLista(),
+                    lista.getPrivada(),
+                    lista.getDataCriacao()));
         }
 
         return listaFavoritosDTO;
 
     }
 
-    public ListaFavoritosResponseDTO buscarListaFavoritosPorId(UUID id) {
+    public ListaFavoritosResponseDTO buscarPorId(UUID id) {
 
-        ListaFavoritos lista = listaFavoritosRepository.findById(id).orElse(null);
+        ListaFavoritos lista = listaFavoritosRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Lista de favoritos não encontrada com ID: " + id));
 
-        if(lista != null) {
+        if (lista != null) {
             return new ListaFavoritosResponseDTO(
-                lista.getId(),
-                lista.getNomeLista(), 
-                lista.getPrivada(), 
-                lista.getDataCriacao()
-            );
+                    lista.getId(),
+                    lista.getNomeLista(),
+                    lista.getPrivada(),
+                    lista.getDataCriacao());
         }
 
         return null;
 
     }
 
-    public ListaFavoritosResponseDTO criarListaFavoritos(ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
+    @Transactional
+    public ListaFavoritosResponseDTO criar(ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
         ListaFavoritos lista = new ListaFavoritos();
 
@@ -63,19 +66,20 @@ public class ListaFavoritosService {
         ListaFavoritos novaLista = listaFavoritosRepository.save(lista);
 
         return new ListaFavoritosResponseDTO(
-            novaLista.getId(),
-            novaLista.getNomeLista(), 
-            novaLista.getPrivada(), 
-            novaLista.getDataCriacao()
-        );
+                novaLista.getId(),
+                novaLista.getNomeLista(),
+                novaLista.getPrivada(),
+                novaLista.getDataCriacao());
 
     }
 
-    public ListaFavoritosResponseDTO atualizarListaFavoritos(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
+    @Transactional
+    public ListaFavoritosResponseDTO atualizar(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
-        ListaFavoritos listaExistente = listaFavoritosRepository.findById(id).orElse(null);
+        ListaFavoritos listaExistente = listaFavoritosRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Lista de favoritos não encontrada com ID: " + id));
 
-        if(listaExistente != null) {
+        if (listaExistente != null) {
             listaExistente.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
             listaExistente.setPrivada(listaFavoritosRequestDTO.getPrivada());
             listaExistente.setDataCriacao(listaFavoritosRequestDTO.getDataCriacao());
@@ -83,20 +87,20 @@ public class ListaFavoritosService {
             ListaFavoritos listaAtualizada = listaFavoritosRepository.save(listaExistente);
 
             return new ListaFavoritosResponseDTO(
-                listaAtualizada.getId(),
-                listaAtualizada.getNomeLista(), 
-                listaAtualizada.getPrivada(), 
-                listaAtualizada.getDataCriacao()
-            );
+                    listaAtualizada.getId(),
+                    listaAtualizada.getNomeLista(),
+                    listaAtualizada.getPrivada(),
+                    listaAtualizada.getDataCriacao());
         }
 
         return null;
 
     }
 
+    @Transactional
     public boolean deletarListaFavoritos(UUID id) {
 
-        if(listaFavoritosRepository.existsById(id)) {
+        if (listaFavoritosRepository.existsById(id)) {
             listaFavoritosRepository.deleteById(id);
             return true;
         }
