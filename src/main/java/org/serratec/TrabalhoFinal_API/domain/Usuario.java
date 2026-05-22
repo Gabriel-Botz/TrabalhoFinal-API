@@ -49,13 +49,13 @@ public class Usuario {
     @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
 
-    // @OneToMany
-    // @JoinColumn(name = "avaliacaoFilme_id", referencedColumnName = "id")
-    // private List<AvaliacaoFilme> avaliacoesFilmes = new ArrayList<>();
+    @OneToMany
+    @JoinColumn(name = "avaliacaoFilme_id", referencedColumnName = "id")
+    private List<AvaliacaoFilme> avaliacoesFilmes = new ArrayList<>();
 
-    // @OneToMany
-    // @JoinColumn(name = "avaliacaoSerie_id", referencedColumnName = "id")
-    // private List<AvaliacaoSerie> avaliacoesSeries = new ArrayList<>();
+    @OneToMany
+    @JoinColumn(name = "avaliacaoSerie_id", referencedColumnName = "id")
+    private List<AvaliacaoSerie> avaliacoesSeries = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "listaFavoritos_id", referencedColumnName = "id")
