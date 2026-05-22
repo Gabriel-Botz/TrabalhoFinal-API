@@ -22,17 +22,17 @@ A SerratecFlix é uma plataforma de streaming geek onde usuários podem avaliar 
 
 ## 2. Tecnologias e Dependências (pom.xml)
 
-| Dependência | Finalidade |
-|---|---|
-| `spring-boot-starter-web` | Controllers REST |
-| `spring-boot-starter-data-jpa` | JPA + Hibernate |
-| `spring-boot-starter-security` | Spring Security |
-| `spring-boot-starter-validation` | Bean Validation |
-| `jjwt` (io.jsonwebtoken) | Geração e validação de JWT |
-| `springdoc-openapi-starter-webmvc-ui` | Swagger / OpenAPI |
-| `postgresql` | Driver do banco |
-| `lombok` | Redução de boilerplate |
-| `spring-boot-devtools` | Reload automático em dev |
+| Dependência                           | Finalidade                 |
+| ------------------------------------- | -------------------------- |
+| `spring-boot-starter-web`             | Controllers REST           |
+| `spring-boot-starter-data-jpa`        | JPA + Hibernate            |
+| `spring-boot-starter-security`        | Spring Security            |
+| `spring-boot-starter-validation`      | Bean Validation            |
+| `jjwt` (io.jsonwebtoken)              | Geração e validação de JWT |
+| `springdoc-openapi-starter-webmvc-ui` | Swagger / OpenAPI          |
+| `postgresql`                          | Driver do banco            |
+| `lombok`                              | Redução de boilerplate     |
+| `spring-boot-devtools`                | Reload automático em dev   |
 
 **Banco de dados:** PostgreSQL  
 **Build:** Maven  
@@ -45,89 +45,96 @@ A SerratecFlix é uma plataforma de streaming geek onde usuários podem avaliar 
 ### 3.1 Entidades
 
 #### 👤 Usuario
-| Campo | Tipo | Restrições |
-|---|---|---|
-| id | Long | PK, auto gerado |
-| nome | String | @NotBlank |
-| email | String | @NotBlank, @Email, único |
-| username | String | @NotBlank, único |
-| senha | String | @NotBlank, @Size(min=6) |
-| fotoPerfil | String | Opcional (URL ou path) |
-| dataCriacao | LocalDateTime | Auto preenchido |
+
+| Campo       | Tipo          | Restrições               |
+| ----------- | ------------- | ------------------------ |
+| id          | Long          | PK, auto gerado          |
+| nome        | String        | @NotBlank                |
+| email       | String        | @NotBlank, @Email, único |
+| username    | String        | @NotBlank, único         |
+| senha       | String        | @NotBlank, @Size(min=6)  |
+| fotoPerfil  | String        | Opcional (URL ou path)   |
+| dataCriacao | LocalDateTime | Auto preenchido          |
 
 #### 🎬 Filme
-| Campo | Tipo | Restrições |
-|---|---|---|
-| id | Long | PK, auto gerado |
-| titulo | String | @NotBlank |
-| descricao | String | @NotBlank |
-| duracao | Integer | @NotNull (em minutos) |
-| dataLancamento | LocalDate | @NotNull |
-| classificacaoIndicativa | Enum | LIVRE, DEZ, DOZE, QUATORZE, DEZESSEIS, DEZOITO |
-| notaMedia | Double | Calculado a partir das avaliações |
+
+| Campo                   | Tipo      | Restrições                                     |
+| ----------------------- | --------- | ---------------------------------------------- |
+| id                      | Long      | PK, auto gerado                                |
+| titulo                  | String    | @NotBlank                                      |
+| descricao               | String    | @NotBlank                                      |
+| duracao                 | Integer   | @NotNull (em minutos)                          |
+| dataLancamento          | LocalDate | @NotNull                                       |
+| classificacaoIndicativa | Enum      | LIVRE, DEZ, DOZE, QUATORZE, DEZESSEIS, DEZOITO |
+| notaMedia               | Double    | Calculado a partir das avaliações              |
 
 #### 📺 Serie
-| Campo | Tipo | Restrições |
-|---|---|---|
-| id | Long | PK, auto gerado |
-| titulo | String | @NotBlank |
-| descricao | String | @NotBlank |
-| temporadas | Integer | @NotNull |
-| episodios | Integer | @NotNull |
-| dataLancamento | LocalDate | @NotNull |
-| notaMedia | Double | Calculado a partir das avaliações |
+
+| Campo          | Tipo      | Restrições                        |
+| -------------- | --------- | --------------------------------- |
+| id             | Long      | PK, auto gerado                   |
+| titulo         | String    | @NotBlank                         |
+| descricao      | String    | @NotBlank                         |
+| temporadas     | Integer   | @NotNull                          |
+| episodios      | Integer   | @NotNull                          |
+| dataLancamento | LocalDate | @NotNull                          |
+| notaMedia      | Double    | Calculado a partir das avaliações |
 
 #### 🏷️ Categoria
-| Campo | Tipo | Restrições |
-|---|---|---|
-| id | Long | PK, auto gerado |
-| nome | String | @NotBlank (ex: Ação, Terror) |
-| descricao | String | @NotBlank |
+
+| Campo     | Tipo   | Restrições                   |
+| --------- | ------ | ---------------------------- |
+| id        | Long   | PK, auto gerado              |
+| nome      | String | @NotBlank (ex: Ação, Terror) |
+| descricao | String | @NotBlank                    |
 
 #### ⭐ AvaliacaoFilme
-| Campo | Tipo | Restrições |
-|---|---|---|
-| id | Long | PK, auto gerado |
-| nota | Double | @NotNull, min=0, max=10 |
-| comentario | String | @NotBlank |
-| dataAvaliacao | LocalDateTime | Auto preenchido |
-| usuario | Usuario | FK (ManyToOne) |
-| filme | Filme | FK (ManyToOne) |
+
+| Campo         | Tipo          | Restrições              |
+| ------------- | ------------- | ----------------------- |
+| id            | Long          | PK, auto gerado         |
+| nota          | Double        | @NotNull, min=0, max=10 |
+| comentario    | String        | @NotBlank               |
+| dataAvaliacao | LocalDateTime | Auto preenchido         |
+| usuario       | Usuario       | FK (ManyToOne)          |
+| filme         | Filme         | FK (ManyToOne)          |
 
 #### ⭐ AvaliacaoSerie
-| Campo | Tipo | Restrições |
-|---|---|---|
-| id | Long | PK, auto gerado |
-| nota | Double | @NotNull, min=0, max=10 |
-| comentario | String | @NotBlank |
-| dataAvaliacao | LocalDateTime | Auto preenchido |
-| usuario | Usuario | FK (ManyToOne) |
-| serie | Serie | FK (ManyToOne) |
+
+| Campo         | Tipo          | Restrições              |
+| ------------- | ------------- | ----------------------- |
+| id            | Long          | PK, auto gerado         |
+| nota          | Double        | @NotNull, min=0, max=10 |
+| comentario    | String        | @NotBlank               |
+| dataAvaliacao | LocalDateTime | Auto preenchido         |
+| usuario       | Usuario       | FK (ManyToOne)          |
+| serie         | Serie         | FK (ManyToOne)          |
 
 #### 📋 ListaFavoritos
-| Campo | Tipo | Restrições |
-|---|---|---|
-| id | Long | PK, auto gerado |
-| nomeLista | String | @NotBlank (ex: Favoritos, Top Filmes) |
-| privada | Boolean | @NotNull |
-| dataCriacao | LocalDateTime | Auto preenchido |
-| usuario | Usuario | FK (ManyToOne) |
+
+| Campo       | Tipo          | Restrições                            |
+| ----------- | ------------- | ------------------------------------- |
+| id          | Long          | PK, auto gerado                       |
+| nomeLista   | String        | @NotBlank (ex: Favoritos, Top Filmes) |
+| privada     | Boolean       | @NotNull                              |
+| dataCriacao | LocalDateTime | Auto preenchido                       |
+| usuario     | Usuario       | FK (ManyToOne)                        |
 
 ---
 
 ### 3.2 Relacionamentos
 
-| Entidade A | Tipo | Entidade B | Dono |
-|---|---|---|---|
-| Usuario | @OneToMany | AvaliacaoFilme | AvaliacaoFilme |
-| Usuario | @OneToMany | AvaliacaoSerie | AvaliacaoSerie |
-| Filme | @OneToMany | AvaliacaoFilme | AvaliacaoFilme |
-| Serie | @OneToMany | AvaliacaoSerie | AvaliacaoSerie |
-| Filme | @ManyToMany | Categoria | tabela intermediária |
-| Serie | @ManyToMany | Categoria | tabela intermediária |
-| Usuario | @OneToMany | ListaFavoritos | ListaFavoritos |
-| ListaFavoritos | @ManyToMany | Filme | tabela intermediária |
-| ListaFavoritos | @ManyToMany | Serie | tabela intermediária |
+| Entidade A     | Tipo        | Entidade B     | Dono                 |
+| -------------- | ----------- | -------------- | -------------------- |
+| Usuario        | @OneToMany  | AvaliacaoFilme | AvaliacaoFilme       |
+| Usuario        | @OneToMany  | AvaliacaoSerie | AvaliacaoSerie       |
+| Filme          | @OneToMany  | AvaliacaoFilme | AvaliacaoFilme       |
+| Serie          | @OneToMany  | AvaliacaoSerie | AvaliacaoSerie       |
+| Filme          | @ManyToMany | Categoria      | tabela intermediária |
+| Serie          | @ManyToMany | Categoria      | tabela intermediária |
+| Usuario        | @OneToMany  | ListaFavoritos | ListaFavoritos       |
+| ListaFavoritos | @ManyToMany | Filme          | tabela intermediária |
+| ListaFavoritos | @ManyToMany | Serie          | tabela intermediária |
 
 > ⚠️ **Atenção:** usar `@JsonManagedReference` / `@JsonBackReference` ou DTOs para **evitar recursão infinita** nos relacionamentos. Nunca retornar a entidade diretamente no controller — usar sempre DTOs.
 
@@ -156,74 +163,82 @@ com.serratecflix
 > Padrão obrigatório: GET all, GET by ID, POST, PUT, DELETE para cada entidade.
 
 ### 🔓 Autenticação (pública)
-| Método | Rota | Descrição |
-|---|---|---|
-| POST | `/auth/login` | Retorna JWT |
-| POST | `/auth/register` | Cadastra novo usuário |
 
-### 👤 Usuarios (protegido)
-| Método | Rota | Descrição |
-|---|---|---|
-| GET | `/usuarios` | Lista todos |
-| GET | `/usuarios/{id}` | Busca por ID |
-| PUT | `/usuarios/{id}` | Atualiza dados |
-| DELETE | `/usuarios/{id}` | Remove usuário |
+| Método | Rota             | Descrição             |
+| ------ | ---------------- | --------------------- |
+| POST   | `/auth/login`    | Retorna JWT           |
+| POST   | `/auth/register` | Cadastra novo usuário |
+
+### 👤 Usuario (protegido)
+
+| Método | Rota            | Descrição      |
+| ------ | --------------- | -------------- |
+| GET    | `/Usuario`      | Lista todos    |
+| GET    | `/Usuario/{id}` | Busca por ID   |
+| PUT    | `/Usuario/{id}` | Atualiza dados |
+| DELETE | `/Usuario/{id}` | Remove usuário |
 
 ### 🎬 Filmes (protegido)
-| Método | Rota | Descrição |
-|---|---|---|
-| GET | `/filmes` | Lista todos |
-| GET | `/filmes/{id}` | Busca por ID |
-| POST | `/filmes` | Cadastra filme |
-| PUT | `/filmes/{id}` | Atualiza filme |
-| DELETE | `/filmes/{id}` | Remove filme |
+
+| Método | Rota           | Descrição      |
+| ------ | -------------- | -------------- |
+| GET    | `/filmes`      | Lista todos    |
+| GET    | `/filmes/{id}` | Busca por ID   |
+| POST   | `/filmes`      | Cadastra filme |
+| PUT    | `/filmes/{id}` | Atualiza filme |
+| DELETE | `/filmes/{id}` | Remove filme   |
 
 ### 📺 Series (protegido)
-| Método | Rota | Descrição |
-|---|---|---|
-| GET | `/series` | Lista todas |
-| GET | `/series/{id}` | Busca por ID |
-| POST | `/series` | Cadastra série |
-| PUT | `/series/{id}` | Atualiza série |
-| DELETE | `/series/{id}` | Remove série |
+
+| Método | Rota           | Descrição      |
+| ------ | -------------- | -------------- |
+| GET    | `/series`      | Lista todas    |
+| GET    | `/series/{id}` | Busca por ID   |
+| POST   | `/series`      | Cadastra série |
+| PUT    | `/series/{id}` | Atualiza série |
+| DELETE | `/series/{id}` | Remove série   |
 
 ### 🏷️ Categorias (protegido)
-| Método | Rota | Descrição |
-|---|---|---|
-| GET | `/categorias` | Lista todas |
-| GET | `/categorias/{id}` | Busca por ID |
-| POST | `/categorias` | Cadastra categoria |
-| PUT | `/categorias/{id}` | Atualiza categoria |
-| DELETE | `/categorias/{id}` | Remove categoria |
+
+| Método | Rota               | Descrição          |
+| ------ | ------------------ | ------------------ |
+| GET    | `/categorias`      | Lista todas        |
+| GET    | `/categorias/{id}` | Busca por ID       |
+| POST   | `/categorias`      | Cadastra categoria |
+| PUT    | `/categorias/{id}` | Atualiza categoria |
+| DELETE | `/categorias/{id}` | Remove categoria   |
 
 ### ⭐ Avaliações de Filme (protegido)
-| Método | Rota | Descrição |
-|---|---|---|
-| GET | `/avaliacoes/filmes` | Lista todas |
-| GET | `/avaliacoes/filmes/{id}` | Busca por ID |
-| POST | `/avaliacoes/filmes` | Cria avaliação |
-| PUT | `/avaliacoes/filmes/{id}` | Atualiza avaliação |
-| DELETE | `/avaliacoes/filmes/{id}` | Remove avaliação |
+
+| Método | Rota                      | Descrição          |
+| ------ | ------------------------- | ------------------ |
+| GET    | `/avaliacoes/filmes`      | Lista todas        |
+| GET    | `/avaliacoes/filmes/{id}` | Busca por ID       |
+| POST   | `/avaliacoes/filmes`      | Cria avaliação     |
+| PUT    | `/avaliacoes/filmes/{id}` | Atualiza avaliação |
+| DELETE | `/avaliacoes/filmes/{id}` | Remove avaliação   |
 
 ### ⭐ Avaliações de Serie (protegido)
-| Método | Rota | Descrição |
-|---|---|---|
-| GET | `/avaliacoes/series` | Lista todas |
-| GET | `/avaliacoes/series/{id}` | Busca por ID |
-| POST | `/avaliacoes/series` | Cria avaliação |
-| PUT | `/avaliacoes/series/{id}` | Atualiza avaliação |
-| DELETE | `/avaliacoes/series/{id}` | Remove avaliação |
+
+| Método | Rota                      | Descrição          |
+| ------ | ------------------------- | ------------------ |
+| GET    | `/avaliacoes/series`      | Lista todas        |
+| GET    | `/avaliacoes/series/{id}` | Busca por ID       |
+| POST   | `/avaliacoes/series`      | Cria avaliação     |
+| PUT    | `/avaliacoes/series/{id}` | Atualiza avaliação |
+| DELETE | `/avaliacoes/series/{id}` | Remove avaliação   |
 
 ### 📋 Listas de Favoritos (protegido)
-| Método | Rota | Descrição |
-|---|---|---|
-| GET | `/listas` | Lista todas |
-| GET | `/listas/{id}` | Busca por ID |
-| POST | `/listas` | Cria lista |
-| PUT | `/listas/{id}` | Atualiza lista |
-| DELETE | `/listas/{id}` | Remove lista |
-| POST | `/listas/{id}/filmes/{filmeId}` | Adiciona filme à lista |
-| POST | `/listas/{id}/series/{serieId}` | Adiciona série à lista |
+
+| Método | Rota                            | Descrição              |
+| ------ | ------------------------------- | ---------------------- |
+| GET    | `/listas`                       | Lista todas            |
+| GET    | `/listas/{id}`                  | Busca por ID           |
+| POST   | `/listas`                       | Cria lista             |
+| PUT    | `/listas/{id}`                  | Atualiza lista         |
+| DELETE | `/listas/{id}`                  | Remove lista           |
+| POST   | `/listas/{id}/filmes/{filmeId}` | Adiciona filme à lista |
+| POST   | `/listas/{id}/series/{serieId}` | Adiciona série à lista |
 
 ---
 
@@ -242,12 +257,12 @@ com.serratecflix
 
 ## 7. Tratamento de Exceções
 
-| Situação | Exception customizada | Status HTTP |
-|---|---|---|
-| Entidade não encontrada | `ResourceNotFoundException` | 404 |
-| Dados inválidos / validação | Tratado pelo `@Valid` + ControllerAdvice | 400 |
-| username/email duplicado | `ConflictException` | 409 |
-| Sem autenticação / token inválido | Tratado pelo Spring Security | 401 |
+| Situação                          | Exception customizada                    | Status HTTP |
+| --------------------------------- | ---------------------------------------- | ----------- |
+| Entidade não encontrada           | `ResourceNotFoundException`              | 404         |
+| Dados inválidos / validação       | Tratado pelo `@Valid` + ControllerAdvice | 400         |
+| username/email duplicado          | `ConflictException`                      | 409         |
+| Sem autenticação / token inválido | Tratado pelo Spring Security             | 401         |
 
 Implementar um `GlobalExceptionHandler` com `@ControllerAdvice` que padronize todas as respostas de erro no formato:
 
@@ -270,6 +285,7 @@ Consumir obrigatoriamente pelo menos uma API externa. Sugestão mais simples:
 - **ViaCEP** (`https://viacep.com.br/ws/{cep}/json/`) — pode ser usada no cadastro de usuário para buscar/validar CEP
 
 Alternativa temática:
+
 - **TMDB API** (`https://www.themoviedb.org/documentation/api`) — buscar informações de filmes/séries por título
 
 Implementar via `RestTemplate` ou `WebClient` no pacote `service` ou criar um `ExternalApiService` separado.
@@ -279,6 +295,7 @@ Implementar via `RestTemplate` ou `WebClient` no pacote `service` ou criar um `E
 ## 9. Segurança (JWT)
 
 Fluxo:
+
 1. Usuário faz POST em `/auth/login` com `{ "username": "...", "senha": "..." }`
 2. Spring Security valida as credenciais via `UserDetailsService`
 3. Se válido, retorna `{ "token": "eyJ..." }`
@@ -286,6 +303,7 @@ Fluxo:
 5. Um `JwtAuthenticationFilter` intercepta cada request, valida o token e autentica o usuário no contexto do Spring
 
 Classes necessárias no pacote `security`:
+
 - `JwtUtil` — gera e valida tokens
 - `JwtAuthenticationFilter` — filtro que intercepta as requisições
 - `UserDetailsServiceImpl` — carrega usuário do banco
@@ -301,9 +319,11 @@ Classes necessárias no pacote `security`:
 ---
 
 ### 👤 Integrante 1 — Setup Geral + Segurança + JWT
+
 **Responsabilidade principal:** Estrutura base do projeto e autenticação
 
 **Entregáveis:**
+
 - Criar o projeto Spring Boot no Spring Initializr com todas as dependências
 - Configurar `application.properties` (banco, JWT secret, porta)
 - Implementar os pacotes `security/` e `config/`
@@ -316,9 +336,11 @@ Classes necessárias no pacote `security`:
 ---
 
 ### 👤 Integrante 2 — Entidade Usuario + ListaFavoritos
+
 **Responsabilidade principal:** CRUD completo de Usuário e Listas de Favoritos
 
 **Entregáveis:**
+
 - Pacotes `entity`, `repository`, `service`, `controller`, `dto` para `Usuario` e `ListaFavoritos`
 - Endpoint de adicionar Filme/Serie à lista (`POST /listas/{id}/filmes/{filmeId}`)
 - Validações: `@NotBlank`, `@Email`, `@Size`, `@NotNull` nos DTOs
@@ -329,9 +351,11 @@ Classes necessárias no pacote `security`:
 ---
 
 ### 👤 Integrante 3 — Entidade Filme + Categoria
+
 **Responsabilidade principal:** CRUD de Filme e Categoria, e o relacionamento ManyToMany entre eles
 
 **Entregáveis:**
+
 - Pacotes completos para `Filme` e `Categoria`
 - Enum `ClassificacaoIndicativa` no pacote `entity`
 - Relacionamento `@ManyToMany` entre Filme e Categoria (tabela intermediária `filme_categoria`)
@@ -343,9 +367,11 @@ Classes necessárias no pacote `security`:
 ---
 
 ### 👤 Integrante 4 — Entidade Serie
+
 **Responsabilidade principal:** CRUD completo de Serie e vínculo com Categoria
 
 **Entregáveis:**
+
 - Pacotes completos para `Serie`
 - Relacionamento `@ManyToMany` com `Categoria` (reutilizar entidade do Integrante 3)
 - Endpoint para vincular categorias a uma série
@@ -356,9 +382,11 @@ Classes necessárias no pacote `security`:
 ---
 
 ### 👤 Integrante 5 — Avaliações + Cálculo de NotaMedia + Queries
+
 **Responsabilidade principal:** CRUD de AvaliacaoFilme e AvaliacaoSerie, cálculo de média, e queries obrigatórias
 
 **Entregáveis:**
+
 - Pacotes completos para `AvaliacaoFilme` e `AvaliacaoSerie`
 - Validação de nota entre 0 e 10 (`@Min`, `@Max` ou validação no service)
 - Lógica de recalcular `notaMedia` de Filme/Serie após cada avaliação criada/editada/deletada
@@ -371,9 +399,11 @@ Classes necessárias no pacote `security`:
 ---
 
 ### 👤 Integrante 6 — Exception Handler + API Externa + DataLoader + README
+
 **Responsabilidade principal:** Infraestrutura de erros, dados iniciais e consumo de API externa
 
 **Entregáveis:**
+
 - `GlobalExceptionHandler` com `@ControllerAdvice` (padrão de resposta de erro definido no item 7)
 - Exceptions customizadas: `ResourceNotFoundException`, `ConflictException`
 - `DataLoader` (via `CommandLineRunner` ou `data.sql`) com pelo menos: 3 usuários, 5 filmes, 3 séries, 4 categorias, avaliações e listas
@@ -389,12 +419,14 @@ Classes necessárias no pacote `security`:
 > Dado o prazo curto, o foco deve ser: **funcionar primeiro, refinar depois.**
 
 ### Dia 1 — 21/05 (hoje) · Fundação
+
 - [ ] Integrante 1: criar projeto, configurar banco, subir no GitHub, criar `develop` branch
 - [ ] Definir padrão de branches: `feature/nome-da-feature` → PR para `develop`
 - [ ] Definir padrão de commit: `feat: descrição`, `fix: descrição`, `chore: descrição`
 - [ ] Todo o grupo: clonar o repositório e confirmar que roda localmente
 
 ### Dia 2 — 22/05 · Core das Entidades
+
 - [ ] Integrante 1: Security + JWT funcional (login retornando token)
 - [ ] Integrante 2: Entities + Repositories de Usuario e ListaFavoritos
 - [ ] Integrante 3: Entities + Repositories de Filme, Categoria e Enum
@@ -403,23 +435,27 @@ Classes necessárias no pacote `security`:
 - [ ] Integrante 6: `GlobalExceptionHandler` base + exceptions customizadas
 
 ### Dia 3 — 23/05 · Services e Controllers
+
 - [ ] Todos: implementar os Services e Controllers das suas entidades
 - [ ] Integrante 5: implementar JPQL, Native Query e Query Methods
 - [ ] Integrante 6: iniciar consumo da API externa
 
 ### Dia 4 — 24/05 · Integração e Testes
+
 - [ ] Testar todos os endpoints no Swagger
 - [ ] Verificar que não há recursão infinita nas respostas
 - [ ] Corrigir bugs de integração (relacionamentos, FKs)
 - [ ] Integrante 6: finalizar DataLoader com dados de teste
 
 ### Dia 5 — 25/05 · Ajustes Finos
+
 - [ ] Validar todos os status HTTP (400, 401, 404, 409)
 - [ ] Verificar validações Bean Validation em todos os DTOs
 - [ ] Swagger documentado e funcional com autenticação
 - [ ] Revisar mensagens de commit — todos devem ter commits em dias diferentes
 
 ### Dia 6 — 26/05 · Entrega
+
 - [ ] README.md escrito e revisado pelo grupo (sem IA)
 - [ ] Merge final de todas as branches para `main`
 - [ ] Testar do zero: clonar o repo, rodar, confirmar que tudo funciona
@@ -429,26 +465,28 @@ Classes necessárias no pacote `security`:
 
 ## 12. Pontos de Atenção e Ambiguidades do PDF
 
-| # | Ponto | Observação |
-|---|---|---|
-| 1 | `notaMedia` | O PDF lista o campo mas não especifica como calcular. Sugestão: calcular no service a cada CREATE/UPDATE/DELETE de avaliação |
-| 2 | `fotoPerfil` | Opcional — pode ser uma String (URL) ou implementar upload real (funcionalidade extra) |
-| 3 | API externa | O PDF cita ViaCEP como sugestão, mas qualquer outra serve. Definir em equipe qual usar e onde integrá-la |
-| 4 | Parte individual | Cada pessoa precisa de uma funcionalidade **diferente** das obrigatórias com GET/POST/PUT/DELETE. Planejar cedo para não ter conflito |
-| 5 | `ListaFavoritos.privada` | O PDF define o campo mas não especifica a regra de negócio. Sugestão: se `privada = true`, apenas o dono pode acessar via token |
-| 6 | Classificação indicativa | O PDF lista como ENUM mas não define os valores exatos. Sugestão: `LIVRE, DEZ, DOZE, QUATORZE, DEZESSEIS, DEZOITO` |
+| #   | Ponto                    | Observação                                                                                                                            |
+| --- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `notaMedia`              | O PDF lista o campo mas não especifica como calcular. Sugestão: calcular no service a cada CREATE/UPDATE/DELETE de avaliação          |
+| 2   | `fotoPerfil`             | Opcional — pode ser uma String (URL) ou implementar upload real (funcionalidade extra)                                                |
+| 3   | API externa              | O PDF cita ViaCEP como sugestão, mas qualquer outra serve. Definir em equipe qual usar e onde integrá-la                              |
+| 4   | Parte individual         | Cada pessoa precisa de uma funcionalidade **diferente** das obrigatórias com GET/POST/PUT/DELETE. Planejar cedo para não ter conflito |
+| 5   | `ListaFavoritos.privada` | O PDF define o campo mas não especifica a regra de negócio. Sugestão: se `privada = true`, apenas o dono pode acessar via token       |
+| 6   | Classificação indicativa | O PDF lista como ENUM mas não define os valores exatos. Sugestão: `LIVRE, DEZ, DOZE, QUATORZE, DEZESSEIS, DEZOITO`                    |
 
 ---
 
 ## 13. Checklist Final de Entrega
 
 ### Obrigatórios (risco de zero se faltar)
+
 - [ ] Projeto compila e executa sem erros
 - [ ] Commits em dias diferentes com mensagens coerentes (não pode ser um commit único!)
 - [ ] README no GitHub (escrito pelo grupo, sem IA)
 - [ ] Código desenvolvido sem uso de IA
 
 ### Obrigatórios (desconto de pontos se faltar)
+
 - [ ] Todos os CRUDs funcionando (GET, GET by ID, POST, PUT, DELETE)
 - [ ] Arquitetura em camadas respeitada (entity, repository, service, controller, dto, exception, config, security)
 - [ ] DTOs em todas as respostas (nunca retornar entidade diretamente)
@@ -465,6 +503,7 @@ Classes necessárias no pacote `security`:
 - [ ] Relacionamentos JPA corretos
 
 ### Extras (impactam criatividade/diferencial)
+
 - [ ] Paginação
 - [ ] Upload de imagem
 - [ ] Filtros avançados
