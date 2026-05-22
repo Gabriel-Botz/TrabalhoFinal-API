@@ -33,7 +33,7 @@ public class ListaFavoritosController {
     @ApiResponse(responseCode = "200", description = "Lista de favoritos retornada com sucesso")
     @GetMapping
     public ResponseEntity<List<ListaFavoritosResponseDTO>> listarListaFavoritos() {
-        List<ListaFavoritosResponseDTO> listaFavoritos = listaFavoritosService.listarListaFavoritos();
+        List<ListaFavoritosResponseDTO> listaFavoritos = listaFavoritosService.listar();
         return ResponseEntity.ok(listaFavoritos);
     }
 
@@ -42,7 +42,7 @@ public class ListaFavoritosController {
     @ApiResponse(responseCode = "404", description = "Lista de favoritos não encontrada")
     @GetMapping("/{id}")
     public ResponseEntity<ListaFavoritosResponseDTO> buscarListaFavoritosPorId(@PathVariable UUID id) {
-        ListaFavoritosResponseDTO listaFavoritos = listaFavoritosService.buscarListaFavoritosPorId(id);
+        ListaFavoritosResponseDTO listaFavoritos = listaFavoritosService.buscarPorId(id);
         if(listaFavoritos != null) {
             return ResponseEntity.ok(listaFavoritos);
         } else {
@@ -54,7 +54,7 @@ public class ListaFavoritosController {
     @ApiResponse(responseCode = "201", description = "Lista de favoritos criada com sucesso")
     @PostMapping
     public ResponseEntity<ListaFavoritosResponseDTO> criarListaFavoritos(@RequestBody ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
-        ListaFavoritosResponseDTO novaLista = listaFavoritosService.criarListaFavoritos(listaFavoritosRequestDTO);
+        ListaFavoritosResponseDTO novaLista = listaFavoritosService.criar(listaFavoritosRequestDTO);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(novaLista.getId()).toUri();
@@ -67,7 +67,7 @@ public class ListaFavoritosController {
     @ApiResponse(responseCode = "404", description = "Lista de favoritos não encontrada")
     @PutMapping("/{id}")
     public ResponseEntity<ListaFavoritosResponseDTO> atualizarListaFavoritos(@PathVariable UUID id, @RequestBody ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
-        ListaFavoritosResponseDTO listaAtualizada = listaFavoritosService.atualizarListaFavoritos(id, listaFavoritosRequestDTO);
+        ListaFavoritosResponseDTO listaAtualizada = listaFavoritosService.atualizar(id, listaFavoritosRequestDTO);
         if(listaAtualizada != null) {
             return ResponseEntity.ok(listaAtualizada);
         } else {

@@ -17,7 +17,7 @@ public class ListaFavoritosService {
     @Autowired
     private ListaFavoritosRepository listaFavoritosRepository;
 
-    public List<ListaFavoritosResponseDTO> listarListaFavoritos() {
+    public List<ListaFavoritosResponseDTO> listar() {
 
         List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
         List<ListaFavoritosResponseDTO> listaFavoritosDTO = new ArrayList<>();
@@ -35,7 +35,7 @@ public class ListaFavoritosService {
 
     }
 
-    public ListaFavoritosResponseDTO buscarListaFavoritosPorId(UUID id) {
+    public ListaFavoritosResponseDTO buscarPorId(UUID id) {
 
         ListaFavoritos lista = listaFavoritosRepository.findById(id).orElse(null);
 
@@ -52,7 +52,7 @@ public class ListaFavoritosService {
 
     }
 
-    public ListaFavoritosResponseDTO criarListaFavoritos(ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
+    public ListaFavoritosResponseDTO criar(ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
         ListaFavoritos lista = new ListaFavoritos();
 
@@ -71,7 +71,7 @@ public class ListaFavoritosService {
 
     }
 
-    public ListaFavoritosResponseDTO atualizarListaFavoritos(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
+    public ListaFavoritosResponseDTO atualizar(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
         ListaFavoritos listaExistente = listaFavoritosRepository.findById(id).orElse(null);
 
