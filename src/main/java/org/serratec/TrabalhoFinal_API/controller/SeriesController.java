@@ -3,6 +3,7 @@ package org.serratec.TrabalhoFinal_API.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.serratec.TrabalhoFinal_API.dto.responseDTO.SeriesResponseDTO;
 import org.serratec.TrabalhoFinal_API.dto.rquestDTO.SeriesRequestDTO;
 import org.serratec.TrabalhoFinal_API.services.SeriesServices;
@@ -72,7 +73,7 @@ public class SeriesController {
             @ApiResponse(responseCode = "500",description = "Erro interno do Servidor")
     })
     @PostMapping
-    public ResponseEntity<SeriesResponseDTO> inserirSeries(@RequestBody SeriesRequestDTO  seriesRequest) {
+    public ResponseEntity<SeriesResponseDTO> inserirSeries(@Valid @RequestBody SeriesRequestDTO  seriesRequest) {
 
         SeriesResponseDTO seriesDTO = seriesServices.inserirSeries(seriesRequest);
 
@@ -90,7 +91,7 @@ public class SeriesController {
     })
     @PutMapping
     public ResponseEntity<SeriesResponseDTO>
-    atualizarSeries(@RequestBody SeriesRequestDTO seriesRequest,@PathVariable UUID id) {
+    atualizarSeries(@Valid @RequestBody SeriesRequestDTO seriesRequest,@PathVariable UUID id) {
 
         SeriesResponseDTO seriesDTO = seriesServices.atualizarSeries(seriesRequest,id);
 
