@@ -24,6 +24,7 @@ public class ListaFavoritosService {
 
         for(ListaFavoritos lista : listaFavoritos) {
             listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
+                lista.getId(),
                 lista.getNomeLista(), 
                 lista.getPrivada(), 
                 lista.getDataCriacao()
@@ -40,6 +41,7 @@ public class ListaFavoritosService {
 
         if(lista != null) {
             return new ListaFavoritosResponseDTO(
+                lista.getId(),
                 lista.getNomeLista(), 
                 lista.getPrivada(), 
                 lista.getDataCriacao()
@@ -61,6 +63,7 @@ public class ListaFavoritosService {
         ListaFavoritos novaLista = listaFavoritosRepository.save(lista);
 
         return new ListaFavoritosResponseDTO(
+            novaLista.getId(),
             novaLista.getNomeLista(), 
             novaLista.getPrivada(), 
             novaLista.getDataCriacao()
@@ -80,6 +83,7 @@ public class ListaFavoritosService {
             ListaFavoritos listaAtualizada = listaFavoritosRepository.save(listaExistente);
 
             return new ListaFavoritosResponseDTO(
+                listaAtualizada.getId(),
                 listaAtualizada.getNomeLista(), 
                 listaAtualizada.getPrivada(), 
                 listaAtualizada.getDataCriacao()
