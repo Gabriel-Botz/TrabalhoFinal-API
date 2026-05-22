@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,18 +32,15 @@ public class FilmeRequestDTO {
 
 
     @Schema(description = "Duração do filme em minutos")
-    @NotBlank(message = "O campo duração é obrigatório")
+    @NotNull(message = "O campo duração é obrigatório")
     private Integer duracao;
 
 
     @Schema(description = "Data de lançamento do filme")
-    @NotBlank(message = "O campo data de lancamento é obrigatório")
+    @NotNull(message = "O campo data de lancamento é obrigatório")
     private LocalDate dataLancamento;
 
-
-    @Schema(description = "Nota média do filme")
-    private Double notaMedia;
-
-    @Enumerated(EnumType.STRING)
     private ClassificacaoIndicativa classificacaoIndicativa;
 }
+
+
