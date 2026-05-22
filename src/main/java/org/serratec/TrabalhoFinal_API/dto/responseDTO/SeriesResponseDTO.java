@@ -1,9 +1,11 @@
 package org.serratec.TrabalhoFinal_API.dto.responseDTO;
 
+import org.serratec.TrabalhoFinal_API.domain.Series;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class SeriesResponseDTO {
-    private Long id;
+    private UUID id;
     private String titulo;
     private String descricao;
     private Integer temporadas;
@@ -14,21 +16,21 @@ public class SeriesResponseDTO {
     public SeriesResponseDTO() {
     }
 
-    public SeriesResponseDTO(Long id, String titulo, String descricao, Integer temporadas, Integer espisodios, LocalDate dataLancamento, Double notaMedia) {
-        this.id = id;
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.temporadas = temporadas;
-        this.espisodios = espisodios;
-        this.dataLancamento = dataLancamento;
-        this.notaMedia = notaMedia;
+    public SeriesResponseDTO(Series series) {
+        this.id = series.getId();
+        this.titulo = series.getTitulo();
+        this.descricao = series.getDescricao();
+        this.temporadas = series.getTemporadas();
+        this.espisodios = series.getEpisodios();
+        this.dataLancamento = series.getDataLancamento();
+        this.notaMedia = series.getNotaMedia();
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
