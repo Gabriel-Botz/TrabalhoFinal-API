@@ -3,6 +3,7 @@ package org.serratec.TrabalhoFinal_API.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -31,5 +32,15 @@ public class Series {
     private LocalDate dataLancamento;
     @Column(name = "notaMedia",nullable = false)
     private Double notaMedia;
+
+    @OneToMany(mappedBy = "series")
+    private List<AvaliacaoSerie> avaliacaoSerie;
+
+    @ManyToMany
+    @JoinTable(name="serie_categoria",
+            joinColumns =  @JoinColumn(name = "id_series"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+    private List<Categoria> categorias;
+
 
 }

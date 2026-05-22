@@ -48,7 +48,6 @@ public class SeriesController {
         return ResponseEntity.ok(seriesServices.ListarSeriesPorId(id));
     }
 
-
     @Operation(summary = "lista uma Serie pelo titulo", description = "lista uma Série especifica do Banco de Dados pelo titulo")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Id Serie econtrado com sucesso"),
@@ -62,7 +61,6 @@ public class SeriesController {
     public ResponseEntity<SeriesResponseDTO> filtrarPorTitulo(@PathVariable String titulo) {
         return ResponseEntity.ok(seriesServices.ListarSeriePorTitulo(titulo));
     }
-
 
     @Operation(summary = "Inserir uma Serie", description = "Inserir uma Série no Banco de Dados")
     @ApiResponses(value = {
@@ -83,12 +81,12 @@ public class SeriesController {
 
     @Operation(summary = "Atualizar uma Série ", description = "Atualiza os atributos de uma Série")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Serie atualizada com sucesso"),
-            @ApiResponse(responseCode = "400",description = "Requisição Inválidade"),
-            @ApiResponse(responseCode = "401",description = "Não Autorizado"),
-            @ApiResponse(responseCode = "403",description = "Proibido"),
-            @ApiResponse(responseCode = "404",description = "Recurso não encontrado"),
-            @ApiResponse(responseCode = "500",description = "Erro interno do Servidor")
+    @ApiResponse(responseCode = "200",description = "Serie atualizada com sucesso"),
+    @ApiResponse(responseCode = "400",description = "Requisição Inválidade"),
+    @ApiResponse(responseCode = "401",description = "Não Autorizado"),
+    @ApiResponse(responseCode = "403",description = "Proibido"),
+    @ApiResponse(responseCode = "404",description = "Recurso não encontrado"),
+    @ApiResponse(responseCode = "500",description = "Erro interno do Servidor")
     })
     @PutMapping
     public ResponseEntity<SeriesResponseDTO>
@@ -97,17 +95,16 @@ public class SeriesController {
         SeriesResponseDTO seriesDTO = seriesServices.atualizarSeries(seriesRequest,id);
 
         return ResponseEntity.ok(seriesDTO);
-
     }
 
     @Operation(summary = "Deletar uma serie pelo ID", description = "Deleta uma Série especifica do Banco de Dados pelo ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Series econtradas com sucesso"),
-            @ApiResponse(responseCode = "400",description = "Requisição Inválidade"),
-            @ApiResponse(responseCode = "401",description = "Não Autorizado"),
-            @ApiResponse(responseCode = "403",description = "Proibido"),
-            @ApiResponse(responseCode = "404",description = "Recurso não encontrado"),
-            @ApiResponse(responseCode = "500",description = "Erro interno do Servidor")
+    @ApiResponse(responseCode = "200",description = "Series econtradas com sucesso"),
+    @ApiResponse(responseCode = "400",description = "Requisição Inválidade"),
+    @ApiResponse(responseCode = "401",description = "Não Autorizado"),
+    @ApiResponse(responseCode = "403",description = "Proibido"),
+    @ApiResponse(responseCode = "404",description = "Recurso não encontrado"),
+    @ApiResponse(responseCode = "500",description = "Erro interno do Servidor")
     })
     @DeleteMapping
     public ResponseEntity<Void> removerSeries(@PathVariable UUID id) {
@@ -116,5 +113,4 @@ public class SeriesController {
 
         return ResponseEntity.noContent().build();
     }
-
 }
