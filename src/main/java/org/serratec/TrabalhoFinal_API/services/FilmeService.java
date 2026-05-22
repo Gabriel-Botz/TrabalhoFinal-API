@@ -16,23 +16,15 @@ public class FilmeService {
     @Autowired
     private FilmeRepository filmeRepository;
 
-    public List<FilmeResponseDTO> listarFilmes(){
+    public List<FilmeResponseDTO> listarFilmes() {
         List<Filme> listaFilmes = filmeRepository.findAll();
-        List<FilmeResponseDTO> listaFilmeResponseDTO = new ArrayList<>();
+        List<FilmeResponseDTO> listaResponse = new ArrayList<>();
 
         for (Filme filme : listaFilmes) {
-            FilmeResponseDTO filmeResponseDTO = new FilmeResponseDTO(
-                    filme.getId(),
-                    filme.getTitulo(),
-                    filme.getDescricao(),
-                    filme.getDuracao(),
-                    filme.getDataLancamento(),
-                    filme.getNotaMedia(),
-                    filme.getClassificacaoIndicativa()
-            );
+            listaResponse.add(new FilmeResponseDTO(filme));
         }
 
-        return listaFilmeResponseDTO;
+        return listaResponse;
     }
 
     public FilmeResponseDTO criarFilme(FilmeRequestDTO dto){
