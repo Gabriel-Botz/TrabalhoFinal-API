@@ -3,6 +3,8 @@ package org.serratec.TrabalhoFinal_API.dto.Response;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import org.serratec.TrabalhoFinal_API.domain.AvaliacaoFilme;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,14 +24,14 @@ public class AvaliacaoFilmeDTOResponse {
 
     private LocalDate dataAvaliacao;
 
-    public AvaliacaoFilmeDTOResponse(AvaliacaoFilmeDTOResponse av){
+    public AvaliacaoFilmeDTOResponse(AvaliacaoFilme avaliacaoFilme){
 
-        this.id = av.getId();
-        this.nomeUsuario = av.getUsuario().getNome();
-        this.nomeFilme = av.getFilme().getTitulo();
-        this.nota = av.getNota();
-        this.comentario = av.getComentario();
-        this.dataAvaliacao = av.getDataAvaliacao();
+        this.id = avaliacaoFilme.getId();
+        this.nomeUsuario = avaliacaoFilme.getUsuario().getNome();
+        this.nomeFilme = avaliacaoFilme.getFilme().getTitulo();
+        this.nota = avaliacaoFilme.getNota();
+        this.comentario = avaliacaoFilme.getComentario();
+        this.dataAvaliacao = avaliacaoFilme.getDataAvaliacao();
     }
 
     
