@@ -1,7 +1,10 @@
 package org.serratec.TrabalhoFinal_API.services;
 
 
-import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.serratec.TrabalhoFinal_API.domain.AvaliacaoFilme;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 import org.serratec.TrabalhoFinal_API.domain.Usuario;
@@ -14,9 +17,7 @@ import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AvaliacaoFilmeService {
@@ -92,7 +93,7 @@ public class AvaliacaoFilmeService {
     public void deletar(UUID id){
 
         AvaliacaoFilme avaliacaoFilme = avaliacaoFilmeRepository.findById(id)
-            .orElseThrow(()-> new ErroResposta.ResourceNotFoundException("Avaliação não encontrada"));
+            .orElseThrow(()-> new RecursoNaoEncontradoException("Avaliação não encontrada"));
 
         avaliacaoFilmeRepository.delete(avaliacaoFilme);    
     }
