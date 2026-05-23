@@ -3,7 +3,8 @@ package org.serratec.TrabalhoFinal_API.controller;
 import java.util.List;
 import java.util.UUID;
 
-import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoFilmeDTO;
+import org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeRequestDTO;
+import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoFilmeResponseDTO;
 import org.serratec.TrabalhoFinal_API.services.AvaliacaoFilmeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,33 +27,33 @@ public class AvaliacaoFilmeController {
     @Autowired AvaliacaoFilmeService service;
 
     @GetMapping
-    public ResponseEntity<List<AvaliacaoFilmeDTO>> findAll(){
+    public ResponseEntity<List<AvaliacaoFilmeResponseDTO>> findAll(){
 
-        List<AvaliacaoFilmeDTO> avaliacoes = service.findAll();
+        List<AvaliacaoFilmeResponseDTO> avaliacoes = service.findAll();
 
         return ResponseEntity.ok(avaliacoes);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AvaliacaoFilmeDTO> findById(@PathVariable UUID id){
+    public ResponseEntity<AvaliacaoFilmeResponseDTO> findById(@PathVariable UUID id){
 
-        AvaliacaoFilmeDTO avaliacao = service.findById(id);
+        AvaliacaoFilmeResponseDTO avaliacao = service.findById(id);
 
         return ResponseEntity.ok(avaliacao);
     }
 
     @PostMapping
-    public ResponseEntity<AvaliacaoFilmeDTO> inserir(@Valid @RequestBody org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeDTO dto){
+    public ResponseEntity<AvaliacaoFilmeResponseDTO> inserir(@Valid @RequestBody AvaliacaoFilmeRequestDTO dto){
 
-        AvaliacaoFilmeDTO criado = service.inserir(dto);
+        AvaliacaoFilmeResponseDTO criado = service.inserir(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
 
     @PutMapping("/{id}") 
-    public ResponseEntity<AvaliacaoFilmeDTO> atualizar(@PathVariable UUID id, @Valid @RequestBody org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeDTO dto){
+    public ResponseEntity<AvaliacaoFilmeResponseDTO> atualizar(@PathVariable UUID id, @Valid @RequestBody AvaliacaoFilmeRequestDTO dto){
         
-        AvaliacaoFilmeDTO atualizado = service.atualizar(id, dto);
+        AvaliacaoFilmeResponseDTO atualizado = service.atualizar(id, dto);
 
         return ResponseEntity.ok(atualizado);
     }
