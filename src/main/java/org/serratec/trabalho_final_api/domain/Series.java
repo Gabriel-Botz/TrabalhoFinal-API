@@ -26,9 +26,9 @@ public class Series {
     private Integer temporadas;
     @Column(name = "episodios", nullable = false)
     private Integer episodios;
-    @Column(name = "dataLancamento", nullable = false)
+    @Column(name = "data_lancamento", nullable = false)
     private LocalDate dataLancamento;
-    @Column(name = "notaMedia", nullable = false)
+    @Column(name = "nota_media", nullable = false)
     private Double notaMedia;
 
     @OneToMany(mappedBy = "series")
