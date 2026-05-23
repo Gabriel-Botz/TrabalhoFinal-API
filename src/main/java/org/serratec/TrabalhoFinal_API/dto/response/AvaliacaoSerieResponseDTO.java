@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AvaliacaoSerieDTO  {
+public class AvaliacaoSerieResponseDTO {
 
     private UUID id;
 
@@ -24,7 +24,7 @@ public class AvaliacaoSerieDTO  {
 
     private LocalDate dataAvaliacao;
 
-    public AvaliacaoSerieDTO(AvaliacaoSerie avaliacao){
+    public AvaliacaoSerieResponseDTO(AvaliacaoSerie avaliacao){
 
         this.id = avaliacao.getId();
         this.nomeUsuario = avaliacao.getUsuario().getNome();

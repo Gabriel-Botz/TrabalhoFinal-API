@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FilmeRepository extends JpaRepository<Filme, UUID> {
-    List<Filme> findByCategorias_Id(UUID categoriaId);
+    List<Filme> findByCategorias_Id(Long categoriaId);
 }

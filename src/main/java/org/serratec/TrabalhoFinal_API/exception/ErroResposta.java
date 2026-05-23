@@ -37,8 +37,8 @@ public class ErroResposta {
     @RestControllerAdvice
     public static class GlobalExceptionHandler {
 
-        @ExceptionHandler(ResourceNotFoundException.class)
-        public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
+        @ExceptionHandler(RecursoNaoEncontradoException.class)
+        public ResponseEntity<Map<String, Object>> handleNotFound(RecursoNaoEncontradoException ex) {
             Map<String, Object> erro = new HashMap<>();
             erro.put("status", 404);
             erro.put("mensagem", ex.getMessage());
@@ -65,8 +65,8 @@ public class ErroResposta {
         }
     }
 
-    public static class ResourceNotFoundException extends RuntimeException {
-        public ResourceNotFoundException(String mensagem) {
+    public static class RecursoNaoEncontradoException extends RuntimeException {
+        public RecursoNaoEncontradoException(String mensagem) {
             super(mensagem);
         }
     }

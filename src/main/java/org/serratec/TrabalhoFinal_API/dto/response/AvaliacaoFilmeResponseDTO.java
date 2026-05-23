@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AvaliacaoFilmeDTO {
+public class AvaliacaoFilmeResponseDTO {
 
     private UUID id;
 
@@ -24,7 +24,12 @@ public class AvaliacaoFilmeDTO {
 
     private LocalDate dataAvaliacao;
 
+<<<<<<<< HEAD:src/main/java/org/serratec/TrabalhoFinal_API/dto/response/AvaliacaoFilmeDTO.java
     public AvaliacaoFilmeDTO(AvaliacaoFilme avaliacaoFilme){
+========
+    public AvaliacaoFilmeResponseDTO(AvaliacaoFilme avaliacaoFilme){
+
+>>>>>>>> 7555498c10fd1d441f42e418ded059f599ed2689:src/main/java/org/serratec/TrabalhoFinal_API/dto/response/AvaliacaoFilmeResponseDTO.java
         this.id = avaliacaoFilme.getId();
         this.nomeUsuario = avaliacaoFilme.getUsuario().getNome();
         this.nomeFilme = avaliacaoFilme.getFilme().getTitulo();
