@@ -1,37 +1,37 @@
-package org.serratec.TrabalhoFinal_API.dto.rquestDTO;
+package org.serratec.TrabalhoFinal_API.dto.Response;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
+import org.serratec.TrabalhoFinal_API.domain.Series;
 import java.time.LocalDate;
+import java.util.UUID;
 
-public class SeriesRequestDTO {
-
-    @NotBlank(message = "Titulo é obrigatório")
-    @NotNull(message = "Titulo não pode ser nulo")
+public class SeriesResponseDTO {
+    private UUID id;
     private String titulo;
-
-    @NotBlank(message = "descrição é obrigatório")
-    @NotNull(message = "descrição pode ser nula")
     private String descricao;
-
-    @NotBlank(message = "temporadas é obrigatório")
-    @NotNull(message = "temporadas não pode ser nulo")
     private Integer temporadas;
-
-    @NotBlank(message = "episodios é obrigatório")
-    @NotNull(message = "episodios não pode ser nulo" )
     private Integer espisodios;
-
-    @NotBlank(message = "Data de lançamento é obrigatório")
-    @NotNull(message = "Data de lançamento não pode ser nulo")
     private LocalDate dataLancamento;
-
-    @NotBlank(message = "Nota media é obrigatório")
-    @NotNull(message = "Nota media não pode ser nulo")
     private Double notaMedia;
 
-    public SeriesRequestDTO() {
+    public SeriesResponseDTO() {
+    }
+
+    public SeriesResponseDTO(Series series) {
+        this.id = series.getId();
+        this.titulo = series.getTitulo();
+        this.descricao = series.getDescricao();
+        this.temporadas = series.getTemporadas();
+        this.espisodios = series.getEpisodios();
+        this.dataLancamento = series.getDataLancamento();
+        this.notaMedia = series.getNotaMedia();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getTitulo() {

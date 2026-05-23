@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -22,7 +21,6 @@ public class Series {
 
     @Column(name = "titulo",nullable = false)
     private String titulo;
-
     @Column(name = "descricao",nullable = false)
     private String descricao;
     @Column(name = "temporadas",nullable = false)
