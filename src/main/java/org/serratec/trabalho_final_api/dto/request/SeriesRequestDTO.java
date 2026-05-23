@@ -7,28 +7,28 @@ import java.time.LocalDate;
 
 public class SeriesRequestDTO {
 
-    @NotBlank(message = "Titulo é obrigatório")
-    @NotNull(message = "Titulo não pode ser nulo")
+    @NotBlank(message = "Título é obrigatório.")
+    @NotNull(message = "Título não pode ser nulo.")
     private String titulo;
 
-    @NotBlank(message = "descrição é obrigatório")
-    @NotNull(message = "descrição pode ser nula")
+    @NotBlank(message = "Descrição é obrigatório.")
+    @NotNull(message = "Descrição pode ser nula.")
     private String descricao;
 
-    @NotBlank(message = "temporadas é obrigatório")
-    @NotNull(message = "temporadas não pode ser nulo")
+    @NotBlank(message = "Temporadas é obrigatório.")
+    @NotNull(message = "Temporadas não pode ser nulo.")
     private Integer temporadas;
 
-    @NotBlank(message = "episodios é obrigatório")
-    @NotNull(message = "episodios não pode ser nulo")
+    @NotBlank(message = "Episódios é obrigatório.")
+    @NotNull(message = "Episódios não pode ser nulo.")
     private Integer espisodios;
 
-    @NotBlank(message = "Data de lançamento é obrigatório")
-    @NotNull(message = "Data de lançamento não pode ser nulo")
+    @NotBlank(message = "Data de lançamento é obrigatório.")
+    @NotNull(message = "Data de lançamento não pode ser nulo.")
     private LocalDate dataLancamento;
 
-    @NotBlank(message = "Nota media é obrigatório")
-    @NotNull(message = "Nota media não pode ser nulo")
+    @NotBlank(message = "Nota média é obrigatório.")
+    @NotNull(message = "Nota média não pode ser nulo.")
     private Double notaMedia;
 
     public SeriesRequestDTO() {
