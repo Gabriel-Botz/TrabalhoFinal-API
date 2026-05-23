@@ -1,6 +1,7 @@
 package org.serratec.TrabalhoFinal_API.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
@@ -31,6 +32,6 @@ public class Usuario {
     private String email;
     private String username;
     private String senha;
-    // private FotoPerfil fotoPerfil;
-    private LocalDate dataCriacao;
+    private String fotoPerfil;
+    private LocalDateTime dataCriacao;
 }
