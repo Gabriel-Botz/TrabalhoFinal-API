@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import org.serratec.trabalho_final_api.enumerated.TipoUsuario;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +43,7 @@ public class Usuario implements UserDetails, Serializable {
     private String username;
     private String senha;
     private String fotoPerfil;
+    private TipoUsuario tipoUsuario;
     private LocalDateTime dataCriacao;
 
     @Override
