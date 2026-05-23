@@ -1,18 +1,18 @@
 package org.serratec.TrabalhoFinal_API.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.serratec.TrabalhoFinal_API.domain.Categoria;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 import org.serratec.TrabalhoFinal_API.dto.request.FilmeRequestDTO;
 import org.serratec.TrabalhoFinal_API.dto.response.FilmeResponseDTO;
-import org.serratec.TrabalhoFinal_API.exception.ErroResposta;
+import org.serratec.TrabalhoFinal_API.exception.RecursoNaoEncontradoException;
 import org.serratec.TrabalhoFinal_API.repository.CategoriaRepository;
 import org.serratec.TrabalhoFinal_API.repository.FilmeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class FilmeService {
@@ -36,7 +36,7 @@ public class FilmeService {
 
     public FilmeResponseDTO atualizarFilme(UUID id, FilmeRequestDTO dto) {
         Filme filme = filmeRepository.findById(id)
-                .orElseThrow(() -> new ErroResposta.ResourceNotFoundException("Filme não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Filme não encontrado"));
 
         filme.setTitulo(dto.getTitulo());
         filme.setDescricao(dto.getDescricao());
@@ -49,7 +49,7 @@ public class FilmeService {
 
     public FilmeResponseDTO buscarFilmePorId(UUID id) {
         Filme filme = filmeRepository.findById(id)
-                .orElseThrow(() -> new ErroResposta.ResourceNotFoundException("Filme não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Filme não encontrado"));
 
         return new FilmeResponseDTO(filme);
     }
@@ -69,23 +69,23 @@ public class FilmeService {
     public void deletarFilme(UUID id) {
 
         if (!filmeRepository.existsById(id)) {
-            throw new ErroResposta.ResourceNotFoundException("Filme não encontrado");
+            throw new RecursoNaoEncontradoException("Filme não encontrado");
         }
         filmeRepository.deleteById(id);
     }
 
-    public FilmeResponseDTO vincularCategoria(UUID filmeId, UUID categoriaId) {
+    public FilmeResponseDTO vincularCategoria(UUID filmeId, Long categoriaId) {
         Filme filme = filmeRepository.findById(filmeId)
-                .orElseThrow(() -> new ErroResposta.ResourceNotFoundException("Filme não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Filme não encontrado"));
 
         Categoria categoria = categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new ErroResposta.ResourceNotFoundException("Categoria não encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada"));
 
         filme.getCategorias().add(categoria);
         return new FilmeResponseDTO(filmeRepository.save(filme));
     }
 
-    public List<FilmeResponseDTO> buscarFilmesPorCategoria(UUID categoriaId) {
+    public List<FilmeResponseDTO> buscarFilmesPorCategoria(Long categoriaId) {
         return filmeRepository.findByCategorias_Id(categoriaId)
                 .stream()
                 .map(FilmeResponseDTO::new)
