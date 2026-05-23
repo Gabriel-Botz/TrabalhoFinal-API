@@ -1,4 +1,4 @@
-package org.serratec.TrabalhoFinal_API.dto.Response;
+package org.serratec.TrabalhoFinal_API.dto.response;
 
 import java.time.LocalDate;
 import java.util.UUID;

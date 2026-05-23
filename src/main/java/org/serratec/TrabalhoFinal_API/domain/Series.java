@@ -41,5 +41,4 @@ public class Series {
             inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     private List<Categoria> categorias;
 
-
 }

@@ -1,8 +1,8 @@
 package org.serratec.TrabalhoFinal_API.services;
 
 import org.serratec.TrabalhoFinal_API.domain.Series;
-import org.serratec.TrabalhoFinal_API.dto.Response.SeriesResponseDTO;
-import org.serratec.TrabalhoFinal_API.dto.Request.SeriesRequestDTO;
+import org.serratec.TrabalhoFinal_API.dto.response.SeriesResponseDTO;
+import org.serratec.TrabalhoFinal_API.dto.request.SeriesRequestDTO;
 import org.serratec.TrabalhoFinal_API.exception.RecursoNaoEncontradoException;
 import org.serratec.TrabalhoFinal_API.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
