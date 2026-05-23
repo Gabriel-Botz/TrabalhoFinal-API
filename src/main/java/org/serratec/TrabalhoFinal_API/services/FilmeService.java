@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.transaction.Transactional;
 import org.serratec.TrabalhoFinal_API.domain.Categoria;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 import org.serratec.TrabalhoFinal_API.dto.request.FilmeRequestDTO;
@@ -34,6 +35,7 @@ public class FilmeService {
         return listaResponse;
     }
 
+    @Transactional
     public FilmeResponseDTO atualizarFilme(UUID id, FilmeRequestDTO dto) {
         Filme filme = filmeRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Filme não encontrado"));
@@ -47,6 +49,7 @@ public class FilmeService {
         return new FilmeResponseDTO(filmeRepository.save(filme));
     }
 
+    @Transactional
     public FilmeResponseDTO buscarFilmePorId(UUID id) {
         Filme filme = filmeRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Filme não encontrado"));
@@ -54,6 +57,7 @@ public class FilmeService {
         return new FilmeResponseDTO(filme);
     }
 
+    @Transactional
     public FilmeResponseDTO criarFilme(FilmeRequestDTO dto){
         var novoFilme = new Filme();
         novoFilme.setTitulo(dto.getTitulo());
@@ -66,6 +70,7 @@ public class FilmeService {
         return new FilmeResponseDTO(filmeSalvo);
     }
 
+    @Transactional
     public void deletarFilme(UUID id) {
 
         if (!filmeRepository.existsById(id)) {
@@ -74,6 +79,7 @@ public class FilmeService {
         filmeRepository.deleteById(id);
     }
 
+    @Transactional
     public FilmeResponseDTO vincularCategoria(UUID filmeId, Long categoriaId) {
         Filme filme = filmeRepository.findById(filmeId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Filme não encontrado"));
@@ -85,6 +91,7 @@ public class FilmeService {
         return new FilmeResponseDTO(filmeRepository.save(filme));
     }
 
+    @Transactional
     public List<FilmeResponseDTO> buscarFilmesPorCategoria(Long categoriaId) {
         return filmeRepository.findByCategorias_Id(categoriaId)
                 .stream()
