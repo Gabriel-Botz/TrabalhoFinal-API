@@ -30,7 +30,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "usuario")
 @EqualsAndHashCode(of = "id")
-public class Usuario implements UserDetails, Serializable {
+public class Usuario implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
