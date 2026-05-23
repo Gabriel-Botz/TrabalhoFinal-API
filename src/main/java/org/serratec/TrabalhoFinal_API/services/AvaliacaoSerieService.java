@@ -11,7 +11,6 @@ import org.serratec.TrabalhoFinal_API.domain.Series;
 import org.serratec.TrabalhoFinal_API.domain.Usuario;
 import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoSerieDTO;
 import org.serratec.TrabalhoFinal_API.exception.RecursoNaoEncontradoException;
-import org.serratec.TrabalhoFinal_API.exceptions.ResourceNotFoundException;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoSerieRepository;
 import org.serratec.TrabalhoFinal_API.repository.SeriesRepository;
 import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
@@ -56,14 +55,14 @@ public class AvaliacaoSerieService {
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
             .orElseThrow(()-> new RecursoNaoEncontradoException("Usuairio não encontrado"));
 
-        Series serie = seriesRepository.findById(dto.getSerieId())
+        Series serie = (Series) seriesRepository.findById(dto.getSerieId())
             .orElseThrow(()-> new RecursoNaoEncontradoException("Serie não Encontrada"));
             
         AvaliacaoSerie avaliacaoSerie = new AvaliacaoSerie();
         avaliacaoSerie.setNota(dto.getNota());
         avaliacaoSerie.setComentario(dto.getComentario());
         avaliacaoSerie.setUsuario(usuario);
-        avaliacaoSerie.setSerie(serie);
+//        avaliacaoSerie.setSerie(serie);
         
         avaliacaoSerie = avaliacaoSerieRepository.save(avaliacaoSerie);
 
