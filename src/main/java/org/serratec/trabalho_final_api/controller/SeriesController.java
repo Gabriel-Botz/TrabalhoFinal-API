@@ -32,7 +32,7 @@ public class SeriesController {
 
     @Operation(summary = "listar todas as séries", description = "lista todas as séries do Banco de Dados")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista encontrada com sucesso!"),
+            @ApiResponse(responseCode = "200", description = "Series econtradas com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição Inválidade"),
             @ApiResponse(responseCode = "401", description = "Não Autorizado"),
             @ApiResponse(responseCode = "403", description = "Proibido"),

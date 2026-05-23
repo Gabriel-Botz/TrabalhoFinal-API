@@ -1,16 +1,17 @@
 package org.serratec.trabalho_final_api.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.serratec.trabalho_final_api.domain.Series;
-import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
+import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class SeriesServices {
@@ -21,7 +22,7 @@ public class SeriesServices {
     // GET por todos
     public List<SeriesResponseDTO> ListarTodasSeries() {
         List<Series> series = seriesRepository.findAll();
-        List<SeriesResponseDTO> seriesDTO = new ArrayList<SeriesResponseDTO>();
+        List<SeriesResponseDTO> seriesDTO = new ArrayList<>();
 
         for (Series serie : series) {
             seriesDTO.add(new SeriesResponseDTO(serie));
@@ -31,7 +32,7 @@ public class SeriesServices {
 
     public SeriesResponseDTO ListarSeriesPorId(@PathVariable UUID id) {
         Series series = (Series) seriesRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Série não encontrada!"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
 
         return new SeriesResponseDTO(series);
     }
@@ -50,7 +51,7 @@ public class SeriesServices {
     public SeriesResponseDTO inserirSeries(SeriesRequestDTO seriesRequest) {
         Series series = seriesRepository.findByTitulo(seriesRequest.getTitulo());
         if (seriesRepository.findByTitulo(seriesRequest.getTitulo()) != null) {
-            throw new RecursoNaoEncontradoException("Série já existente!");
+            throw new RecursoNaoEncontradoException("Serie já existente!");
         }
         Series serie = new Series();
         serie.setTitulo(seriesRequest.getTitulo());
@@ -65,7 +66,7 @@ public class SeriesServices {
 
     public SeriesResponseDTO atualizarSeries(SeriesRequestDTO seriesRequest, UUID id) {
         Series series = (Series) seriesRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Série não encontrada!"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
 
         series.setTitulo(seriesRequest.getTitulo());
         series.setDescricao(seriesRequest.getDescricao());
@@ -80,7 +81,7 @@ public class SeriesServices {
 
     public void removerSeries(UUID id) {
         Series series = (Series) seriesRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Série não encontrada!"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
         seriesRepository.delete(series);
     }
 }

@@ -1,7 +1,15 @@
 package org.serratec.trabalho_final_api.domain;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +29,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "usuario")
 @EqualsAndHashCode(of = "id")
-public class Usuario {
+public class Usuario implements UserDetails, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -33,4 +43,17 @@ public class Usuario {
     private String senha;
     private String fotoPerfil;
     private LocalDateTime dataCriacao;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        authorities.add(new SimpleGrantedAuthority("USER"));
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
 }

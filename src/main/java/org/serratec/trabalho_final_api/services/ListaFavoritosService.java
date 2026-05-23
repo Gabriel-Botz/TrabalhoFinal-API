@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.serratec.trabalho_final_api.domain.ListaFavoritos;
 import org.serratec.trabalho_final_api.dto.request.ListaFavoritosRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.ListaFavoritosResponseDTO;
+import org.serratec.trabalho_final_api.exception.AcessoNegadoException;
 import org.serratec.trabalho_final_api.exception.ErroResposta;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.ListaFavoritosRepository;
@@ -76,13 +77,18 @@ public class ListaFavoritosService {
     }
 
     @Transactional
-    public ListaFavoritosResponseDTO atualizar(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
+    public ListaFavoritosResponseDTO atualizar(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO,
+            String usuario) { // <- Aqui
 
         ListaFavoritos listaExistente = listaFavoritosRepository.findById(id)
                 .orElseThrow(() -> new ErroResposta.RecursoNaoEncontradoException(
                         "Lista de favoritos não encontrada com ID: " + id));
 
         if (listaExistente != null) {
+
+            if (!listaExistente.getUsuario().getUsername().equals(usuario)) // <- Aqui
+                throw new AcessoNegadoException("Você não tem permissão para alterar esta lista.");
+
             listaExistente.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
             listaExistente.setPrivada(listaFavoritosRequestDTO.getPrivada());
             listaExistente.setDataCriacao(listaFavoritosRequestDTO.getDataCriacao());
@@ -107,9 +113,7 @@ public class ListaFavoritosService {
             throw new RecursoNaoEncontradoException("Lista com o id " + id + " não encontrada");
         } else {
             listaFavoritosRepository.deleteById(id);
+            return true;
         }
-
-        return false;
-
     }
 }
