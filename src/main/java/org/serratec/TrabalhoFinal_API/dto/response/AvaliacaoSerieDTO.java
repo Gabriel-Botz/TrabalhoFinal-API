@@ -28,7 +28,7 @@ public class AvaliacaoSerieDTO  {
 
         this.id = avaliacao.getId();
         this.nomeUsuario = avaliacao.getUsuario().getNome();
-        this.nomeSerie = avaliacao.getSerie().getTitulo();
+        this.nomeSerie = avaliacao.getSerie().;
         this.nota = avaliacao.getNota();
         this.comentario = avaliacao.getComentario();
         this.dataAvaliacao = avaliacao.getDataAvaliacao();
