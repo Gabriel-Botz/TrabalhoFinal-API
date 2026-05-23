@@ -35,32 +35,24 @@ public class ListaFavoritos {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    
+
     @NotNull(message = "O nome da lista não pode ser nulo")
     @Size(max = 120, message = "O nome da lista deve ter no máximo 120 caracteres")
     private String nomeLista;
-    
+
     @NotBlank(message = "O status de privacidade é obrigatório")
     private Boolean privada;
-    
+
     @NotBlank(message = "A data de criação é obrigatória")
     private LocalDate dataCriacao;
 
     @ManyToMany
-    @JoinTable(
-        name = "lista_favoritos_filme",
-        joinColumns = @JoinColumn(name = "lista_id"),
-        inverseJoinColumns = @JoinColumn(name = "filme_id")
-    )
+    @JoinTable(name = "lista_favoritos_filme", joinColumns = @JoinColumn(name = "lista_id"), inverseJoinColumns = @JoinColumn(name = "filme_id"))
     @JsonManagedReference
     private List<Filme> filmes;
-    
+
     @ManyToMany
-    @JoinTable(
-        name = "lista_favoritos_series",
-        joinColumns = @JoinColumn(name = "lista_id"),
-        inverseJoinColumns = @JoinColumn(name = "series_id")
-    )
+    @JoinTable(name = "lista_favoritos_series", joinColumns = @JoinColumn(name = "lista_id"), inverseJoinColumns = @JoinColumn(name = "series_id"))
     @JsonManagedReference
     private List<Series> series;
 
