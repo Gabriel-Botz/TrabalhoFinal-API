@@ -1,4 +1,4 @@
-package org.serratec.TrabalhoFinal_API.domain;
+package org.serratec.trabalho_final_api.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +11,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Table(name = "series")
 public class Series {
 
@@ -19,28 +18,24 @@ public class Series {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "titulo",nullable = false)
+    @Column(name = "titulo", nullable = false)
     private String titulo;
-    @Column(name = "descricao",nullable = false)
+    @Column(name = "descricao", nullable = false)
     private String descricao;
-    @Column(name = "temporadas",nullable = false)
+    @Column(name = "temporadas", nullable = false)
     private Integer temporadas;
-    @Column(name = "episodios",nullable = false)
+    @Column(name = "episodios", nullable = false)
     private Integer episodios;
-    @Column(name = "dataLancamento",nullable = false)
+    @Column(name = "dataLancamento", nullable = false)
     private LocalDate dataLancamento;
-    @Column(name = "notaMedia",nullable = false)
+    @Column(name = "notaMedia", nullable = false)
     private Double notaMedia;
-
 
     @OneToMany(mappedBy = "series")
     private List<AvaliacaoSerie> avaliacaoSerie;
 
-
     @ManyToMany
-    @JoinTable(name="serie_categoria",
-            joinColumns =  @JoinColumn(name = "id_series"),
-            inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+    @JoinTable(name = "serie_categoria", joinColumns = @JoinColumn(name = "id_series"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     private List<Categoria> categorias;
 
 }

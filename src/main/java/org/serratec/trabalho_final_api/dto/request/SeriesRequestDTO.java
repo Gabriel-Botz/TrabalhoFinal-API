@@ -1,4 +1,4 @@
-package org.serratec.TrabalhoFinal_API.dto.request;
+package org.serratec.trabalho_final_api.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +20,7 @@ public class SeriesRequestDTO {
     private Integer temporadas;
 
     @NotBlank(message = "episodios é obrigatório")
-    @NotNull(message = "episodios não pode ser nulo" )
+    @NotNull(message = "episodios não pode ser nulo")
     private Integer espisodios;
 
     @NotBlank(message = "Data de lançamento é obrigatório")

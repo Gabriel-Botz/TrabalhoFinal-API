@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
+import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class UsuarioService {
     @Transactional
     public UsuarioResponseDTO buscar(UUID id) {
         return repository.findById(id).map(UsuarioResponseDTO::toUsuarioResponseDTO)
-                .orElseThrow(() -> null); // -> new Exception("Usuario de ID '" + id + "' não encontrado")
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
     }
 
     /* Métodos POSTs */
@@ -53,8 +54,7 @@ public class UsuarioService {
     @Transactional
     public UsuarioResponseDTO atualizar(UUID id, UsuarioRequestDTO request) {
         Usuario existe = repository.findById(id)
-                .orElseThrow(() -> null); // -> new Exception("Usuario de ID '" + id +
-                                          // "' não encontrado")
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
 
         if (request.nome() != null && !request.nome().isBlank())
             existe.setNome(request.nome());
@@ -74,8 +74,8 @@ public class UsuarioService {
     @Transactional
     public void excluir(UUID id) {
         if (!repository.existsById(id))
-            // throw new Exception("Usuario de ID '" + id + "' não encontrado");
+            throw new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado");
 
-            repository.deleteById(id);
+        repository.deleteById(id);
     }
 }

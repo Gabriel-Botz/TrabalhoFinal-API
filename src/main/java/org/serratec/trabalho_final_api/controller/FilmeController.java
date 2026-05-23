@@ -42,7 +42,8 @@ public class FilmeController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um filme")
-    public ResponseEntity<FilmeResponseDTO> atualizarFilme(@PathVariable UUID id, @RequestBody @Valid FilmeRequestDTO dto) {
+    public ResponseEntity<FilmeResponseDTO> atualizarFilme(@PathVariable UUID id,
+            @RequestBody @Valid FilmeRequestDTO dto) {
         return ResponseEntity.ok(filmeService.atualizarFilme(id, dto));
     }
 
@@ -55,13 +56,15 @@ public class FilmeController {
 
     @PostMapping("/{filmeId}/categorias/{categoriaId}")
     @Operation(summary = "Vincula uma categoria a um filme")
-    public ResponseEntity<FilmeResponseDTO> vincularCategoria(@PathVariable UUID filmeId, @PathVariable UUID categoriaId) {
+    public ResponseEntity<FilmeResponseDTO> vincularCategoria(
+            @PathVariable UUID filmeId,
+            @PathVariable Long categoriaId) {
         return ResponseEntity.ok(filmeService.vincularCategoria(filmeId, categoriaId));
     }
 
     @GetMapping("/categoria/{categoriaId}")
     @Operation(summary = "Busca filmes por categoria")
-    public ResponseEntity<List<FilmeResponseDTO>> buscarFilmesPorCategoria(@PathVariable UUID categoriaId) {
+    public ResponseEntity<List<FilmeResponseDTO>> buscarFilmesPorCategoria(@PathVariable Long categoriaId) {
         return ResponseEntity.ok(filmeService.buscarFilmesPorCategoria(categoriaId));
     }
 }

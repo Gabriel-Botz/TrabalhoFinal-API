@@ -24,7 +24,7 @@ public class AvaliacaoSerieResponseDTO {
 
     private LocalDate dataAvaliacao;
 
-    public AvaliacaoSerieResponseDTO(AvaliacaoSerie avaliacao){
+    public AvaliacaoSerieResponseDTO(AvaliacaoSerie avaliacao) {
 
         this.id = avaliacao.getId();
         this.nomeUsuario = avaliacao.getUsuario().getNome();

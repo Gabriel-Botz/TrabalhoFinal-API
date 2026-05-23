@@ -1,6 +1,5 @@
 package org.serratec.trabalho_final_api.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

@@ -1,13 +1,13 @@
-package org.serratec.TrabalhoFinal_API.repository;
+package org.serratec.trabalho_final_api.repository;
 
-import org.serratec.TrabalhoFinal_API.domain.Series;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import java.util.Optional;
 import java.util.UUID;
 
+import org.serratec.trabalho_final_api.domain.Series;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 @Repository
-public interface SeriesRepository extends JpaRepository<Series,Long> {
-    Optional<Object> findById(UUID id);
+public interface SeriesRepository extends JpaRepository<Series, UUID> {
+
     Series findByTitulo(String titulo);
 }

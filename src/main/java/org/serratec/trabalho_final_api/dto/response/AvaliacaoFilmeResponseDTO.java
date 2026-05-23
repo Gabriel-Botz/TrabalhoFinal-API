@@ -24,12 +24,7 @@ public class AvaliacaoFilmeResponseDTO {
 
     private LocalDate dataAvaliacao;
 
-<<<<<<<< HEAD:src/main/java/org/serratec/trabalho_final_api/dto/response/AvaliacaoFilmeDTO.java
-    public AvaliacaoFilmeDTO(AvaliacaoFilme avaliacaoFilme){
-========
-    public AvaliacaoFilmeResponseDTO(AvaliacaoFilme avaliacaoFilme){
-
->>>>>>>> 4ea3209eb1e3d7b91033a29108738bd9cb704fc4:src/main/java/org/serratec/trabalho_final_api/dto/response/AvaliacaoFilmeResponseDTO.java
+    public AvaliacaoFilmeResponseDTO(AvaliacaoFilme avaliacaoFilme) {
         this.id = avaliacaoFilme.getId();
         this.nomeUsuario = avaliacaoFilme.getUsuario().getNome();
         this.nomeFilme = avaliacaoFilme.getFilme().getTitulo();
@@ -38,5 +33,4 @@ public class AvaliacaoFilmeResponseDTO {
         this.dataAvaliacao = avaliacaoFilme.getDataAvaliacao();
     }
 
-    
-}   
+}

@@ -1,6 +1,6 @@
-package org.serratec.TrabalhoFinal_API.dto.response;
+package org.serratec.trabalho_final_api.dto.response;
 
-import org.serratec.TrabalhoFinal_API.domain.Series;
+import org.serratec.trabalho_final_api.domain.Series;
 import java.time.LocalDate;
 import java.util.UUID;
 
