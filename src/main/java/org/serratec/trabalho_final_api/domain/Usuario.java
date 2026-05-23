@@ -1,6 +1,5 @@
 package org.serratec.trabalho_final_api.domain;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;

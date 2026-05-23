@@ -8,6 +8,7 @@ import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
 import org.serratec.trabalho_final_api.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +42,7 @@ public class UsuarioController {
         @Operation(summary = "Listar todos os usuários", description = "Retorna uma lista contendo todos os usuarios cadastrados no sistema.")
         @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
         @GetMapping
+        @PreAuthorize("hasRole('ADMIN')")
         public List<UsuarioResponseDTO> listar() {
                 return service.listarTodos();
         }
@@ -51,6 +53,7 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "404", description = "Nenhum animal encontrado com o ID informado")
         })
         @GetMapping("/id")
+        @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
         public UsuarioResponseDTO buscar(
                         @Parameter(description = "ID único do usuario", example = "1") @Valid @RequestParam UUID id) { // trows
                                                                                                                        // Exception
@@ -65,6 +68,7 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "400", description = "Dados da requisição inválidos ou mal formatados")
         })
         @PostMapping
+        @PreAuthorize("permitAll()")
         public ResponseEntity<UsuarioResponseDTO> salvar(@Valid @RequestBody UsuarioRequestDTO request) {
                 UsuarioResponseDTO response = service.salvar(request);
 
@@ -83,6 +87,7 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "400", description = "Um ou mais elementos da lista contêm dados inválidos")
         })
         @PostMapping("/salvar-lista")
+        @PreAuthorize("hasRole('ADMIN')")
         public ResponseEntity<List<UsuarioResponseDTO>> salvarVarios(
                         @Valid @RequestBody List<UsuarioRequestDTO> request) {
                 List<UsuarioResponseDTO> response = service.salvarList(request);
@@ -98,6 +103,7 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "404", description = "Usuario não localizado para atualização")
         })
         @PutMapping("/{id}")
+        @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
         public UsuarioResponseDTO atualizar(
                         @Parameter(description = "ID do animal a ser modificado", example = "1") @Valid @PathVariable UUID id,
                         @Valid @RequestBody UsuarioRequestDTO request) {// throws RecursoNaoEncontradoException
@@ -106,6 +112,7 @@ public class UsuarioController {
         }
 
         @DeleteMapping("/{id}")
+        @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
         public ResponseEntity<Void> deletar(
                         @Parameter(description = "ID do usuario a ser deletado", example = "1") @PathVariable UUID id) { // throws
                                                                                                                          // RecursoNaoEncontradoException
