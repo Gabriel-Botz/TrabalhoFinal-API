@@ -31,7 +31,7 @@ public class SeriesServices {
 
     public SeriesResponseDTO ListarSeriesPorId(@PathVariable UUID id) {
         Series series = (Series) seriesRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Série não encontrada!"));
 
         return new SeriesResponseDTO(series);
     }
@@ -50,7 +50,7 @@ public class SeriesServices {
     public SeriesResponseDTO inserirSeries(SeriesRequestDTO seriesRequest) {
         Series series = seriesRepository.findByTitulo(seriesRequest.getTitulo());
         if (seriesRepository.findByTitulo(seriesRequest.getTitulo()) != null) {
-            throw new RecursoNaoEncontradoException("Serie já existente!");
+            throw new RecursoNaoEncontradoException("Série já existente!");
         }
         Series serie = new Series();
         serie.setTitulo(seriesRequest.getTitulo());
@@ -65,7 +65,7 @@ public class SeriesServices {
 
     public SeriesResponseDTO atualizarSeries(SeriesRequestDTO seriesRequest, UUID id) {
         Series series = (Series) seriesRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Série não encontrada!"));
 
         series.setTitulo(seriesRequest.getTitulo());
         series.setDescricao(seriesRequest.getDescricao());
@@ -80,7 +80,7 @@ public class SeriesServices {
 
     public void removerSeries(UUID id) {
         Series series = (Series) seriesRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Série não encontrada!"));
         seriesRepository.delete(series);
     }
 }
