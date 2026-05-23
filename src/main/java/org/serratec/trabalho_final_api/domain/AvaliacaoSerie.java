@@ -55,6 +55,6 @@ public class AvaliacaoSerie {
 
     @ManyToOne
     @JoinColumn(name = "serie_id", nullable = false)
-    private Serie serie;
+    private Series series;
 
 }
