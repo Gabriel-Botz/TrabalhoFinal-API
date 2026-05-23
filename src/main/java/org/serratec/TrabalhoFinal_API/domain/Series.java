@@ -32,6 +32,7 @@ public class Series {
     @Column(name = "notaMedia",nullable = false)
     private Double notaMedia;
 
+
     @OneToMany(mappedBy = "series")
     private List<AvaliacaoSerie> avaliacaoSerie;
 
