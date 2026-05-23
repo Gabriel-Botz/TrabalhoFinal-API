@@ -35,6 +35,7 @@ public class Series {
     @OneToMany(mappedBy = "series")
     private List<AvaliacaoSerie> avaliacaoSerie;
 
+
     @ManyToMany
     @JoinTable(name="serie_categoria",
             joinColumns =  @JoinColumn(name = "id_series"),
