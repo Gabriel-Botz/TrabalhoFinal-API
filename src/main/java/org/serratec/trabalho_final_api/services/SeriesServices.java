@@ -1,16 +1,17 @@
 package org.serratec.trabalho_final_api.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.serratec.trabalho_final_api.domain.Series;
-import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
+import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class SeriesServices {
@@ -21,7 +22,7 @@ public class SeriesServices {
     // GET por todos
     public List<SeriesResponseDTO> ListarTodasSeries() {
         List<Series> series = seriesRepository.findAll();
-        List<SeriesResponseDTO> seriesDTO = new ArrayList<SeriesResponseDTO>();
+        List<SeriesResponseDTO> seriesDTO = new ArrayList<>();
 
         for (Series serie : series) {
             seriesDTO.add(new SeriesResponseDTO(serie));

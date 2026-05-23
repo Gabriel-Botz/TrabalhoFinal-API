@@ -32,9 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
-<<<<<<< HEAD
 ### Rafael Albino Settings ###
 src/main/resources/application.properties
-=======
-.src/main/resources
->>>>>>> f92451f61e7d7a809ee931d7c69963d9ebbc1678
