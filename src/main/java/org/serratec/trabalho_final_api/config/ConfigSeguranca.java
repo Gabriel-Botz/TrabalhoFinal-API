@@ -46,14 +46,14 @@ public class ConfigSeguranca {
         UserDetails user = User.builder()
                 .username("usuario_comum")
                 .password(bCryptPasswordEncoder().encode("123456"))
-                .roles("USER")
+                .roles("ROLE_USER")
                 .build();
 
         // Usuario admin teste
         UserDetails admin = User.builder()
                 .username("admin")
                 .password(bCryptPasswordEncoder().encode("admin123"))
-                .roles("ADMIN")
+                .roles("ROLE_ADMIN")
                 .build();
 
         return new InMemoryUserDetailsManager(user, admin);
