@@ -44,10 +44,10 @@ public class ConfigSeguranca {
         return http.build();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService(){
-        UserDetails user = User.withDefaultPasswordEncoder().username(usuario.)
-    }
+    // @Bean
+    // public InMemoryUserDetailsManager userDetailsService(){
+    // UserDetails user = User.withDefaultPasswordEncoder().username(usuario.)
+    // }
 
     @Bean
     private CorsConfigurationSource configurationSource() {
