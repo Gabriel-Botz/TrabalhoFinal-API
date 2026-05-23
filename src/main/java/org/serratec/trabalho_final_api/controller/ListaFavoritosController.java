@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.serratec.trabalho_final_api.dto.request.ListaFavoritosRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.ListaFavoritosResponseDTO;
+import org.serratec.trabalho_final_api.exception.ErroResposta.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.services.ListaFavoritosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -109,12 +110,10 @@ public class ListaFavoritosController {
         responseCode = "404", 
         description = "Lista de favoritos não encontrada")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarListaFavoritos(@PathVariable UUID id) {
-        boolean deletado = listaFavoritosService.deletarListaFavoritos(id);
-        if(deletado) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deletarListaFavoritos(@PathVariable UUID id) throws RecursoNaoEncontradoException {
+        
+        listaFavoritosService.deletar(id);
+        return ResponseEntity.noContent().build();
+    
     }
 }
