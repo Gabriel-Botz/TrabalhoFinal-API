@@ -1,5 +1,7 @@
 package org.serratec.TrabalhoFinal_API.dto.request;
 
+
+
 import java.util.UUID;
 
 import jakarta.validation.constraints.DecimalMax;
@@ -11,7 +13,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AvaliacaoSerieDTO {
+public class AvaliacaoFilmeRequestDTO {
 
     @NotNull
     @DecimalMin(value = "0.0")
@@ -25,5 +27,5 @@ public class AvaliacaoSerieDTO {
     private UUID usuarioId;
 
     @NotNull
-    private UUID serieId;
+    private UUID filmeId;
 }

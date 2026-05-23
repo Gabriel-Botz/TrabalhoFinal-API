@@ -8,8 +8,9 @@ import java.util.UUID;
 import org.serratec.TrabalhoFinal_API.domain.AvaliacaoFilme;
 import org.serratec.TrabalhoFinal_API.domain.Filme;
 import org.serratec.TrabalhoFinal_API.domain.Usuario;
-import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoFilmeDTO;
-import org.serratec.TrabalhoFinal_API.exception.RecursoNaoEncontradoException;
+import org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeRequestDTO;
+import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoFilmeResponseDTO;
+import org.serratec.TrabalhoFinal_API.exception.ErroResposta;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoFilmeRepository;
 import org.serratec.TrabalhoFinal_API.repository.FilmeRepository;
 import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
@@ -31,30 +32,30 @@ public class AvaliacaoFilmeService {
     @Autowired
     FilmeRepository filmeRepository;
 
-    public List<AvaliacaoFilmeDTO> findAll(){
+    public List<AvaliacaoFilmeResponseDTO> findAll(){
 
         List<AvaliacaoFilme> avaliacoes = avaliacaoFilmeRepository.findAll();
 
-        List<AvaliacaoFilmeDTO> avaliacoesDTO = new ArrayList<>();
+        List<AvaliacaoFilmeResponseDTO> avaliacoesDTO = new ArrayList<>();
 
         for(AvaliacaoFilme avaliacao:avaliacoes){
-            avaliacoesDTO.add(new AvaliacaoFilmeDTO(avaliacao));
+            avaliacoesDTO.add(new AvaliacaoFilmeResponseDTO(avaliacao));
 
         }
             return avaliacoesDTO;
     }
 
 
-    public AvaliacaoFilmeDTO findById(UUID id){
+    public AvaliacaoFilmeResponseDTO findById(UUID id){
 
         AvaliacaoFilme avaliacaoFilme = avaliacaoFilmeRepository.findById(id)
             .orElseThrow(()-> new RuntimeException("Avaliação não encontrada"));
 
-        return new AvaliacaoFilmeDTO(avaliacaoFilme);
+        return new AvaliacaoFilmeResponseDTO(avaliacaoFilme);
     }
 
     @Transactional
-    public AvaliacaoFilmeDTO inserir (org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeDTO dto){
+    public AvaliacaoFilmeResponseDTO inserir (AvaliacaoFilmeRequestDTO dto){
 
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
             .orElseThrow(()-> new RuntimeException("Usuairio não encontrado"));
@@ -71,11 +72,11 @@ public class AvaliacaoFilmeService {
 
         avaliacaoFilme = avaliacaoFilmeRepository.save(avaliacaoFilme);
 
-        return new AvaliacaoFilmeDTO(avaliacaoFilme);
+        return new AvaliacaoFilmeResponseDTO(avaliacaoFilme);
     }
 
     @Transactional
-    public AvaliacaoFilmeDTO atualizar (UUID id, org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoFilmeDTO dto){
+    public AvaliacaoFilmeResponseDTO atualizar (UUID id, AvaliacaoFilmeRequestDTO dto){
         
         AvaliacaoFilme avaliacaoFilme = avaliacaoFilmeRepository.findById(id)
             .orElseThrow(()-> new RuntimeException("Avaliação não encontrada"));
@@ -85,7 +86,7 @@ public class AvaliacaoFilmeService {
         
         avaliacaoFilme = avaliacaoFilmeRepository.save(avaliacaoFilme);
 
-        return new AvaliacaoFilmeDTO(avaliacaoFilme);
+        return new AvaliacaoFilmeResponseDTO(avaliacaoFilme);
     }
     
     @Transactional

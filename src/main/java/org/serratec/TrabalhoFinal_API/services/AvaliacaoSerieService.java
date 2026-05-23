@@ -8,7 +8,8 @@ import java.util.UUID;
 
 import org.serratec.TrabalhoFinal_API.domain.AvaliacaoSerie;
 import org.serratec.TrabalhoFinal_API.domain.Usuario;
-import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoSerieDTO;
+import org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieRequestDTO;
+import org.serratec.TrabalhoFinal_API.dto.response.AvaliacaoSerieResponseDTO;
 import org.serratec.TrabalhoFinal_API.exception.RecursoNaoEncontradoException;
 import org.serratec.TrabalhoFinal_API.repository.AvaliacaoSerieRepository;
 import org.serratec.TrabalhoFinal_API.repository.UsuarioRepository;
@@ -26,28 +27,28 @@ public class AvaliacaoSerieService {
 
     @Autowired SerieRepository serieRepository;
 
-    public List <AvaliacaoSerieDTO> findAll(){
+    public List <AvaliacaoSerieResponseDTO> findAll(){
 
         List<AvaliacaoSerie> avaliacoes = avaliacaoSerieRepository.findAll();
 
-        List<AvaliacaoSerieDTO> avaliacoesDTO = new ArrayList<>();
+        List<AvaliacaoSerieResponseDTO> avaliacoesDTO = new ArrayList<>();
 
         for(AvaliacaoSerie avaliacao:avaliacoes){
-            avaliacoesDTO.add(new AvaliacaoSerieDTO(avaliacao));
+            avaliacoesDTO.add(new AvaliacaoSerieResponseDTO(avaliacao));
         }
             return avaliacoesDTO;
     }
 
-    public AvaliacaoSerieDTO findById(UUID id){
+    public AvaliacaoSerieResponseDTO findById(UUID id){
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
             .orElseThrow(()-> new RecursoNaoEncontradoException("Serie não encontrada"));
          
-        return new AvaliacaoSerieDTO(avaliacaoSerie);
+        return new AvaliacaoSerieResponseDTO(avaliacaoSerie);
     }
 
     @Transactional
-    public AvaliacaoSerieDTO inserir (org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieDTO dto){
+    public AvaliacaoSerieResponseDTO inserir (AvaliacaoSerieRequestDTO dto){
 
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
             .orElseThrow(()-> new RecursoNaoEncontradoException("Usuairio não encontrado"));
@@ -63,11 +64,11 @@ public class AvaliacaoSerieService {
         
         avaliacaoSerie = avaliacaoSerieRepository.save(avaliacaoSerie);
 
-        return new AvaliacaoSerieDTO(avaliacaoSerie);
+        return new AvaliacaoSerieResponseDTO(avaliacaoSerie);
     }
 
     @Transactional
-    public AvaliacaoSerieDTO atualizar(UUID id, org.serratec.TrabalhoFinal_API.dto.request.AvaliacaoSerieDTO dto){
+    public AvaliacaoSerieResponseDTO atualizar(UUID id, AvaliacaoSerieRequestDTO dto){
 
         AvaliacaoSerie avaliacaoSerie = avaliacaoSerieRepository.findById(id)
             .orElseThrow(()-> new RecursoNaoEncontradoException("Avaliação não encontrada"));
@@ -77,7 +78,7 @@ public class AvaliacaoSerieService {
         
         avaliacaoSerie = avaliacaoSerieRepository.save(avaliacaoSerie);
 
-        return new AvaliacaoSerieDTO(avaliacaoSerie);
+        return new AvaliacaoSerieResponseDTO(avaliacaoSerie);
     }
 
     @Transactional
