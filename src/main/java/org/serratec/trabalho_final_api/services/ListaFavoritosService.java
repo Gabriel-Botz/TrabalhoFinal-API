@@ -107,14 +107,13 @@ public class ListaFavoritosService {
     }
 
     @Transactional
-    public boolean deletarListaFavoritos(UUID id) {
+    public boolean deletar(UUID id) {
 
-        if (listaFavoritosRepository.existsById(id)) {
+        if (!listaFavoritosRepository.existsById(id)) {
+            throw new RecursoNaoEncontradoException("Lista com o id " + id + " não encontrada");
+        } else {
             listaFavoritosRepository.deleteById(id);
             return true;
         }
-
-        return false;
-
     }
 }
