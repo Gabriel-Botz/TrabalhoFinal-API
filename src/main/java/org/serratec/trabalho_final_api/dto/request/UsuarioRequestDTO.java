@@ -3,6 +3,8 @@ package org.serratec.trabalho_final_api.dto.request;
 import java.time.LocalDateTime;
 
 import org.serratec.trabalho_final_api.domain.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -23,14 +25,17 @@ public record UsuarioRequestDTO(
         String fotoPerfil
 
 ) {
+    @Autowired
+    private static BCryptPasswordEncoder encoder;
 
     public Usuario toUsuario() {
+
         Usuario usuario = new Usuario();
 
         usuario.setNome(this.nome());
         usuario.setEmail(this.email());
         usuario.setUsername(this.username());
-        usuario.setSenha(this.senha());
+        usuario.setSenha(encoder.encode(this.senha()));
         usuario.setDataCriacao(this.dataCriacao());
         usuario.setFotoPerfil(this.fotoPerfil());
 
