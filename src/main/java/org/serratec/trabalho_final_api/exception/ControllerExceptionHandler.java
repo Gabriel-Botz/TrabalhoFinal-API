@@ -124,6 +124,24 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, erroResposta, new HttpHeaders(), status, request);
     }
 
+    @ExceptionHandler(AcessoNegadoException.class)
+    public ResponseEntity<Object> handleAcessoNegado(DataIntegrityViolationException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        List<String> erros = new ArrayList<>();
+
+        String mensagem = extrairMensagemDoBanco(ex);
+
+        erros.add(mensagem);
+
+        ErroResposta erroResposta = new ErroResposta(
+                status.value(),
+                "Acesso negado!",
+                LocalDateTime.now(ZoneId.of(regiao)),
+                erros);
+
+        return handleExceptionInternal(ex, erroResposta, new HttpHeaders(), status, request);
+    }
+
     private String extrairMensagemDoBanco(DataIntegrityViolationException ex) {
 
         if (ex.getMostSpecificCause() == null) {
