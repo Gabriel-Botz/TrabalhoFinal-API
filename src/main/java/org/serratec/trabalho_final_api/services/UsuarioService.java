@@ -8,12 +8,8 @@ import java.util.UUID;
 import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
-import org.serratec.trabalho_final_api.exception.AcessoNegadoException;
-import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,29 +27,8 @@ public class UsuarioService {
     @Autowired
     private NotificacaoUsuarioService notificacao;
 
-    private void permissao(UUID id) {
-        Authentication autenticacao = SecurityContextHolder.getContext().getAuthentication();
-
-        if (autenticacao == null || !autenticacao.isAuthenticated())
-            throw new AcessoNegadoException("Usuário não autorizado!");
-
-        String username = autenticacao.getName();
-
-        boolean admin = autenticacao.getAuthorities().stream().anyMatch(
-                authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-
-        if (admin)
-            return;
-
-        Usuario usuarioDonoDoRecurso = repository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
-
-        if (!usuarioDonoDoRecurso.getUsername().equals(username)) {
-            throw new AcessoNegadoException(
-                    "Você não tem permissão para acessar ou modificar os dados de outro usuário.");
-        }
-
-    }
+    @Autowired
+    private PermissaoService permissao;
 
     /* --> Métodos GETs */
 
@@ -64,9 +39,10 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponseDTO buscar(UUID id) {
-        permissao(id);
-        return repository.findById(id).map(UsuarioResponseDTO::toUsuarioResponseDTO)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
+
+        Usuario usuario = permissao.validarObter(id);
+        return UsuarioResponseDTO.toUsuarioResponseDTO(usuario);
+
     }
 
     /* Métodos POSTs */
@@ -157,9 +133,9 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponseDTO atualizar(UUID id, UsuarioRequestDTO request) {
-        permissao(id);
-        Usuario existe = repository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
+
+        // valida a permissao e retorna o id --> Olhar casse PermissaoService
+        Usuario existe = permissao.validarObter(id);
 
         StringBuilder mensagem = new StringBuilder();
         mensagem.append("Alerta! \nAlteração nos dados do usuario: '").append(existe.getUsername()).append("'");
@@ -192,12 +168,10 @@ public class UsuarioService {
 
     @Transactional
     public void excluir(UUID id) {
-        Usuario existe = repository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
 
-        permissao(id);
+        Usuario existe = permissao.validarObter(id);
+
         StringBuilder mensagem = new StringBuilder();
-
         mensagem.append("Olá, ").append(existe.getUsername()).append("!")
                 .append("\nEstamos passando para confirmar que a sua conta foi encerrada.")
                 .append("\nSentiremos sua falta! Se decidir voltar no futuro, as portas estarão sempre abertas.");
