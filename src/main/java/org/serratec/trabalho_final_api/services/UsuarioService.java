@@ -80,6 +80,35 @@ public class UsuarioService {
                 }).toList();
 
         List<Usuario> salvos = repository.saveAll(usuarios);
+
+        for (Usuario usuario : salvos) {
+            StringBuilder mensagem = new StringBuilder();
+            StringBuilder mensagemAdm = new StringBuilder();
+
+            mensagem // Método de mensagem para USER
+                    .append("Cadastro do usuario '")
+                    .append(usuario.getUsername())
+                    .append("' realizado com sucesso,")
+                    .append("às '")
+                    .append(usuario.getDataCriacao())
+                    .append("'")
+                    .append("\n Obrigado por se registrar em nosso sistema serratecFlix XD");
+
+            mensagemAdm // método de mensagem para o ADMIN
+                    .append("Avido do Sistem: Um novo usuário foi cadastrado.")
+                    .append("\nId: '").append(usuario.getId()).append("'")
+                    .append("\nNome: '").append(usuario.getNome()).append("'")
+                    .append("\nUsername: '").append(usuario.getUsername()).append("'")
+                    .append("\nEmail: '").append(usuario.getEmail()).append("'")
+                    .append("\n")
+                    .append("\nData da Criação: '").append(usuario.getDataCriacao()).append("'")
+                    .append("\nTipo de Usuário: '").append(usuario.getTipoUsuario()).append("'");
+
+            // Chamando os métodos e passando as informações para o envio de e-mail
+            notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso", mensagem.toString());
+            notificacao.avisarVariosAdmin("Cadastro Realizado com Sucesso", mensagem.toString());
+        }
+
         return salvos.stream().map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
     }
 
@@ -91,10 +120,11 @@ public class UsuarioService {
 
         UsuarioResponseDTO salvo = UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(request.toUsuario()));
 
+        // criando a mensagem com o StringBuilder para ficar mais organizado
         StringBuilder mensagem = new StringBuilder();
         StringBuilder mensagemAdm = new StringBuilder();
 
-        mensagem
+        mensagem // Método de mensagem para USER
                 .append("Cadastro do usuario '")
                 .append(usuario.getUsername())
                 .append("' realizado com sucesso,")
@@ -103,7 +133,7 @@ public class UsuarioService {
                 .append("'")
                 .append("\n Obrigado por se registrar em nosso sistema serratecFlix XD");
 
-        mensagemAdm
+        mensagemAdm // método de mensagem para o ADMIN
                 .append("Avido do Sistem: Um novo usuário foi cadastrado.")
                 .append("\nId: '").append(usuario.getId()).append("'")
                 .append("\nNome: '").append(usuario.getNome()).append("'")
@@ -113,6 +143,7 @@ public class UsuarioService {
                 .append("\nData da Criação: '").append(usuario.getDataCriacao()).append("'")
                 .append("\nTipo de Usuário: '").append(usuario.getTipoUsuario()).append("'");
 
+        // Chamando os métodos e passando as informações para o envio de e-mail
         notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso", mensagem.toString());
         notificacao.avisarVariosAdmin("Cadastro Realizado com Sucesso", mensagem.toString());
 
