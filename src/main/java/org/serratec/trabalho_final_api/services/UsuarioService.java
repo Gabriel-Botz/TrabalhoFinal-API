@@ -3,9 +3,11 @@ package org.serratec.trabalho_final_api.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.serratec.trabalho_final_api.config.MailService;
 import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
+import org.serratec.trabalho_final_api.enumerated.TipoUsuario;
 import org.serratec.trabalho_final_api.exception.AcessoNegadoException;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
@@ -25,6 +27,9 @@ public class UsuarioService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MailService mailService;
 
     private void permissao(UUID id) {
         Authentication autenticacao = SecurityContextHolder.getContext().getAuthentication();
@@ -86,7 +91,40 @@ public class UsuarioService {
         Usuario usuario = request.toUsuario();
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
-        return UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(request.toUsuario()));
+        UsuarioResponseDTO salvo = UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(request.toUsuario()));
+
+        StringBuilder mensagem = new StringBuilder();
+
+        mensagem
+                .append("Cadastro do usuario '")
+                .append(usuario.getUsername())
+                .append("' realizado com sucesso,")
+                .append("às '")
+                .append(usuario.getDataCriacao())
+                .append("'")
+                .append("\n Obrigado por se registrar em nosso sistema serratecFlix XD");
+
+        mailService.sendEmail(salvo.email(), "Cadastro Realizado com Sucesso", mensagem.toString());
+
+        List<String> adminEmails = repository.findEmailsByTipoUsuario(TipoUsuario.ADMIN);
+
+        StringBuilder mensagemAdm = new StringBuilder();
+
+        mensagemAdm
+                .append("Avido do Sistem: Um novo usuário foi cadastrado.")
+                .append("\nId: '").append(usuario.getId()).append("'")
+                .append("\nNome: '").append(usuario.getNome()).append("'")
+                .append("\nUsername: '").append(usuario.getUsername()).append("'")
+                .append("\nEmail: '").append(usuario.getEmail()).append("'")
+                .append("\n")
+                .append("\nData da Criação: '").append(usuario.getDataCriacao()).append("'")
+                .append("\nTipo de Usuário: '").append(usuario.getTipoUsuario()).append("'");
+
+        adminEmails.forEach(email -> mailService
+                .sendEmail(email, "Alerta: Novo Usuário Cadastrado",
+                        mensagemAdm.toString()));
+
+        return salvo;
     }
 
     /* Métodos PUT */
