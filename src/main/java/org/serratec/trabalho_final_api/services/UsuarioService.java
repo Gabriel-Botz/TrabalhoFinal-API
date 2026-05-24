@@ -1,5 +1,7 @@
 package org.serratec.trabalho_final_api.services;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -145,7 +147,8 @@ public class UsuarioService {
 
         // Chamando os métodos e passando as informações para o envio de e-mail
         notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso", mensagem.toString());
-        notificacao.avisarVariosAdmin("Cadastro Realizado com Sucesso", mensagem.toString());
+        notificacao.avisarVariosAdmin("Cadastro de usuário '" + usuario.getUsername() + "'' realizado com Sucesso!",
+                mensagem.toString());
 
         return salvo;
     }
@@ -158,18 +161,32 @@ public class UsuarioService {
         Usuario existe = repository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
 
-        if (request.nome() != null && !request.nome().isBlank())
+        StringBuilder mensagem = new StringBuilder();
+        mensagem.append("Alerta! \nAlteração nos dados do usuario: '").append(existe.getUsername()).append("'");
+
+        if (request.nome() != null && !request.nome().isBlank()) {
             existe.setNome(request.nome());
+            mensagem.append("Nome realizado com sucesso!");
+        }
 
-        if (request.email() != null && !request.email().isBlank())
+        if (request.email() != null && !request.email().isBlank()) {
             existe.setEmail(request.email());
+            mensagem.append("Email realizado com sucesso!");
+        }
 
-        if (request.username() != null && !request.username().isBlank())
+        if (request.username() != null && !request.username().isBlank()) {
             existe.setUsername(request.username());
+            mensagem.append("Username realizado com sucesso!");
+        }
 
-        if (request.senha() != null && !request.senha().isBlank())
+        if (request.senha() != null && !request.senha().isBlank()) {
             existe.setSenha(request.senha());
+            mensagem.append("Senha realizado com sucesso!");
+        }
 
+        notificacao.avisarUsuario(existe,
+                ("Alteração de dados do Usuário às" + LocalTime.now(ZoneId.of("America/Sao_Paulo"))),
+                mensagem.toString());
         return UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(existe));
     }
 
@@ -179,6 +196,14 @@ public class UsuarioService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
 
         permissao(id);
+        StringBuilder mensagem = new StringBuilder();
+
+        mensagem.append("Olá, ").append(existe.getUsername()).append("!")
+                .append("\nEstamos passando para confirmar que a sua conta foi encerrada.")
+                .append("\nSentiremos sua falta! Se decidir voltar no futuro, as portas estarão sempre abertas.");
+
+        notificacao.avisarUsuario(existe, "Confirmação de exclusão de conta", mensagem.toString());
+
         repository.delete(existe);
     }
 }
