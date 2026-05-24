@@ -293,3 +293,7 @@ body {
     color: var(--muted);
     margin-top: 3px;
 }
+
+.card-badge.serie {
+    background: rgba(6, 182, 212, 0.85);
+}
