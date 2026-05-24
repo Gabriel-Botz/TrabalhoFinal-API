@@ -8,6 +8,7 @@
 </head>
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar">
     <span class="logo">SerratecFlix</span>
 
@@ -19,11 +20,35 @@
     </div>
 
     <div class="nav-right">
-        <input type="text" class="search-input" placeholder="Buscar..."/>
         <button class="btn-login">Entrar</button>
     </div>
 </nav>
 
+<!-- FILTROS -->
+<div class="filters-bar">
+
+    <input type="text" class="filter-search" placeholder="🔍 Buscar filmes e séries..."/>
+
+    <div class="filter-toggle">
+        <button class="toggle-btn active" id="btn-todos" onclick="setTipo('todos')">Todos</button>
+        <button class="toggle-btn" id="btn-filmes" onclick="setTipo('filmes')">Filmes</button>
+        <button class="toggle-btn" id="btn-series" onclick="setTipo('series')">Séries</button>
+    </div>
+
+    <select class="filter-select" id="filter-categoria">
+        <option value="">Categoria</option>
+        <option value="1">Ação</option>
+        <option value="2">Terror</option>
+        <option value="3">Comédia</option>
+        <option value="4">Sci-fi</option>
+        <option value="5">Drama</option>
+    </select>
+
+    <button class="btn-buscar">Buscar</button>
+
+</div>
+
+<!-- HERO -->
 <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
@@ -43,13 +68,16 @@
     </div>
 </section>
 
+<!-- CARROSSEL: Filmes Populares -->
 <section class="carousel-section">
     <h2 class="carousel-title">Filmes Populares</h2>
     <div class="carousel">
 
         <div class="card">
             <div class="card-poster">
-                <img src="https://placehold.co/150x220/1e1e2a/888?text=Filme" alt="O Poderoso Chefão"/>                <span class="card-badge">Filme</span>
+                <img src="https://image.tmdb.org/t/p/w500/godmFdpBaRTZOEGaHcBPMqnBqoh.jpg" alt="O Poderoso Chefão"/>
+                <span class="card-nota">★ 9.2</span>
+                <span class="card-badge">Filme</span>
             </div>
             <div class="card-info">
                 <p class="card-title">O Poderoso Chefão</p>
@@ -71,7 +99,7 @@
 
         <div class="card">
             <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" alt="Interestelar"/>
+                <img src="https://image.tmdb.org/t/p/w500/xJHokMbljvjADYdit5fK5VQsXEG.jpg" alt="Interestelar"/>
                 <span class="card-nota">★ 8.6</span>
                 <span class="card-badge">Filme</span>
             </div>
@@ -83,7 +111,7 @@
 
         <div class="card">
             <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" alt="Inception"/>
+                <img src="https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" alt="A Origem"/>
                 <span class="card-nota">★ 8.8</span>
                 <span class="card-badge">Filme</span>
             </div>
@@ -108,6 +136,7 @@
     </div>
 </section>
 
+<!-- CARROSSEL: Séries em Alta -->
 <section class="carousel-section">
     <h2 class="carousel-title">Séries em Alta</h2>
     <div class="carousel">
@@ -175,6 +204,7 @@
     </div>
 </section>
 
+<!-- CARROSSEL: Ação & Aventura -->
 <section class="carousel-section">
     <h2 class="carousel-title">Ação & Aventura</h2>
     <div class="carousel">
@@ -242,6 +272,7 @@
     </div>
 </section>
 
+<!-- CARROSSEL: Sci-fi & Fantasia -->
 <section class="carousel-section">
     <h2 class="carousel-title">Sci-fi & Fantasia</h2>
     <div class="carousel">
@@ -310,5 +341,17 @@
 </section>
 
 <script src="js/app.js"></script>
+
+<script>
+    function setTipo(tipo) {
+        document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('btn-' + tipo).classList.add('active');
+
+        const categoriaSelect = document.getElementById('filter-categoria');
+        categoriaSelect.disabled = tipo === 'series';
+        categoriaSelect.style.opacity = tipo === 'series' ? '0.4' : '1';
+    }
+</script>
+
 </body>
 </html>

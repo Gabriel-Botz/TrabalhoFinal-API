@@ -23,6 +23,7 @@ body {
     min-height: 100vh;
 }
 
+/* ===== NAVBAR ===== */
 .navbar {
     display: flex;
     align-items: center;
@@ -66,20 +67,6 @@ body {
     gap: 16px;
 }
 
-.search-input {
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 8px 14px;
-    color: #fff;
-    font-size: 13px;
-    width: 220px;
-}
-
-.search-input::placeholder {
-    color: var(--muted);
-}
-
 .btn-login {
     background: var(--accent);
     color: #fff;
@@ -95,6 +82,96 @@ body {
     background: var(--accent-dark);
 }
 
+/* ===== FILTROS ===== */
+.filters-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 40px;
+    background: var(--surface);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    flex-wrap: wrap;
+}
+
+.filter-search {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #fff;
+    font-size: 14px;
+    max-width: 360px;
+    min-width: 200px;
+}
+
+.filter-search::placeholder {
+    color: var(--muted);
+}
+
+.filter-toggle {
+    display: flex;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.toggle-btn {
+    padding: 7px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.2s;
+}
+
+.toggle-btn.active {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 500;
+}
+
+.toggle-btn:hover:not(.active) {
+    color: var(--text);
+}
+
+.filter-select {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.filter-select option {
+    background: var(--surface2);
+    color: #fff;
+}
+
+.btn-buscar {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.btn-buscar:hover {
+    opacity: 0.85;
+}
+
+/* ===== HERO ===== */
 .hero {
     position: relative;
     height: 500px;
@@ -201,6 +278,7 @@ body {
     background: rgba(255, 255, 255, 0.25);
 }
 
+/* ===== CARROSSEIS ===== */
 .carousel-section {
     padding: 16px 40px 28px;
 }
@@ -224,6 +302,7 @@ body {
     display: none;
 }
 
+/* ===== CARDS ===== */
 .card {
     min-width: 150px;
     flex-shrink: 0;
@@ -275,6 +354,10 @@ body {
     border-radius: 3px;
 }
 
+.card-badge.serie {
+    background: rgba(6, 182, 212, 0.85);
+}
+
 .card-info {
     padding: 8px 10px;
 }
@@ -292,8 +375,4 @@ body {
     font-size: 11px;
     color: var(--muted);
     margin-top: 3px;
-}
-
-.card-badge.serie {
-    background: rgba(6, 182, 212, 0.85);
 }
