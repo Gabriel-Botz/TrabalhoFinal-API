@@ -20,8 +20,7 @@
     </div>
 
     <div class="nav-right">
-        <button class="btn-login">Entrar</button>
-    </div>
+        <button class="btn-login" onclick="abrirModal()">Entrar</button>    </div>
 </nav>
 
 <!-- FILTROS -->
@@ -352,6 +351,41 @@
         categoriaSelect.style.opacity = tipo === 'series' ? '0.4' : '1';
     }
 </script>
+<!-- MODAL DE AUTH -->
+<div class="modal-overlay" id="modal-auth">
+    <div class="modal-box">
 
+        <button class="modal-close" onclick="fecharModal()">×</button>
+
+        <h1 class="modal-logo">SerratecFlix</h1>
+        <p class="modal-sub">Sua plataforma geek de streaming</p>
+
+        <!-- TABS -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-login" onclick="setTab('login')">Entrar</button>
+            <button class="auth-tab" id="tab-cadastro" onclick="setTab('cadastro')">Cadastrar</button>
+        </div>
+
+        <!-- FORM LOGIN -->
+        <div class="auth-form" id="form-login">
+            <input type="text" class="auth-input" placeholder="Username"/>
+            <input type="password" class="auth-input" placeholder="Senha"/>
+            <div class="auth-error" id="erro-login"></div>
+            <button class="auth-btn" onclick="login()">Entrar</button>
+        </div>
+
+        <!-- FORM CADASTRO -->
+        <div class="auth-form hidden" id="form-cadastro">
+            <input type="text" class="auth-input" placeholder="Nome completo *"/>
+            <input type="email" class="auth-input" placeholder="E-mail *"/>
+            <input type="text" class="auth-input" placeholder="Username *"/>
+            <input type="password" class="auth-input" placeholder="Senha * (mín. 6 caracteres)"/>
+            <input type="text" class="auth-input" placeholder="URL da foto de perfil (opcional)"/>
+            <div class="auth-error" id="erro-cadastro"></div>
+            <button class="auth-btn" onclick="cadastrar()">Criar conta</button>
+        </div>
+
+    </div>
+</div>
 </body>
 </html>
