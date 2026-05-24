@@ -94,3 +94,109 @@ body {
 .btn-login:hover {
     background: var(--accent-dark);
 }
+
+.hero {
+    position: relative;
+    height: 500px;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 40px 48px;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://image.tmdb.org/t/p/original/xJHokMbljvjADYdit5fK5VQsXEG.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(10,10,15,0.95) 30%, transparent 70%),
+    linear-gradient(to top, rgba(10,10,15,1) 0%, transparent 50%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 500px;
+}
+
+.hero-badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero-title {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.hero-meta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.hero-nota {
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.hero-desc {
+    font-size: 14px;
+    color: #ccc;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-play {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 11px 26px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-play:hover {
+    opacity: 0.85;
+}
+
+.btn-fav {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 11px 22px;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-fav:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
