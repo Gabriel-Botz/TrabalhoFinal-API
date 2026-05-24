@@ -1,5 +1,9 @@
 package org.serratec.trabalho_final_api.dto.request;
 
+import java.time.LocalDate;
+
+import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,9 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.serratec.trabalho_final_api.domain.ClassificacaoIndicativa;
 
-import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,11 +30,9 @@ public class FilmeRequestDTO {
     @Size(max = 200, message = "O campo descrição deve conter no máximo 200 caracteres")
     private String descricao;
 
-
     @Schema(description = "Duração do filme em minutos")
     @NotNull(message = "O campo duração é obrigatório")
     private Integer duracao;
-
 
     @Schema(description = "Data de lançamento do filme")
     @NotNull(message = "O campo data de lancamento é obrigatório")
@@ -40,5 +40,3 @@ public class FilmeRequestDTO {
 
     private ClassificacaoIndicativa classificacaoIndicativa;
 }
-
-
