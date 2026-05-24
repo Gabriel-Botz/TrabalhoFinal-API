@@ -96,7 +96,9 @@ public class UsuarioService {
         Usuario usuario = request.toUsuario();
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
-        UsuarioResponseDTO salvo = UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(request.toUsuario()));
+        // UsuarioResponseDTO salvo =
+        // UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(request.toUsuario()));
+        UsuarioResponseDTO salvo = UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(usuario));
 
         // criando a mensagem com o StringBuilder para ficar mais organizado
         StringBuilder mensagem = new StringBuilder();
@@ -156,7 +158,7 @@ public class UsuarioService {
         }
 
         if (request.senha() != null && !request.senha().isBlank()) {
-            existe.setSenha(request.senha());
+            existe.setSenha(passwordEncoder.encode(request.senha()));
             mensagem.append("Senha realizado com sucesso!");
         }
 
