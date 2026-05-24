@@ -34,3 +34,4 @@ build/
 
 ### Rafael Albino Settings ###
 src/main/resources/application.properties
+pom.xml
