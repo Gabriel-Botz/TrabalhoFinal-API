@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.serratec.trabalho_final_api.domain.ClassificacaoIndicativa;
+import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
 
 import java.time.LocalDate;
 @Getter
