@@ -7,8 +7,11 @@ import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.enumerated.TipoUsuario;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class NotificacaoUsuarioService {
+
     @Autowired
     private MailService mailService;
 
