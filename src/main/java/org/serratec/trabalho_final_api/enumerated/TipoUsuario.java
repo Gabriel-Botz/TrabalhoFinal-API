@@ -16,6 +16,6 @@ public enum TipoUsuario {
             if (usuario.name().equalsIgnoreCase(value))
                 return usuario;
         }
-        throw new EnumValidationException("Tipo de Usuaário inválido! Valores permitidos: USER OU ADMIN");
+        throw new EnumValidationException("Tipo de Usuário inválido! Valores permitidos: USER OU ADMIN");
     }
 }
