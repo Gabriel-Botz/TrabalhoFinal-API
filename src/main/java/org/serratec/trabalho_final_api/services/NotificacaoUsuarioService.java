@@ -15,12 +15,22 @@ public class NotificacaoUsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    // notifica um usuario expecifico o que foi realizado (ADMIN OU USER)
     public void avisarUsuario(Usuario usuario, String titulo, String mensagem) {
         mailService.sendEmail(usuario.getEmail(), titulo, mensagem);
     }
 
-    public void avisarAdmin(String titulo, String mensagem) {
+    // notifica a todos os administradores o que foi feito
+    public void avisarVariosAdmin(String titulo, String mensagem) {
         List<String> adminEmails = usuarioRepository.findEmailsByTipoUsuario(TipoUsuario.ADMIN);
+
+        adminEmails.forEach(
+                email -> mailService.sendEmail(email, titulo, mensagem));
+    }
+
+    // notifica a todos os administradores o que foi feito
+    public void avisarVariosUsuarios(String titulo, String mensagem) {
+        List<String> adminEmails = usuarioRepository.findEmailsByTipoUsuario(TipoUsuario.USER);
 
         adminEmails.forEach(
                 email -> mailService.sendEmail(email, titulo, mensagem));

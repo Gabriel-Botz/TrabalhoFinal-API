@@ -114,7 +114,7 @@ public class UsuarioService {
                 .append("\nTipo de Usuário: '").append(usuario.getTipoUsuario()).append("'");
 
         notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso", mensagem.toString());
-        notificacao.avisarAdmin("Cadastro Realizado com Sucesso", mensagem.toString());
+        notificacao.avisarVariosAdmin("Cadastro Realizado com Sucesso", mensagem.toString());
 
         return salvo;
     }
