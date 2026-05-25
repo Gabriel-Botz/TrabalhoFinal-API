@@ -2,16 +2,20 @@ package org.serratec.trabalho_final_api.config;
 
 import java.util.Arrays;
 
+import org.serratec.trabalho_final_api.security.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -20,6 +24,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class ConfigSeguranca {
+
+    @Autowired
+    private JwtAuthenticationFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,27 +40,15 @@ public class ConfigSeguranca {
                         .requestMatchers(HttpMethod.GET, "/lista-favoritos/filmes/publica").permitAll()
                         .requestMatchers(HttpMethod.GET, "/lista-favoritos/series/publica").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-    // @Bean
-    // public InMemoryUserDetailsManager userDetailsService() {
-    // // Usuario padrão teste
-    // UserDetails user = User.builder()
-    // .username("usuario_comum")
-    // .password(bCryptPasswordEncoder().encode("123456"))
-    // .roles("USER")
-    // .build();
 
-    // // Usuario admin teste
-    // UserDetails admin = User.builder()
-    // .username("admin")
-    // .password(bCryptPasswordEncoder().encode("admin123"))
-    // .roles("ADMIN")
-    // .build();
-
-    // return new InMemoryUserDetailsManager(user, admin);
-    // }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
