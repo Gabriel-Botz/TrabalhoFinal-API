@@ -69,9 +69,9 @@ public class SeriesServices {
         serie.setDescricao(seriesRequest.getDescricao());
         serie.setTemporadas(seriesRequest.getTemporadas());
         /* tá tentando fazer uma inserção utilizando serieRequest ou de séries ? */
-        serie.setEpisodios(series.getEpisodios()); // verificar se é um erro aqui
-        serie.setDataLancamento(series.getDataLancamento()); // verificar se é um erro aqui
-        serie.setNotaMedia(series.getNotaMedia());// verificar se é um erro aqui
+        serie.setEpisodios(seriesRequest.getEpisodios()); // verificar se é um erro aqui
+        serie.setDataLancamento(seriesRequest.getDataLancamento()); // verificar se é um erro aqui
+        serie.setNotaMedia(seriesRequest.getNotaMedia());// verificar se é um erro aqui
 
         return new SeriesResponseDTO(seriesRepository.save(serie));
     }
@@ -93,7 +93,7 @@ public class SeriesServices {
     @Transactional
     public List<SeriesResponseDTO> buscarPorCategoria(Long idCategoria) {
         // o repository utiliza a classe domain como base e não a DB
-        return seriesRepository.findByCategoriasId(idCategoria)// <-- erro
+        return seriesRepository.findByCategoriaId(idCategoria)// <-- erro
                 .stream()
                 .map(SeriesResponseDTO::new)
                 .toList();
