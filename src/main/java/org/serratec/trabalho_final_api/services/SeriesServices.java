@@ -3,10 +3,14 @@ package org.serratec.trabalho_final_api.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import jakarta.transaction.Transactional;
+import org.serratec.trabalho_final_api.domain.Categoria;
 import org.serratec.trabalho_final_api.domain.Series;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
+import org.serratec.trabalho_final_api.repository.CategoriaRepository;
 import org.serratec.trabalho_final_api.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,9 @@ public class SeriesServices {
 
     @Autowired
     private SeriesRepository seriesRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     // GET por todos
     public List<SeriesResponseDTO> ListarTodasSeries() {
@@ -29,6 +36,7 @@ public class SeriesServices {
         return seriesDTO;
     }
 
+    @Transactional
     public SeriesResponseDTO ListarSeriesPorId(@PathVariable UUID id) {
         Series series =  seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
@@ -37,6 +45,7 @@ public class SeriesServices {
     }
 
     // GET por titulo
+    @Transactional
     public SeriesResponseDTO ListarSeriePorTitulo(String titulo) {
         Series series = seriesRepository.findByTitulo(titulo);
 
@@ -47,6 +56,7 @@ public class SeriesServices {
         return new SeriesResponseDTO(series);
     }
 
+    @Transactional
     public SeriesResponseDTO inserirSeries(SeriesRequestDTO seriesRequest) {
         Series series = seriesRepository.findByTitulo(seriesRequest.getTitulo());
         if (seriesRepository.findByTitulo(seriesRequest.getTitulo()) != null) {
@@ -63,6 +73,21 @@ public class SeriesServices {
         return new SeriesResponseDTO(seriesRepository.save(serie));
     }
 
+    @Transactional
+    public SeriesResponseDTO vincularCategoria (UUID id,Long categoriaId) {
+
+        Series series =  seriesRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
+
+        Categoria categoria = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada"));
+
+        series.getCategorias().add(categoria);
+        return new SeriesResponseDTO(seriesRepository.save(series));
+
+    }
+
+    @Transactional
     public List<SeriesResponseDTO> buscarPorCategoria(Long categoriaId){
         return seriesRepository.findByCategoria_id(categoriaId)
                 .stream()
@@ -70,6 +95,7 @@ public class SeriesServices {
                 .toList();
     }
 
+    @Transactional
     public SeriesResponseDTO atualizarSeries(SeriesRequestDTO seriesRequest, UUID id) {
         Series series =  seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
@@ -85,6 +111,7 @@ public class SeriesServices {
         return new SeriesResponseDTO(series);
     }
 
+    @Transactional
     public void removerSeries(UUID id) {
         Series series =  seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));

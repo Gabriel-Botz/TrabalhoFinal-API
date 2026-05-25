@@ -3,6 +3,7 @@ package org.serratec.trabalho_final_api.controller;
 import java.util.List;
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
 import org.serratec.trabalho_final_api.services.SeriesServices;
@@ -25,6 +26,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/series")
+@Tag(name="series",description = "Endpoints para buscar e adicionar series")
 public class SeriesController {
 
     @Autowired
