@@ -39,9 +39,7 @@ public class ListaFavoritosService {
                     lista.getPrivada(),
                     lista.getDataCriacao()));
         }
-
         return listaFavoritosDTO;
-
     }
 
     public ListaFavoritosResponseDTO buscarPorId(UUID id) {
