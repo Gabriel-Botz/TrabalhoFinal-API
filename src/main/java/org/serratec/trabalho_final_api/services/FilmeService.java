@@ -9,7 +9,7 @@ import org.serratec.trabalho_final_api.domain.Categoria;
 import org.serratec.trabalho_final_api.domain.Filme;
 import org.serratec.trabalho_final_api.dto.request.FilmeRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
-import org.serratec.trabalho_final_api.dto.response.TmdbDetalhesDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbFilmeDetalhesDTO;
 import org.serratec.trabalho_final_api.dto.response.TmdbFilmesResponseDTO;
 import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
@@ -111,18 +111,18 @@ public class FilmeService {
     public List<FilmeResponseDTO> buscarCatalogoUnificado(String query) {
         List<FilmeResponseDTO> resultadoFinal = new ArrayList<>();
 
-        // 1. Busca no Banco de Dados Local
+        // busca no Banco de Dados Local
         List<Filme> filmesLocais = filmeRepository.findByTituloContainingIgnoreCase(query);
         for (Filme filme : filmesLocais) {
             resultadoFinal.add(new FilmeResponseDTO(filme));
         }
 
-        // 2. Busca na API Externa (TMDB)
+        // busca na API Externa (TMDB)
         TmdbFilmesResponseDTO filmesExternos = tmdbService.pesquisarFilmesNoTmdb(query);
         if (filmesExternos != null && filmesExternos.getResultados() != null) {
             for (TmdbFilmesResponseDTO.TmdbFilmeItem itemExterno : filmesExternos.getResultados()) {
 
-                // Evita duplicar na tela se o filme do TMDB já estiver cadastrado no seu banco local
+                //evita duplicar na tela se o filme do TMDB já estiver cadastrado no seu banco local
                 boolean jaExisteLocalmente = filmesLocais.stream()
                         .anyMatch(f -> itemExterno.getId().equals(f.getTmdbId()));
 
@@ -158,7 +158,7 @@ public class FilmeService {
     }
 
     private void enriquecerComDetalhesDoTmdb(FilmeResponseDTO dto, Long tmdbId) {
-        TmdbDetalhesDTO detalhes = tmdbService.buscarFilmeExterno(tmdbId);
+        TmdbFilmeDetalhesDTO detalhes = tmdbService.buscarFilmeExterno(tmdbId);
 
         if (detalhes != null) {
             System.out.println("Filme: " + dto.getTitulo() + " -> Runtime vindo do TMDB: " + detalhes.getRuntime());
@@ -167,10 +167,10 @@ public class FilmeService {
 
             String certificacaoBr = "L";
             if (detalhes.getReleaseDates() != null && detalhes.getReleaseDates().getResults() != null) {
-                for (TmdbDetalhesDTO.PaisResult pais : detalhes.getReleaseDates().getResults()) {
+                for (TmdbFilmeDetalhesDTO.PaisResult pais : detalhes.getReleaseDates().getResults()) {
                     if ("BR".equals(pais.getIsoCodigo())) {
                         if (pais.getReleaseDates() != null) {
-                            for (TmdbDetalhesDTO.CertificacaoItem item : pais.getReleaseDates()) {
+                            for (TmdbFilmeDetalhesDTO.CertificacaoItem item : pais.getReleaseDates()) {
                                 if (item.getCertification() != null && !item.getCertification().isEmpty()) {
                                     certificacaoBr = item.getCertification();
                                     break;
