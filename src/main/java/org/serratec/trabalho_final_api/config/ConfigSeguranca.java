@@ -63,7 +63,7 @@ public class ConfigSeguranca {
     @Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:6000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:6000")); // rota de acesso, para o front
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*")); // Importante adicionar se usar cabeçalhos customizados
 
