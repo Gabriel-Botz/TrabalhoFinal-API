@@ -43,7 +43,7 @@ public class Usuario implements UserDetails {
     private String email;
     private String username;
     private String senha;
-    private String fotoPerfil;
+    private String fotoPerfilUrl;
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
     private LocalDateTime dataCriacao;
