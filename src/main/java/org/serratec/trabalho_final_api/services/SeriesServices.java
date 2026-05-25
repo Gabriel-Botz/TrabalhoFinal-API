@@ -9,6 +9,7 @@ import org.serratec.trabalho_final_api.domain.Categoria;
 import org.serratec.trabalho_final_api.domain.Series;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
+import org.serratec.trabalho_final_api.exception.RecursoJaExistenteException;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.CategoriaRepository;
 import org.serratec.trabalho_final_api.repository.SeriesRepository;
@@ -60,15 +61,16 @@ public class SeriesServices {
     public SeriesResponseDTO inserirSeries(SeriesRequestDTO seriesRequest) {
         Series series = seriesRepository.findByTitulo(seriesRequest.getTitulo());
         if (seriesRepository.findByTitulo(seriesRequest.getTitulo()) != null) {
-            throw new RecursoNaoEncontradoException("Serie já existente!");
+            throw new RecursoJaExistenteException("Serie já existente!");
         }
         Series serie = new Series();
         serie.setTitulo(seriesRequest.getTitulo());
         serie.setDescricao(seriesRequest.getDescricao());
         serie.setTemporadas(seriesRequest.getTemporadas());
-        serie.setEpisodios(series.getEpisodios());
-        serie.setDataLancamento(series.getDataLancamento());
-        serie.setNotaMedia(series.getNotaMedia());
+        /* tá tentando fazer uma inserção utilizando serieRequest ou de séries ? */
+        serie.setEpisodios(series.getEpisodios()); // verificar se é um erro aqui
+        serie.setDataLancamento(series.getDataLancamento()); // verificar se é um erro aqui
+        serie.setNotaMedia(series.getNotaMedia());// verificar se é um erro aqui
 
         return new SeriesResponseDTO(seriesRepository.save(serie));
     }

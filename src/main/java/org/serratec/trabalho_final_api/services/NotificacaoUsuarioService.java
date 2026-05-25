@@ -2,37 +2,88 @@ package org.serratec.trabalho_final_api.services;
 
 import java.util.List;
 
-import org.serratec.trabalho_final_api.config.MailService;
+import io.mailtrap.client.MailtrapClient;
+import io.mailtrap.model.request.emails.Address;
+import io.mailtrap.model.request.emails.MailtrapMail;
 import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.enumerated.TipoUsuario;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class NotificacaoUsuarioService {
+
     @Autowired
-    private MailService mailService;
+    private MailtrapClient mailtrapClient;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
     // notifica um usuario expecifico o que foi realizado (ADMIN OU USER)
-    public void avisarUsuario(Usuario usuario, String titulo, String mensagem) {
-        mailService.sendEmail(usuario.getEmail(), titulo, mensagem);
+    public void avisarUsuario(Usuario usuario, String assunto, String mensagem) {
+        MailtrapMail mail = MailtrapMail.builder()
+                .from(new Address("hello@demomailtrap.co", "Serratec Flix"))
+                .to(List.of(new Address(usuario.getEmail(), usuario.getNome())))
+                .subject(assunto)
+                .text(mensagem)
+                .category("Cadastro de Usuário")
+                .build();
+
+        try {
+            mailtrapClient.send(mail);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha ao disparar e-mail via SDK Mailtrap: " + e.getMessage(), e);
+        }
     }
 
     // notifica a todos os administradores o que foi feito
     public void avisarVariosAdmin(String titulo, String mensagem) {
         List<String> adminEmails = usuarioRepository.findEmailsByTipoUsuario(TipoUsuario.ADMIN);
 
-        adminEmails.forEach(
-                email -> mailService.sendEmail(email, titulo, mensagem));
+        List<Address> admin = adminEmails.stream()
+                .map(email -> new Address(email))
+                .toList();
+
+        if (!admin.isEmpty()) {
+            MailtrapMail mail = MailtrapMail.builder()
+                    .from(new Address("hello@demomailtrap.co", "Serratec Flix"))
+                    .to(admin)
+                    .subject(titulo)
+                    .text(mensagem)
+                    .category("Aviso Administrativo")
+                    .build();
+
+            try {
+                mailtrapClient.send(mail);
+            } catch (Exception e) {
+                throw new RuntimeException("Falha ao disparar e-mail em massa para Admins: " + e.getMessage(), e);
+            }
+        }
     }
 
     // notifica a todos os administradores o que foi feito
     public void avisarVariosUsuarios(String titulo, String mensagem) {
-        List<String> adminEmails = usuarioRepository.findEmailsByTipoUsuario(TipoUsuario.USER);
+        List<String> userEmails = usuarioRepository.findEmailsByTipoUsuario(TipoUsuario.USER);
 
-        adminEmails.forEach(
-                email -> mailService.sendEmail(email, titulo, mensagem));
+        List<Address> destinatarios = userEmails.stream()
+                .map(email -> new Address(email))
+                .toList();
+
+        if (!destinatarios.isEmpty()) {
+            MailtrapMail mail = MailtrapMail.builder()
+                    .from(new Address("hello@demomailtrap.co", "Serratec Flix"))
+                    .to(destinatarios)
+                    .subject(titulo)
+                    .text(mensagem)
+                    .category("Aviso Geral")
+                    .build();
+
+            try {
+                mailtrapClient.send(mail);
+            } catch (Exception e) {
+                throw new RuntimeException("Falha ao disparar e-mail em massa para Usuários: " + e.getMessage(), e);
+            }
+        }
     }
 }

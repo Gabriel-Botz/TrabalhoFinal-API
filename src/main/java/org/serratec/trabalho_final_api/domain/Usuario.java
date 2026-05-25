@@ -12,6 +12,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -42,6 +44,7 @@ public class Usuario implements UserDetails {
     private String username;
     private String senha;
     private String fotoPerfil;
+    @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
     private LocalDateTime dataCriacao;
 

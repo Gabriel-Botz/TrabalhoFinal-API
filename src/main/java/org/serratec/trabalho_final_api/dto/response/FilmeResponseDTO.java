@@ -3,8 +3,9 @@ package org.serratec.trabalho_final_api.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
+
 import org.serratec.trabalho_final_api.domain.Filme;
+import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
 
 import java.time.LocalDate;
 
@@ -39,6 +40,5 @@ public class FilmeResponseDTO {
 
     @Schema(description = "Classificação indicativa do filme")
     private ClassificacaoIndicativa classificacaoIndicativa;
-
 
 }

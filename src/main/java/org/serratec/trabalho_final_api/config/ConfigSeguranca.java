@@ -10,13 +10,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
@@ -26,38 +23,37 @@ public class ConfigSeguranca {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
+        http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(configurationSource()))
-                .httpBasic(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> {
-                    request.requestMatchers(HttpMethod.GET, "/lista-favoritos/filmes/publica").permitAll();
-                    request.requestMatchers(HttpMethod.GET, "/lista-favoritos/series/publica").permitAll();
-                    request.requestMatchers("/**").hasRole("ADMIN");
-                    request.anyRequest().authenticated(); // para qualquer outra requisição
-                }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll() // Garante sub-rotas se houver
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/lista-favoritos/filmes/publica").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/lista-favoritos/series/publica").permitAll()
+                        .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
+    // @Bean
+    // public InMemoryUserDetailsManager userDetailsService() {
+    // // Usuario padrão teste
+    // UserDetails user = User.builder()
+    // .username("usuario_comum")
+    // .password(bCryptPasswordEncoder().encode("123456"))
+    // .roles("USER")
+    // .build();
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        // Usuario padrão teste
-        UserDetails user = User.builder()
-                .username("usuario_comum")
-                .password(bCryptPasswordEncoder().encode("123456"))
-                .roles("ROLE_USER")
-                .build();
+    // // Usuario admin teste
+    // UserDetails admin = User.builder()
+    // .username("admin")
+    // .password(bCryptPasswordEncoder().encode("admin123"))
+    // .roles("ADMIN")
+    // .build();
 
-        // Usuario admin teste
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(bCryptPasswordEncoder().encode("admin123"))
-                .roles("ROLE_ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
-    }
+    // return new InMemoryUserDetailsManager(user, admin);
+    // }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
