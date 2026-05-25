@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import lombok.Setter;
 import org.serratec.trabalho_final_api.domain.Filme;
 import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @Schema(description = "DTO para resposta de filme")
 public class FilmeResponseDTO {
 
