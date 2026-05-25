@@ -3,7 +3,6 @@ package org.serratec.trabalho_final_api.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.serratec.trabalho_final_api.domain.Series;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
@@ -31,7 +30,7 @@ public class SeriesServices {
     }
 
     public SeriesResponseDTO ListarSeriesPorId(@PathVariable UUID id) {
-        Series series = (Series) seriesRepository.findById(id)
+        Series series =  seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
 
         return new SeriesResponseDTO(series);
@@ -64,8 +63,15 @@ public class SeriesServices {
         return new SeriesResponseDTO(seriesRepository.save(serie));
     }
 
+    public List<SeriesResponseDTO> buscarPorCategoria(Long categoriaId){
+        return seriesRepository.findByCategoria_id(categoriaId)
+                .stream()
+                .map(SeriesResponseDTO::new)
+                .toList();
+    }
+
     public SeriesResponseDTO atualizarSeries(SeriesRequestDTO seriesRequest, UUID id) {
-        Series series = (Series) seriesRepository.findById(id)
+        Series series =  seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
 
         series.setTitulo(seriesRequest.getTitulo());
@@ -80,7 +86,7 @@ public class SeriesServices {
     }
 
     public void removerSeries(UUID id) {
-        Series series = (Series) seriesRepository.findById(id)
+        Series series =  seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
         seriesRepository.delete(series);
     }
