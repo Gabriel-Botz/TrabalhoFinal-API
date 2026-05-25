@@ -139,6 +139,9 @@ function setTipo(tipo) {
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modal-auth').addEventListener('click', function (e) {
         if (e.target === this) fecharModal();
+        document.getElementById('modal-selecionar-lista').addEventListener('click', function(e) {
+            if (e.target === this) fecharSelecionarLista();
+        });
     });
 
     document.getElementById('modal-detalhes').addEventListener('click', function (e) {
@@ -217,4 +220,59 @@ function filtrarPorTipo(tipo) {
             secao.style.display = titulo.includes('série') ? 'block' : 'none';
         }
     });
+}
+
+// ===== FAVORITOS =====
+let itemAtual = null;
+
+function abrirDetalhes(titulo, descricao, nota, ano, poster, backdrop) {
+    itemAtual = { titulo, descricao, nota, ano, poster, backdrop };
+
+    document.getElementById('detalhes-titulo').textContent = titulo;
+    document.getElementById('detalhes-desc').textContent = descricao;
+    document.getElementById('detalhes-poster').src = poster;
+    document.getElementById('detalhes-backdrop').style.backgroundImage = `url(${backdrop})`;
+    document.getElementById('detalhes-meta').innerHTML = `
+    <span class="meta-nota">★ ${nota}</span>
+    <span>${ano}</span>
+  `;
+
+    renderAvaliacoes(avaliacoesMock);
+    document.getElementById('modal-detalhes').classList.add('ativo');
+}
+
+function abrirSelecionarLista() {
+    const opcoes = listas.map((lista, i) => `
+    <div class="avaliacao-item" style="cursor:pointer;margin-bottom:8px;" onclick="adicionarALista(${i})">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:14px;font-weight:500;">${lista.nomeLista}</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:${lista.privada?'rgba(239,68,68,0.15)':'rgba(34,197,94,0.15)'};color:${lista.privada?'#fca5a5':'#86efac'};">
+          ${lista.privada?'Privada':'Pública'}
+        </span>
+      </div>
+    </div>
+  `).join('');
+
+    document.getElementById('modal-selecionar-lista').innerHTML = `
+    <div class="modal-detalhes-box" style="max-width:400px;">
+      <button class="modal-close" onclick="fecharSelecionarLista()">×</button>
+      <div class="detalhes-content">
+        <h3 style="margin-bottom:16px;">Adicionar à lista</h3>
+        ${opcoes}
+      </div>
+    </div>
+  `;
+
+    document.getElementById('modal-selecionar-lista').classList.add('ativo');
+}
+
+function fecharSelecionarLista() {
+    document.getElementById('modal-selecionar-lista').classList.remove('ativo');
+}
+
+function adicionarALista(index) {
+    if (!itemAtual) return;
+    listas[index].items.push(itemAtual.titulo);
+    fecharSelecionarLista();
+    alert(`"${itemAtual.titulo}" adicionado à lista "${listas[index].nomeLista}"!`);
 }
