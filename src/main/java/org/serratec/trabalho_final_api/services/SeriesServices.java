@@ -93,7 +93,7 @@ public class SeriesServices {
     @Transactional
     public List<SeriesResponseDTO> buscarPorCategoria(Long idCategoria) {
         // o repository utiliza a classe domain como base e não a DB
-        return seriesRepository.findByCategoriaId(idCategoria)// <-- erro
+        return seriesRepository.findByCategoriasId(idCategoria)// <-- erro
                 .stream()
                 .map(SeriesResponseDTO::new)
                 .toList();
