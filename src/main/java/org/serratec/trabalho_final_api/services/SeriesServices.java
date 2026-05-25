@@ -60,7 +60,7 @@ public class SeriesServices {
 
     @Transactional
     public SeriesResponseDTO inserirSeries(SeriesRequestDTO seriesRequest) {
-        Series series = seriesRepository.findByTitulo(seriesRequest.getTitulo());
+        // Series series = seriesRepository.findByTitulo(seriesRequest.getTitulo());
         if (seriesRepository.findByTitulo(seriesRequest.getTitulo()) != null) {
             throw new RecursoJaExistenteException("Serie já existente!");
         }
