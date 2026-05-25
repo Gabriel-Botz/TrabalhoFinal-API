@@ -26,16 +26,16 @@ public class ConfigSeguranca {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(request -> {
-                    request.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
-                    request.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
-                    request.requestMatchers(HttpMethod.GET, "/lista-favoritos/filmes/publica").permitAll();
-                    request.requestMatchers(HttpMethod.GET, "/lista-favoritos/series/publica").permitAll();
-                    request.anyRequest().authenticated();
-                }).httpBasic(Customizer.withDefaults());
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll() // Garante sub-rotas se houver
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/lista-favoritos/filmes/publica").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/lista-favoritos/series/publica").permitAll()
+                        .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
-
     // @Bean
     // public InMemoryUserDetailsManager userDetailsService() {
     // // Usuario padrão teste
