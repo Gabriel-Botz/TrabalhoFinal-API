@@ -28,7 +28,7 @@ public class AvaliacaoSerieService {
     UsuarioRepository usuarioRepository;
 
     @Autowired
-    SeriesRepository serieRepository;
+    SeriesRepository seriesRepository;
 
     public List<AvaliacaoSerieResponseDTO> findAll() {
 
@@ -56,7 +56,7 @@ public class AvaliacaoSerieService {
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuairio não encontrado"));
 
-        Series serie = serieRepository.findById(dto.getSerieId())
+        Series serie = seriesRepository.findById(dto.getSerieId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
 
         AvaliacaoSerie avaliacaoSerie = new AvaliacaoSerie();

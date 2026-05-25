@@ -83,7 +83,7 @@ public class SeriesController {
                         @ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
                         @ApiResponse(responseCode = "500", description = "Erro interno do Servidor")
         })
-        @PutMapping("/{id}/categorias/{categoriaId}")
+        @PutMapping("/{id}/categoria/{idCategoria}")
         public ResponseEntity<SeriesResponseDTO> vincularCategoria(@PathVariable UUID id,
                         @PathVariable Long idCategoria) {
                 return ResponseEntity.ok(seriesServices.vincularCategoria(id, idCategoria));
@@ -98,7 +98,7 @@ public class SeriesController {
                         @ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
                         @ApiResponse(responseCode = "500", description = "Erro interno do Servidor")
         })
-        @GetMapping("/categoria/{categoriaId}")
+        @GetMapping("/categoria/{idCategoria}")
         public ResponseEntity<List<SeriesResponseDTO>> filtrarPorCategoria(@PathVariable Long idCategoria) {
                 return ResponseEntity.ok(seriesServices.buscarPorCategoria(idCategoria));
         }
