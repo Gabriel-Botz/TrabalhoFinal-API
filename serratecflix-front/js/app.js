@@ -202,3 +202,19 @@ function renderListas() {
     </div>
   `).join('');
 }
+
+function filtrarPorTipo(tipo) {
+    const secoes = document.querySelectorAll('.carousel-section');
+
+    secoes.forEach(secao => {
+        const titulo = secao.querySelector('.carousel-title').textContent.toLowerCase();
+
+        if (tipo === 'todos') {
+            secao.style.display = 'block';
+        } else if (tipo === 'filmes') {
+            secao.style.display = titulo.includes('série') ? 'none' : 'block';
+        } else if (tipo === 'series') {
+            secao.style.display = titulo.includes('série') ? 'block' : 'none';
+        }
+    });
+}
