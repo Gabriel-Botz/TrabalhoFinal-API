@@ -8,6 +8,7 @@ import org.serratec.trabalho_final_api.domain.Filme;
 import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 public class FilmeResponseDTO {
 
     public FilmeResponseDTO(Filme filme) {
+        this.id = filme.getId();
         this.titulo = filme.getTitulo();
         this.descricao = filme.getDescricao();
         this.duracao = filme.getDuracao();
@@ -23,6 +25,8 @@ public class FilmeResponseDTO {
         this.classificacaoIndicativa = filme.getClassificacaoIndicativa();
         this.tmdbId = filme.getTmdbId();
     }
+
+    private UUID id;
 
     private Long tmdbId;
 
