@@ -8,7 +8,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar">
     <span class="logo">SerratecFlix</span>
 
@@ -16,14 +15,12 @@
         <a href="#">Início</a>
         <a href="#">Filmes</a>
         <a href="#">Séries</a>
-        <a href="#">Minhas Listas</a>
-    </div>
+        <a href="#" onclick="abrirListas()">Minhas Listas</a>    </div>
 
     <div class="nav-right">
         <button class="btn-login" onclick="abrirModal()">Entrar</button>    </div>
 </nav>
 
-<!-- FILTROS -->
 <div class="filters-bar">
 
     <input type="text" class="filter-search" placeholder="🔍 Buscar filmes e séries..."/>
@@ -47,7 +44,6 @@
 
 </div>
 
-<!-- HERO -->
 <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
@@ -67,7 +63,6 @@
     </div>
 </section>
 
-<!-- CARROSSEL: Filmes Populares -->
 <section class="carousel-section">
     <h2 class="carousel-title">Filmes Populares</h2>
     <div class="carousel">
@@ -135,7 +130,6 @@
     </div>
 </section>
 
-<!-- CARROSSEL: Séries em Alta -->
 <section class="carousel-section">
     <h2 class="carousel-title">Séries em Alta</h2>
     <div class="carousel">
@@ -203,7 +197,6 @@
     </div>
 </section>
 
-<!-- CARROSSEL: Ação & Aventura -->
 <section class="carousel-section">
     <h2 class="carousel-title">Ação & Aventura</h2>
     <div class="carousel">
@@ -271,7 +264,6 @@
     </div>
 </section>
 
-<!-- CARROSSEL: Sci-fi & Fantasia -->
 <section class="carousel-section">
     <h2 class="carousel-title">Sci-fi & Fantasia</h2>
     <div class="carousel">
@@ -351,7 +343,6 @@
         categoriaSelect.style.opacity = tipo === 'series' ? '0.4' : '1';
     }
 </script>
-<!-- MODAL DE AUTH -->
 <div class="modal-overlay" id="modal-auth">
     <div class="modal-box">
 
@@ -360,13 +351,11 @@
         <h1 class="modal-logo">SerratecFlix</h1>
         <p class="modal-sub">Sua plataforma geek de streaming</p>
 
-        <!-- TABS -->
         <div class="auth-tabs">
             <button class="auth-tab active" id="tab-login" onclick="setTab('login')">Entrar</button>
             <button class="auth-tab" id="tab-cadastro" onclick="setTab('cadastro')">Cadastrar</button>
         </div>
 
-        <!-- FORM LOGIN -->
         <div class="auth-form" id="form-login">
             <input type="text" class="auth-input" placeholder="Username"/>
             <input type="password" class="auth-input" placeholder="Senha"/>
@@ -374,7 +363,6 @@
             <button class="auth-btn" onclick="login()">Entrar</button>
         </div>
 
-        <!-- FORM CADASTRO -->
         <div class="auth-form hidden" id="form-cadastro">
             <input type="text" class="auth-input" placeholder="Nome completo *"/>
             <input type="email" class="auth-input" placeholder="E-mail *"/>
@@ -388,16 +376,13 @@
     </div>
 </div>
 
-<!-- MODAL DETALHES -->
 <div class="modal-overlay" id="modal-detalhes">
     <div class="modal-detalhes-box">
 
         <button class="modal-close" onclick="fecharDetalhes()">×</button>
 
-        <!-- BACKDROP -->
         <div class="detalhes-backdrop" id="detalhes-backdrop"></div>
 
-        <!-- CONTEUDO -->
         <div class="detalhes-content">
 
             <div class="detalhes-topo">
@@ -413,7 +398,6 @@
                 </div>
             </div>
 
-            <!-- AVALIACOES -->
             <div class="detalhes-avaliacoes">
                 <h3 class="avaliacoes-titulo">Avaliações</h3>
 
@@ -431,6 +415,34 @@
                 <div class="avaliacoes-lista" id="avaliacoes-lista"></div>
 
             </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-overlay" id="modal-listas">
+    <div class="modal-detalhes-box">
+
+        <button class="modal-close" onclick="fecharListas()">×</button>
+
+        <div class="detalhes-content">
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                <h2>Minhas Listas</h2>
+                <button class="btn-buscar" onclick="mostrarFormLista()">+ Nova lista</button>
+            </div>
+
+            <div class="auth-form hidden" id="form-nova-lista">
+                <input type="text" class="auth-input" id="input-nome-lista" placeholder="Nome da lista *"/>
+                <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); cursor:pointer;">
+                    <input type="checkbox" id="input-privada"/> Lista privada
+                </label>
+                <div style="display:flex; gap:10px;">
+                    <button class="auth-btn" style="margin-top:0" onclick="criarLista()">Criar</button>
+                    <button class="btn-fav" onclick="ocultarFormLista()">Cancelar</button>
+                </div>
+            </div>
+
+            <div id="container-listas"></div>
 
         </div>
     </div>

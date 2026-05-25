@@ -143,5 +143,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('modal-detalhes').addEventListener('click', function (e) {
         if (e.target === this) fecharDetalhes();
+        document.getElementById('modal-listas').addEventListener('click', function(e) {
+            if (e.target === this) fecharListas();
+        });
     });
 });
+
+// ===== MINHAS LISTAS =====
+let listas = [
+    { id: 1, nomeLista: 'Meus Favoritos', privada: false, items: [] }
+];
+
+function abrirListas() {
+    renderListas();
+    document.getElementById('modal-listas').classList.add('ativo');
+}
+
+function fecharListas() {
+    document.getElementById('modal-listas').classList.remove('ativo');
+}
+
+function mostrarFormLista() {
+    document.getElementById('form-nova-lista').classList.remove('hidden');
+}
+
+function ocultarFormLista() {
+    document.getElementById('form-nova-lista').classList.add('hidden');
+    document.getElementById('input-nome-lista').value = '';
+    document.getElementById('input-privada').checked = false;
+}
+
+function criarLista() {
+    const nome = document.getElementById('input-nome-lista').value.trim();
+    const privada = document.getElementById('input-privada').checked;
+
+    if (!nome) return alert('Digite um nome para a lista!');
+
+    listas.push({ id: Date.now(), nomeLista: nome, privada, items: [] });
+    ocultarFormLista();
+    renderListas();
+}
+
+function renderListas() {
+    const container = document.getElementById('container-listas');
+    container.innerHTML = listas.map(lista => `
+    <div class="avaliacao-item" style="margin-bottom:12px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <h3 style="font-size:15px; font-weight:600;">${lista.nomeLista}</h3>
+        <span style="font-size:11px; padding:2px 8px; border-radius:4px; background:${lista.privada ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)'}; color:${lista.privada ? '#fca5a5' : '#86efac'};">
+          ${lista.privada ? 'Privada' : 'Pública'}
+        </span>
+        <span style="font-size:12px; color:var(--muted);">${lista.items.length} item(s)</span>
+      </div>
+      ${lista.items.length === 0
+        ? `<p style="font-size:13px; color:var(--muted);">Nenhum item ainda.</p>`
+        : `<div style="display:flex; gap:8px; flex-wrap:wrap;">${lista.items.map(i => `<span style="font-size:12px; background:var(--surface2); padding:4px 10px; border-radius:4px;">${i}</span>`).join('')}</div>`
+    }
+    </div>
+  `).join('');
+}
