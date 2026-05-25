@@ -65,6 +65,7 @@ public class FilmeService {
         novoFilme.setDuracao(dto.getDuracao());
         novoFilme.setDataLancamento(dto.getDataLancamento());
         novoFilme.setClassificacaoIndicativa(dto.getClassificacaoIndicativa());
+        novoFilme.setTmdbId(dto.getTmdbId());
 
         var filmeSalvo = filmeRepository.save(novoFilme);
         return new FilmeResponseDTO(filmeSalvo);

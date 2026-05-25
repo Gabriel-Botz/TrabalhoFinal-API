@@ -21,7 +21,10 @@ public class FilmeResponseDTO {
         this.dataLancamento = filme.getDataLancamento();
         this.notaMedia = filme.getNotaMedia();
         this.classificacaoIndicativa = filme.getClassificacaoIndicativa();
+        this.tmdbId = filme.getTmdbId();
     }
+
+    private Long tmdbId;
 
     @Schema(description = "Titulo do filme", example = "O Poderoso Chefão")
     private String titulo;
