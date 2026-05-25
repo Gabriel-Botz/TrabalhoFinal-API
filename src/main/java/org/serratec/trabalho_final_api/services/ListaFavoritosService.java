@@ -1,5 +1,6 @@
 package org.serratec.trabalho_final_api.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,17 +28,55 @@ public class ListaFavoritosService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<ListaFavoritosResponseDTO> listar() {
+    // @Autowired
+    // private PermissaoService permissaoService;
+
+    // Listar somente as listas públicas
+    public List<ListaFavoritosResponseDTO> listarPublicas() {
 
         List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
         List<ListaFavoritosResponseDTO> listaFavoritosDTO = new ArrayList<>();
 
         for (ListaFavoritos lista : listaFavoritos) {
-            listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
-                    lista.getId(),
-                    lista.getNomeLista(),
-                    lista.getPrivada(),
-                    lista.getDataCriacao()));
+
+            // Adiciona somente listas públicas
+            if (!lista.getPrivada()) {
+                listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
+                        lista.getId(),
+                        lista.getNomeLista(),
+                        lista.getPrivada(),
+                        lista.getDataCriacao(),
+                        lista.getUsuario()));
+            }
+        }
+
+        return listaFavoritosDTO;
+
+    }
+
+    // Listar somente as listas privadas do usuário logado
+    public List<ListaFavoritosResponseDTO> listarPrivadas() {
+
+        List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
+        List<ListaFavoritosResponseDTO> listaFavoritosDTO = new ArrayList<>();
+
+        for (ListaFavoritos lista : listaFavoritos) {
+
+            if (!lista.getPrivada()) {
+
+                // Verificar se o usuário logado é igual ao proprietario da lista
+                // Se sim, mostrar somente listas onde o usuário logado é o proprietário da lista
+                if (true) {
+
+                    listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
+                            lista.getId(),
+                            lista.getNomeLista(),
+                            lista.getPrivada(),
+                            lista.getDataCriacao(),
+                            lista.getUsuario()));
+
+                }
+            }
         }
 
         return listaFavoritosDTO;
@@ -54,11 +93,29 @@ public class ListaFavoritosService {
                 lista.getId(),
                 lista.getNomeLista(),
                 lista.getPrivada(),
-                lista.getDataCriacao());
+                lista.getDataCriacao(),
+                lista.getUsuario());
+
+        // Verificar se a lista é pública. Se sim, retorna a lista
+        // Se não, verifica se o usuário logado é proprietário do id informado
+        // Se sim, mostra a lista. Se não, lança excessão não encontrado.
+
+        // if (true) {
+        // return new ListaFavoritosResponseDTO(
+        // lista.getId(),
+        // lista.getNomeLista(),
+        // lista.getPrivada(),
+        // lista.getDataCriacao(),
+        // lista.getUsuario());
+        // } else {
+        // throw new RecursoNaoEncontradoException(
+        // "Lista não encontrada");
+        // }
 
     }
 
-    public List<ListaFavoritosResponseDTO> buscarPorNome(String nome) {
+    // Busca por nome, mas somente as listas públicas
+    public List<ListaFavoritosResponseDTO> buscarPorNomePublicas(String nome) {
 
         if (nome.isBlank() || nome == null) {
             throw new RecursoNaoEncontradoException("Nenhuma lista contendo \"" + nome + "\"foi encontrada");
@@ -69,12 +126,35 @@ public class ListaFavoritosService {
         listas.forEach(lista -> {
 
             listasDTO.add(new ListaFavoritosResponseDTO(
-                lista.getId(),
-                lista.getNomeLista(),
-                lista.getPrivada(),
-                lista.getDataCriacao()
-            ));
-            
+                    lista.getId(),
+                    lista.getNomeLista(),
+                    lista.getPrivada(),
+                    lista.getDataCriacao(),
+                    lista.getUsuario()));
+
+        });
+
+        return listasDTO;
+    }
+
+    // Busca por nome, mas somente as listas privadas
+    public List<ListaFavoritosResponseDTO> buscarPorNomePrivadas(String nome) {
+
+        if (nome.isBlank() || nome == null) {
+            throw new RecursoNaoEncontradoException("Nenhuma lista contendo \"" + nome + "\"foi encontrada");
+        }
+
+        List<ListaFavoritos> listas = listaFavoritosRepository.findByNomeListaContainingIgnoreCase(nome);
+        List<ListaFavoritosResponseDTO> listasDTO = new ArrayList<>();
+        listas.forEach(lista -> {
+
+            listasDTO.add(new ListaFavoritosResponseDTO(
+                    lista.getId(),
+                    lista.getNomeLista(),
+                    lista.getPrivada(),
+                    lista.getDataCriacao(),
+                    lista.getUsuario()));
+
         });
 
         return listasDTO;
@@ -94,7 +174,7 @@ public class ListaFavoritosService {
 
         lista.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
         lista.setPrivada(listaFavoritosRequestDTO.getPrivada());
-        lista.setDataCriacao(listaFavoritosRequestDTO.getDataCriacao());
+        lista.setDataCriacao(LocalDate.now());
 
         // vinculando a lista ao usuario
         lista.setUsuario(donoDaLista);
@@ -105,7 +185,8 @@ public class ListaFavoritosService {
                 novaLista.getId(),
                 novaLista.getNomeLista(),
                 novaLista.getPrivada(),
-                novaLista.getDataCriacao());
+                novaLista.getDataCriacao(),
+                novaLista.getUsuario());
 
     }
 
@@ -122,7 +203,7 @@ public class ListaFavoritosService {
 
         listaExistente.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
         listaExistente.setPrivada(listaFavoritosRequestDTO.getPrivada());
-        listaExistente.setDataCriacao(listaFavoritosRequestDTO.getDataCriacao());
+        listaExistente.setDataCriacao(LocalDate.now());
 
         ListaFavoritos listaAtualizada = listaFavoritosRepository.save(listaExistente);
 
@@ -130,7 +211,8 @@ public class ListaFavoritosService {
                 listaAtualizada.getId(),
                 listaAtualizada.getNomeLista(),
                 listaAtualizada.getPrivada(),
-                listaAtualizada.getDataCriacao());
+                listaAtualizada.getDataCriacao(),
+                listaAtualizada.getUsuario());
 
     }
 

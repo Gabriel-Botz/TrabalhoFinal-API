@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,14 +34,14 @@ public class ListaFavoritosController {
     private ListaFavoritosService listaFavoritosService;
 
     @Operation(
-        summary = "Listar todas as listas de favoritos", 
-        description = "Retorna uma lista de todas as listas de favoritos criadas pelos usuários.")
+        summary = "Listar todas as listas públicas de favoritos", 
+        description = "Retorna uma lista de todas as listas públicas de favoritos criadas pelos usuários.")
     @ApiResponse(
         responseCode = "200", 
         description = "Lista de favoritos retornada com sucesso")
     @GetMapping
-    public ResponseEntity<List<ListaFavoritosResponseDTO>> listarListaFavoritos() {
-        List<ListaFavoritosResponseDTO> listaFavoritos = listaFavoritosService.listar();
+    public ResponseEntity<List<ListaFavoritosResponseDTO>> listarFavoritos() {
+        List<ListaFavoritosResponseDTO> listaFavoritos = listaFavoritosService.listarPublicas();
         return ResponseEntity.ok(listaFavoritos);
     }
 
@@ -75,7 +76,7 @@ public class ListaFavoritosController {
     @GetMapping("/busca/?nome={nome}")
     public ResponseEntity<List<ListaFavoritosResponseDTO>> buscarListaFavoritosPorNome(@RequestParam String nome) {
         
-        List<ListaFavoritosResponseDTO> listas = listaFavoritosService.buscarPorNome(nome);
+        List<ListaFavoritosResponseDTO> listas = listaFavoritosService.buscarPorNomePublicas(nome);
         return ResponseEntity.ok(listas);
 
     }
@@ -87,8 +88,10 @@ public class ListaFavoritosController {
         responseCode = "201", 
         description = "Lista de favoritos criada com sucesso")
     @PostMapping
-    public ResponseEntity<ListaFavoritosResponseDTO> criarListaFavoritos(
-            @RequestBody ListaFavoritosRequestDTO listaFavoritosRequestDTO, Authentication authentication) { // <-Aqui
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<ListaFavoritosResponseDTO> criarLista(
+            @RequestBody ListaFavoritosRequestDTO listaFavoritosRequestDTO, 
+            Authentication authentication) { // <-Aqui
 
         ListaFavoritosResponseDTO novaLista = listaFavoritosService.criar(listaFavoritosRequestDTO);
 
