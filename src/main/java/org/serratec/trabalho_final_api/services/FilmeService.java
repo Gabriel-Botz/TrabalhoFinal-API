@@ -9,6 +9,7 @@ import org.serratec.trabalho_final_api.domain.Categoria;
 import org.serratec.trabalho_final_api.domain.Filme;
 import org.serratec.trabalho_final_api.dto.request.FilmeRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbResponseDTO;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.CategoriaRepository;
 import org.serratec.trabalho_final_api.repository.FilmeRepository;
@@ -23,6 +24,9 @@ public class FilmeService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private TmdbService tmdbService;
 
     public List<FilmeResponseDTO> listarFilmes() {
         List<Filme> listaFilmes = filmeRepository.findAll();
@@ -101,4 +105,31 @@ public class FilmeService {
                 .toList();
     }
 
+    @Transactional
+    public List<FilmeResponseDTO> buscarCatalogoUnificado(String query) {
+        List<FilmeResponseDTO> resultadoFinal = new ArrayList<>();
+
+        // 1. Busca no Banco de Dados Local (PostgreSQL)
+        List<Filme> filmesLocais = filmeRepository.findByTituloContainingIgnoreCase(query);
+        for (Filme filme : filmesLocais) {
+            resultadoFinal.add(new FilmeResponseDTO(filme));
+        }
+
+        // 2. Busca na API Externa (TMDB)
+        TmdbResponseDTO filmesExternos = tmdbService.pesquisarFilmesNoTmdb(query);
+        if (filmesExternos != null && filmesExternos.getResultados() != null) {
+            for (TmdbResponseDTO.TmdbFilmeItem itemExterno : filmesExternos.getResultados()) {
+
+                // Evita duplicar na tela se o filme do TMDB já estiver cadastrado no seu banco local
+                boolean jaExisteLocalmente = filmesLocais.stream()
+                        .anyMatch(f -> itemExterno.getId().equals(f.getTmdbId()));
+
+                if (!jaExisteLocalmente) {
+                    resultadoFinal.add(itemExterno.paraFilmeResponseDTO());
+                }
+            }
+        }
+
+        return resultadoFinal;
+    }
 }
