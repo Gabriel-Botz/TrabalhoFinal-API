@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.serratec.trabalho_final_api.dto.request.FilmeRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
-import org.serratec.trabalho_final_api.dto.response.TmdbDetalhesDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbFilmeDetalhesDTO;
 import org.serratec.trabalho_final_api.services.FilmeService;
 import org.serratec.trabalho_final_api.services.TmdbService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +75,8 @@ public class FilmeController {
 
     @GetMapping("/tmdb/{tmdbId}")
     @Operation(summary = "Endpoint temporário para testar conexão com o TMDB")
-    public ResponseEntity<TmdbDetalhesDTO> testarTmdb(@PathVariable Long tmdbId) {
-        TmdbDetalhesDTO detalhes = tmdbService.buscarFilmeExterno(tmdbId);
+    public ResponseEntity<TmdbFilmeDetalhesDTO> testarTmdb(@PathVariable Long tmdbId) {
+        TmdbFilmeDetalhesDTO detalhes = tmdbService.buscarFilmeExterno(tmdbId);
         return ResponseEntity.ok(detalhes);
     }
 
