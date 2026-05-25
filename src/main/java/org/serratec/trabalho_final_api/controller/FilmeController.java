@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.serratec.trabalho_final_api.dto.request.FilmeRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
 import org.serratec.trabalho_final_api.services.FilmeService;
+import org.serratec.trabalho_final_api.services.TmdbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,9 @@ public class FilmeController {
 
     @Autowired
     private FilmeService filmeService;
+
+    @Autowired
+    private TmdbService tmdbService;
 
     @GetMapping
     @Operation(summary = "Lista todos os filmes")
@@ -66,5 +70,12 @@ public class FilmeController {
     @Operation(summary = "Busca filmes por categoria")
     public ResponseEntity<List<FilmeResponseDTO>> buscarFilmesPorCategoria(@PathVariable Long categoriaId) {
         return ResponseEntity.ok(filmeService.buscarFilmesPorCategoria(categoriaId));
+    }
+
+    @GetMapping("/tmdb/{tmdbId}")
+    @Operation(summary = "Endpoint temporário para testar conexão com o TMDB")
+    public ResponseEntity<String> testarTmdb(@PathVariable Long tmdbId) {
+        String jsonDeResposta = tmdbService.buscarFilmeExterno(tmdbId);
+        return ResponseEntity.ok(jsonDeResposta);
     }
 }
