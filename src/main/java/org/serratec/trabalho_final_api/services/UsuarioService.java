@@ -60,6 +60,54 @@ public class UsuarioService {
         List<Usuario> salvos = repository.saveAll(usuarios);
 
         for (Usuario usuario : salvos) {
+
+            try {
+                StringBuilder mensagem = new StringBuilder();
+                StringBuilder mensagemAdm = new StringBuilder();
+
+                mensagem // Método de mensagem para USER
+                        .append("Cadastro do usuario '")
+                        .append(usuario.getUsername())
+                        .append("' realizado com sucesso,")
+                        .append("às '")
+                        .append(usuario.getDataCriacao())
+                        .append("'")
+                        .append("\n Obrigado por se registrar em nosso sistema serratecFlix XD");
+
+                mensagemAdm // método de mensagem para o ADMIN
+                        .append("Avido do Sistem: Um novo usuário foi cadastrado.")
+                        .append("\nId: '").append(usuario.getId()).append("'")
+                        .append("\nNome: '").append(usuario.getNome()).append("'")
+                        .append("\nUsername: '").append(usuario.getUsername()).append("'")
+                        .append("\nEmail: '").append(usuario.getEmail()).append("'")
+                        .append("\n")
+                        .append("\nData da Criação: '").append(usuario.getDataCriacao()).append("'")
+                        .append("\nTipo de Usuário: '").append(usuario.getTipoUsuario()).append("'");
+
+                // Chamando os métodos e passando as informações para o envio de e-mail
+                notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso", mensagem.toString());
+                notificacao.avisarVariosAdmin("Cadastro Realizado com Sucesso", mensagem.toString());
+
+            } catch (Exception e) {
+                System.err.println("Falha ao enviar notificação por e-mail para o usuário " + usuario.getUsername()
+                        + ": " + e.getMessage());
+            }
+        }
+
+        return salvos.stream().map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
+    }
+
+    @Transactional
+    public UsuarioResponseDTO salvar(UsuarioRequestDTO request) {
+
+        Usuario usuario = request.toUsuario();
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+
+        Usuario usuarioSalvo = repository.save(usuario);
+        UsuarioResponseDTO response = UsuarioResponseDTO.toUsuarioResponseDTO(usuarioSalvo);
+
+        try {
+            // criando a mensagem com o StringBuilder para ficar mais organizado
             StringBuilder mensagem = new StringBuilder();
             StringBuilder mensagemAdm = new StringBuilder();
 
@@ -83,52 +131,20 @@ public class UsuarioService {
                     .append("\nTipo de Usuário: '").append(usuario.getTipoUsuario()).append("'");
 
             // Chamando os métodos e passando as informações para o envio de e-mail
-            notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso", mensagem.toString());
-            notificacao.avisarVariosAdmin("Cadastro Realizado com Sucesso", mensagem.toString());
+            notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso",
+                    mensagem.toString());
+            notificacao.avisarVariosAdmin("Cadastro de usuário '" + usuario.getUsername()
+                    + "'' realizado com Sucesso!",
+                    mensagem.toString());
+        } catch (
+
+        Exception e) {
+            System.err.println("Erro ao tentar enviar e-mails de notificação: " +
+                    e.getMessage());
         }
 
-        return salvos.stream().map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
-    }
+        return response;
 
-    @Transactional
-    public UsuarioResponseDTO salvar(UsuarioRequestDTO request) {
-
-        Usuario usuario = request.toUsuario();
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-
-        // UsuarioResponseDTO salvo =
-        // UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(request.toUsuario()));
-        UsuarioResponseDTO salvo = UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(usuario));
-
-        // criando a mensagem com o StringBuilder para ficar mais organizado
-        StringBuilder mensagem = new StringBuilder();
-        StringBuilder mensagemAdm = new StringBuilder();
-
-        mensagem // Método de mensagem para USER
-                .append("Cadastro do usuario '")
-                .append(usuario.getUsername())
-                .append("' realizado com sucesso,")
-                .append("às '")
-                .append(usuario.getDataCriacao())
-                .append("'")
-                .append("\n Obrigado por se registrar em nosso sistema serratecFlix XD");
-
-        mensagemAdm // método de mensagem para o ADMIN
-                .append("Avido do Sistem: Um novo usuário foi cadastrado.")
-                .append("\nId: '").append(usuario.getId()).append("'")
-                .append("\nNome: '").append(usuario.getNome()).append("'")
-                .append("\nUsername: '").append(usuario.getUsername()).append("'")
-                .append("\nEmail: '").append(usuario.getEmail()).append("'")
-                .append("\n")
-                .append("\nData da Criação: '").append(usuario.getDataCriacao()).append("'")
-                .append("\nTipo de Usuário: '").append(usuario.getTipoUsuario()).append("'");
-
-        // Chamando os métodos e passando as informações para o envio de e-mail
-        notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso", mensagem.toString());
-        notificacao.avisarVariosAdmin("Cadastro de usuário '" + usuario.getUsername() + "'' realizado com Sucesso!",
-                mensagem.toString());
-
-        return salvo;
     }
 
     /* Métodos PUT */
