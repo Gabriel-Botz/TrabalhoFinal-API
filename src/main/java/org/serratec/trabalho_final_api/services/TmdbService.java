@@ -1,22 +1,28 @@
 package org.serratec.trabalho_final_api.services;
 
-import org.serratec.trabalho_final_api.dto.response.TmdbDetalhesDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbFilmeDetalhesDTO;
 import org.serratec.trabalho_final_api.dto.response.TmdbFilmesResponseDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbSerieDetalhesDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbSerieResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class TmdbService {
 
-    private final WebClient webClient;//USADO PRA FAZER REQUISIÇÃO PRA FORA DA APLICAÇÃO (NO CASO NOSSA API) :)
+    private final WebClient webClient; // USADO PRA FAZER REQUISIÇÃO PRA FORA DA APLICAÇÃO :)
 
-    private final String apiKey = "ae41581a9c0c6cabd2cc9bcf5961ba1b"; //CHAVE DA NOSSA API :)
+    private final String apiKey = "ae41581a9c0c6cabd2cc9bcf5961ba1b"; // CHAVE DA NOSSA API :)
 
     public TmdbService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("https://api.themoviedb.org/3").build();//DIFININFO O BASE URL DA API :)
+        this.webClient = webClientBuilder.baseUrl("https://api.themoviedb.org/3").build(); // DEFININDO O BASE URL DA API :)
     }
 
-    public TmdbDetalhesDTO buscarFilmeExterno(Long tmdbId) {
+    // ==========================================
+    //            MÉTODOS DE FILMES
+    // ==========================================
+
+    public TmdbFilmeDetalhesDTO buscarFilmeExterno(Long tmdbId) {
         try {
             return this.webClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -26,7 +32,7 @@ public class TmdbService {
                             .queryParam("append_to_response", "release_dates")
                             .build())
                     .retrieve()
-                    .bodyToMono(TmdbDetalhesDTO.class) // Garanta que está convertendo para a classe aqui
+                    .bodyToMono(TmdbFilmeDetalhesDTO.class)
                     .block();
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,17 +44,62 @@ public class TmdbService {
         try {
             return this.webClient.get()
                     .uri(uriBuilder -> uriBuilder
-                            .path("/search/movie") // Endpoint de busca do TMDB
+                            .path("/search/movie")
                             .queryParam("api_key", apiKey)
                             .queryParam("query", query)
                             .queryParam("language", "pt-BR")
                             .build())
                     .retrieve()
-                    .bodyToMono(TmdbFilmesResponseDTO.class) // O Spring descompacta o JSON direto no nosso DTO Tradutor
+                    .bodyToMono(TmdbFilmesResponseDTO.class)
                     .block();
         } catch (Exception e) {
-            // Se a chamada falhar, retorna um objeto vazio para não travar a busca do banco local
             return new TmdbFilmesResponseDTO();
+        }
+    }
+
+    // ==========================================
+    //            MÉTODOS DE SÉRIES
+    // ==========================================
+
+    /**
+     * Pesquisa séries no TMDB pelo texto informado (Query)
+     */
+    public TmdbSerieResponseDTO pesquisarSeriesNoTmdb(String query) {
+        try {
+            return this.webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/search/tv") // Endpoint de busca de séries/TV no TMDB
+                            .queryParam("api_key", apiKey)
+                            .queryParam("query", query)
+                            .queryParam("language", "pt-BR")
+                            .build())
+                    .retrieve()
+                    .bodyToMono(TmdbSerieResponseDTO.class)
+                    .block();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new TmdbSerieResponseDTO();
+        }
+    }
+
+    /**
+     * Busca os detalhes de uma série específica para obter duração e classificações
+     */
+    public TmdbSerieDetalhesDTO buscarSerieExterna(Long tmdbId) {
+        try {
+            return this.webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/tv/" + tmdbId) // Endpoint de detalhes da série no TMDB
+                            .queryParam("api_key", apiKey)
+                            .queryParam("language", "pt-BR")
+                            .queryParam("append_to_response", "content_ratings") // Traz as classificações etárias
+                            .build())
+                    .retrieve()
+                    .bodyToMono(TmdbSerieDetalhesDTO.class)
+                    .block();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
