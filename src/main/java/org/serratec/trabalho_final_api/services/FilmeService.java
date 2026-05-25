@@ -9,7 +9,9 @@ import org.serratec.trabalho_final_api.domain.Categoria;
 import org.serratec.trabalho_final_api.domain.Filme;
 import org.serratec.trabalho_final_api.dto.request.FilmeRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbDetalhesDTO;
 import org.serratec.trabalho_final_api.dto.response.TmdbResponseDTO;
+import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.CategoriaRepository;
 import org.serratec.trabalho_final_api.repository.FilmeRepository;
@@ -109,7 +111,7 @@ public class FilmeService {
     public List<FilmeResponseDTO> buscarCatalogoUnificado(String query) {
         List<FilmeResponseDTO> resultadoFinal = new ArrayList<>();
 
-        // 1. Busca no Banco de Dados Local (PostgreSQL)
+        // 1. Busca no Banco de Dados Local
         List<Filme> filmesLocais = filmeRepository.findByTituloContainingIgnoreCase(query);
         for (Filme filme : filmesLocais) {
             resultadoFinal.add(new FilmeResponseDTO(filme));
@@ -125,11 +127,66 @@ public class FilmeService {
                         .anyMatch(f -> itemExterno.getId().equals(f.getTmdbId()));
 
                 if (!jaExisteLocalmente) {
-                    resultadoFinal.add(itemExterno.paraFilmeResponseDTO());
+                    // CORREÇÃO AQUI: Primeiro geramos o DTO base
+                    FilmeResponseDTO dtoExterno = itemExterno.paraFilmeResponseDTO();
+
+                    // CHAMA O ENRIQUECIMENTO: Agora sim ele vai buscar o runtime e a classificação do Brasil!
+                    enriquecerComDetalhesDoTmdb(dtoExterno, itemExterno.getId());
+
+                    // ADICIONA NO RESULTADO: Adiciona o objeto já completo
+                    resultadoFinal.add(dtoExterno);
                 }
             }
         }
 
         return resultadoFinal;
     }
+
+    private ClassificacaoIndicativa traduzirClassificacao(String certificacao) {
+        if (certificacao == null || certificacao.isEmpty() || certificacao.equalsIgnoreCase("L")) {
+            return ClassificacaoIndicativa.LIVRE;
+        }
+
+        switch (certificacao) {
+            case "10": return ClassificacaoIndicativa.DEZ;
+            case "12": return ClassificacaoIndicativa.DOZE;
+            case "14": return ClassificacaoIndicativa.QUATORZE;
+            case "16": return ClassificacaoIndicativa.DEZESSEIS;
+            case "18": return ClassificacaoIndicativa.DEZOITO;
+            default: return ClassificacaoIndicativa.LIVRE;
+        }
+    }
+
+    private void enriquecerComDetalhesDoTmdb(FilmeResponseDTO dto, Long tmdbId) {
+        TmdbDetalhesDTO detalhes = tmdbService.buscarFilmeExterno(tmdbId);
+
+        if (detalhes != null) {
+            System.out.println("Filme: " + dto.getTitulo() + " -> Runtime vindo do TMDB: " + detalhes.getRuntime());
+
+            dto.setDuracao(detalhes.getRuntime());
+
+            String certificacaoBr = "L";
+            if (detalhes.getReleaseDates() != null && detalhes.getReleaseDates().getResults() != null) {
+                for (TmdbDetalhesDTO.PaisResult pais : detalhes.getReleaseDates().getResults()) {
+                    if ("BR".equals(pais.getIsoCodigo())) {
+                        if (pais.getReleaseDates() != null) {
+                            for (TmdbDetalhesDTO.CertificacaoItem item : pais.getReleaseDates()) {
+                                if (item.getCertification() != null && !item.getCertification().isEmpty()) {
+                                    certificacaoBr = item.getCertification();
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            dto.setClassificacaoIndicativa(traduzirClassificacao(certificacaoBr));
+        } else {
+            System.out.println("Atenção: Detalhes do filme " + dto.getTitulo() + " vieram NULOS do serviço.");
+        }
+    }
+
+
 }
