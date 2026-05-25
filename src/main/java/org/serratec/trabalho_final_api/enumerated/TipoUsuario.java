@@ -9,8 +9,9 @@ public enum TipoUsuario {
 
     @JsonCreator
     public static TipoUsuario verificar(String value) throws EnumValidationException {
-        if (value.isBlank())
-            return null;
+        if (value == null || value.isBlank())
+            throw new EnumValidationException(
+                    "O tipo de usuário não pode ser vazio! Valores permitidos: USER ou ADMIN");
 
         for (TipoUsuario usuario : values()) {
             if (usuario.name().equalsIgnoreCase(value))
