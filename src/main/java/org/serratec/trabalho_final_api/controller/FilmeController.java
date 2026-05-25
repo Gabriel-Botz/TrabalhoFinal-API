@@ -78,4 +78,10 @@ public class FilmeController {
         String jsonDeResposta = tmdbService.buscarFilmeExterno(tmdbId);
         return ResponseEntity.ok(jsonDeResposta);
     }
+
+    @GetMapping("/buscar")
+    @Operation(summary = "Busca filmes no banco local e na API do TMDB de forma unificada")
+    public ResponseEntity<List<FilmeResponseDTO>> buscarFilmes(@RequestParam String query) {
+        return ResponseEntity.ok(filmeService.buscarCatalogoUnificado(query));
+    }
 }
