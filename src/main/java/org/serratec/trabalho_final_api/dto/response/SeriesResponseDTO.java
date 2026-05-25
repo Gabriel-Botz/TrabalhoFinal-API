@@ -62,8 +62,8 @@ public class SeriesResponseDTO {
         return episodios;
     }
 
-    public void setEpisodios(Integer espisodios) {
-        this.episodios = espisodios;
+    public void setEpisodios(Integer episodios) {
+        this.episodios = episodios;
     }
 
     public LocalDate getDataLancamento() {
