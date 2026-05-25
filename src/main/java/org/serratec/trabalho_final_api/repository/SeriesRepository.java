@@ -10,5 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SeriesRepository extends JpaRepository<Series, UUID> {
     Series findByTitulo(String titulo);
-    List<Series> findByCategoria_id(Long idCategoria);
+
+    // o repository utiliza a classe domain Categoria como base e o DB
+    List<Series> findByCategoriasId(Long id);
 }

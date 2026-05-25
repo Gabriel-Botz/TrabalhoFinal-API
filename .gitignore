@@ -31,7 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Rafael Albino Settings ###
-src/main/resources/application.properties
+### ignorar .env
 .env

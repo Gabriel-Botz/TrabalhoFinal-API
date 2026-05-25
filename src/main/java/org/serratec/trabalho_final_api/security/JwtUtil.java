@@ -8,17 +8,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 
 @Component
 public class JwtUtil {
 
-    @Value("${auth.jwt-secret}")
+    @Value("${auth.jwt.secret}")
     private String jwtSecret;
 
-    @Value("${auth.jwt-expiration-miliseg}")
+    @Value("${auth.jwt.expiration-millis}")
     private Long jwtExpirationMsiliseg;
 
     private SecretKey secretKey;
@@ -58,9 +61,13 @@ public class JwtUtil {
     }
 
     public Claims getClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey).build()
-                .parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey).build()
+                    .parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException | MalformedJwtException | UnsupportedJwtException
+                | IllegalArgumentException e) {
+            return null;
+        }
     }
-
 }

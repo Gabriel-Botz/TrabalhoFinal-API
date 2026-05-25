@@ -1,4 +1,4 @@
-package org.serratec.trabalho_final_api.domain;
+package org.serratec.trabalho_final_api.enumerated;
 
 public enum ClassificacaoIndicativa {
     LIVRE,
