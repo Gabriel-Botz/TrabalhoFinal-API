@@ -68,7 +68,7 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "400", description = "Dados da requisição inválidos ou mal formatados")
         })
         @PostMapping
-        @PreAuthorize("permitAll()")
+        // @PreAuthorize("permitAll()")
         public ResponseEntity<UsuarioResponseDTO> salvar(@Valid @RequestBody UsuarioRequestDTO request) {
                 UsuarioResponseDTO response = service.salvar(request);
 
