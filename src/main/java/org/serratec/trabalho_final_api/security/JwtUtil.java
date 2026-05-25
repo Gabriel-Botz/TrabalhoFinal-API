@@ -18,7 +18,7 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class JwtUtil {
 
-    @Value("${auth.jwt-secret}")
+    @Value("${auth.jwt.secret}")
     private String jwtSecret;
 
     @Value("${auth.jwt.expiration-millis}")
