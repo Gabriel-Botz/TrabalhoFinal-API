@@ -39,8 +39,28 @@ public class PermissaoService {
             throw new AcessoNegadoException(
                     "Você não tem permissão para acessar ou modificar os dados de outro usuário.");
         }
-
         return usuario;
+    }
 
+    // necessário passar apenas o usuario --> Eli, verificar se funciona
+    public void validar(Usuario usuario) {
+        Authentication autenticacao = SecurityContextHolder.getContext().getAuthentication();
+
+        if (autenticacao == null || !autenticacao.isAuthenticated()) // verifica a autenciacao do usuario
+            throw new AcessoNegadoException("Usuário não autorizado!");
+
+        boolean admin = autenticacao.getAuthorities().stream().anyMatch( // verifica se é ou não ADMIN
+                authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+
+        if (admin) // se for admin, retorna os dados dele e a autorização geral do CRUD
+            return;
+
+        // se não for admin e nem o dono, usuario tem limitações
+        String usernameAutenticado = autenticacao.getName();
+
+        if (!usuario.getUsername().equals(usernameAutenticado)) {
+            throw new AcessoNegadoException(
+                    "Você não tem permissão para acessar ou modificar os dados de outro usuário.");
+        }
     }
 }
