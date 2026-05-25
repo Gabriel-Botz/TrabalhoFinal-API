@@ -11,17 +11,19 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TmdbSerieDetalhesDTO {
 
-    // Vem como uma lista de inteiros (ex: [45, 50])
-    @JsonProperty("episode_run_time")
-    private List<Integer> episodeRunTime;
+    @JsonProperty("number_of_seasons")
+    private Integer quantidadeTemporadas;
+
+    @JsonProperty("number_of_episodes")
+    private Integer quantidadeEpisodios;
 
     @JsonProperty("content_ratings")
-    private ContentRatingsContainer contentRatings;
+    private ContentRatingsResult contentRatings;
 
     @Getter
     @Setter
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class ContentRatingsContainer {
+    public static class ContentRatingsResult {
         @JsonProperty("results")
         private List<RatingResult> results;
     }
@@ -31,17 +33,9 @@ public class TmdbSerieDetalhesDTO {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RatingResult {
         @JsonProperty("iso_3166_1")
-        private String isoCodigo; // Procuramos por "BR"
+        private String isoCodigo;
 
         @JsonProperty("rating")
-        private String rating; // Ex: "14", "16", "L"
-    }
-
-    // Método auxiliar para pegar a primeira duração da lista, se existir
-    public Integer getDuracaoMedia() {
-        if (episodeRunTime != null && !episodeRunTime.isEmpty()) {
-            return episodeRunTime.get(0);
-        }
-        return null;
+        private String rating;
     }
 }
