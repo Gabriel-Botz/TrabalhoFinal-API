@@ -62,7 +62,7 @@ public class SeriesResponseDTO {
         return episodios;
     }
 
-    public void setEspisodios(Integer espisodios) {
+    public void setEpisodios(Integer espisodios) {
         this.episodios = espisodios;
     }
 
