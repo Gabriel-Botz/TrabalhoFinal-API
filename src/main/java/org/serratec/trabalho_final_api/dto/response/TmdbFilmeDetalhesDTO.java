@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TmdbDetalhesDTO {
+public class TmdbFilmeDetalhesDTO {
 
     @JsonProperty("runtime")
     private Integer runtime;
