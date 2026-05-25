@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.serratec.trabalho_final_api.domain.Categoria;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
 import org.serratec.trabalho_final_api.services.SeriesServices;
@@ -72,6 +73,37 @@ public class SeriesController {
     @GetMapping("/{titulo}")
     public ResponseEntity<SeriesResponseDTO> filtrarPorTitulo(@PathVariable String titulo) {
         return ResponseEntity.ok(seriesServices.ListarSeriePorTitulo(titulo));
+    }
+
+
+
+    @Operation(summary = "Vincular uma serie a uma categoria",
+            description = "vincular uma serie a uma categoria no Banco de Dados")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Series vinculada a categoria com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição Inválidade"),
+            @ApiResponse(responseCode = "401", description = "Não Autorizado"),
+            @ApiResponse(responseCode = "403", description = "Proibido"),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do Servidor")
+    })
+    @PutMapping("/{id}/categorias/{categoriaId}")
+    public ResponseEntity<SeriesResponseDTO> vincularCategoria(@PathVariable UUID id, @PathVariable Long idCategoria) {
+        return ResponseEntity.ok(seriesServices.vincularCategoria(id, idCategoria));
+    }
+
+    @Operation(summary = "Buscar categoria de series pelo Id ", description = "Buscar categoria de series do Banco de Dados pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Categoria econtrada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição Inválidade"),
+            @ApiResponse(responseCode = "401", description = "Não Autorizado"),
+            @ApiResponse(responseCode = "403", description = "Proibido"),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do Servidor")
+    })
+    @GetMapping("/categoria/{categoriaId}")
+    public ResponseEntity <List<SeriesResponseDTO>> filtrarPorCategoria(@PathVariable Long idCategoria) {
+        return ResponseEntity.ok(seriesServices.buscarPorCategoria(idCategoria));
     }
 
     @Operation(summary = "Inserir uma Serie", description = "Inserir uma Série no Banco de Dados")

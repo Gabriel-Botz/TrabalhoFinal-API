@@ -74,12 +74,12 @@ public class SeriesServices {
     }
 
     @Transactional
-    public SeriesResponseDTO vincularCategoria (UUID id,Long categoriaId) {
+    public SeriesResponseDTO vincularCategoria (UUID id,Long idCategoria) {
 
         Series series =  seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
 
-        Categoria categoria = categoriaRepository.findById(categoriaId)
+        Categoria categoria = categoriaRepository.findById(idCategoria)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada"));
 
         series.getCategorias().add(categoria);
@@ -88,8 +88,8 @@ public class SeriesServices {
     }
 
     @Transactional
-    public List<SeriesResponseDTO> buscarPorCategoria(Long categoriaId){
-        return seriesRepository.findByCategoria_id(categoriaId)
+    public List<SeriesResponseDTO> buscarPorCategoria(Long idCategoria){
+        return seriesRepository.findByCategoria_id(idCategoria)
                 .stream()
                 .map(SeriesResponseDTO::new)
                 .toList();
