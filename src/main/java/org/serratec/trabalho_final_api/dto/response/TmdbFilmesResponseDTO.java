@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class TmdbResponseDTO {
+public class TmdbFilmesResponseDTO {
 
     // O TMDB sempre devolve os resultados dentro de uma lista chamada "results"
     @JsonProperty("results")

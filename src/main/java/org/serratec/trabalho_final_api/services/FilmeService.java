@@ -10,7 +10,7 @@ import org.serratec.trabalho_final_api.domain.Filme;
 import org.serratec.trabalho_final_api.dto.request.FilmeRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
 import org.serratec.trabalho_final_api.dto.response.TmdbDetalhesDTO;
-import org.serratec.trabalho_final_api.dto.response.TmdbResponseDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbFilmesResponseDTO;
 import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.CategoriaRepository;
@@ -118,9 +118,9 @@ public class FilmeService {
         }
 
         // 2. Busca na API Externa (TMDB)
-        TmdbResponseDTO filmesExternos = tmdbService.pesquisarFilmesNoTmdb(query);
+        TmdbFilmesResponseDTO filmesExternos = tmdbService.pesquisarFilmesNoTmdb(query);
         if (filmesExternos != null && filmesExternos.getResultados() != null) {
-            for (TmdbResponseDTO.TmdbFilmeItem itemExterno : filmesExternos.getResultados()) {
+            for (TmdbFilmesResponseDTO.TmdbFilmeItem itemExterno : filmesExternos.getResultados()) {
 
                 // Evita duplicar na tela se o filme do TMDB já estiver cadastrado no seu banco local
                 boolean jaExisteLocalmente = filmesLocais.stream()
