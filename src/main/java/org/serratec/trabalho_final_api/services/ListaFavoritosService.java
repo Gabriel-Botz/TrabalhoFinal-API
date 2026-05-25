@@ -50,15 +50,34 @@ public class ListaFavoritosService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException(
                         "Lista de favoritos não encontrada com ID: " + id));
 
-        // if (lista != null) { -> retirei o return null pois o exception já faz isso
         return new ListaFavoritosResponseDTO(
                 lista.getId(),
                 lista.getNomeLista(),
                 lista.getPrivada(),
                 lista.getDataCriacao());
-        // }
-        // return null;
 
+    }
+
+    public List<ListaFavoritosResponseDTO> buscarPorNome(String nome) {
+
+        if (nome.isBlank() || nome == null) {
+            throw new RecursoNaoEncontradoException("Nenhuma lista contendo \"" + nome + "\"foi encontrada");
+        }
+
+        List<ListaFavoritos> listas = listaFavoritosRepository.findByNomeListaContainingIgnoreCase(nome);
+        List<ListaFavoritosResponseDTO> listasDTO = new ArrayList<>();
+        listas.forEach(lista -> {
+
+            listasDTO.add(new ListaFavoritosResponseDTO(
+                lista.getId(),
+                lista.getNomeLista(),
+                lista.getPrivada(),
+                lista.getDataCriacao()
+            ));
+            
+        });
+
+        return listasDTO;
     }
 
     @Transactional
@@ -98,8 +117,6 @@ public class ListaFavoritosService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException(
                         "Lista de favoritos não encontrada com ID: " + id));
 
-        // if (listaExistente != null) {
-
         if (!listaExistente.getUsuario().getUsername().equals(usuario)) // <- Aqui
             throw new AcessoNegadoException("Você não tem permissão para alterar esta lista.");
 
@@ -114,8 +131,6 @@ public class ListaFavoritosService {
                 listaAtualizada.getNomeLista(),
                 listaAtualizada.getPrivada(),
                 listaAtualizada.getDataCriacao());
-        // }
-        // return null;
 
     }
 
