@@ -1,11 +1,9 @@
-// ===== DADOS MOCK =====
 const avaliacoesMock = [
     { nome: 'Ana Lima', username: 'ana_lima', nota: 9.0, comentario: 'Simplesmente incrível! Um dos melhores que já assisti.', data: '2025-03-10' },
     { nome: 'Carlos Mendes', username: 'carlos_m', nota: 7.5, comentario: 'Muito bom, roteiro bem construído.', data: '2025-02-20' },
     { nome: 'Julia Rocha', username: 'julia_r', nota: 8.5, comentario: 'Recomendo muito, vale cada minuto!', data: '2025-01-15' },
 ];
 
-// ===== MODAL AUTH =====
 function abrirModal() {
     document.getElementById('modal-auth').classList.add('ativo');
 }
@@ -19,7 +17,6 @@ function setTab(tab) {
     document.getElementById('form-cadastro').classList.add('hidden');
     document.getElementById('tab-login').classList.remove('active');
     document.getElementById('tab-cadastro').classList.remove('active');
-
     document.getElementById('form-' + tab).classList.remove('hidden');
     document.getElementById('tab-' + tab).classList.add('active');
 }
@@ -66,7 +63,6 @@ function cadastrar() {
     fecharModal();
 }
 
-// ===== MODAL DETALHES =====
 function abrirDetalhes(titulo, descricao, nota, ano, poster, backdrop) {
     document.getElementById('detalhes-titulo').textContent = titulo;
     document.getElementById('detalhes-desc').textContent = descricao;
@@ -125,7 +121,6 @@ function enviarAvaliacao() {
     document.getElementById('input-comentario').value = '';
 }
 
-// ===== FILTROS =====
 function setTipo(tipo) {
     document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById('btn-' + tipo).classList.add('active');
@@ -135,7 +130,6 @@ function setTipo(tipo) {
     categoriaSelect.style.opacity = tipo === 'series' ? '0.4' : '1';
 }
 
-// ===== EVENTOS =====
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modal-auth').addEventListener('click', function (e) {
         if (e.target === this) fecharModal();
@@ -152,7 +146,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// ===== MINHAS LISTAS =====
 let listas = [
     { id: 1, nomeLista: 'Meus Favoritos', privada: false, items: [] }
 ];
@@ -222,7 +215,6 @@ function filtrarPorTipo(tipo) {
     });
 }
 
-// ===== FAVORITOS =====
 let itemAtual = null;
 
 function abrirDetalhes(titulo, descricao, nota, ano, poster, backdrop) {
