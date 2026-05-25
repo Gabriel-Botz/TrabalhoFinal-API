@@ -142,6 +142,24 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, erroResposta, new HttpHeaders(), status, request);
     }
 
+    @ExceptionHandler(RecursoJaExistenteException.class)
+    public ResponseEntity<Object> handleConflito(DataIntegrityViolationException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        List<String> erros = new ArrayList<>();
+
+        String mensagem = extrairMensagemDoBanco(ex);
+
+        erros.add(mensagem);
+
+        ErroResposta erroResposta = new ErroResposta(
+                status.value(),
+                "Recurso Já existe",
+                LocalDateTime.now(ZoneId.of(regiao)),
+                erros);
+
+        return handleExceptionInternal(ex, erroResposta, new HttpHeaders(), status, request);
+    }
+
     private String extrairMensagemDoBanco(DataIntegrityViolationException ex) {
 
         if (ex.getMostSpecificCause() == null) {

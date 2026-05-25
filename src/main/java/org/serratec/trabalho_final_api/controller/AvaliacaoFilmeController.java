@@ -24,10 +24,11 @@ import jakarta.validation.Valid;
 @RequestMapping("/avaliacoesFilmes")
 public class AvaliacaoFilmeController {
 
-    @Autowired AvaliacaoFilmeService service;
+    @Autowired
+    AvaliacaoFilmeService service;
 
     @GetMapping
-    public ResponseEntity<List<AvaliacaoFilmeResponseDTO>> findAll(){
+    public ResponseEntity<List<AvaliacaoFilmeResponseDTO>> findAll() {
 
         List<AvaliacaoFilmeResponseDTO> avaliacoes = service.findAll();
 
@@ -35,7 +36,7 @@ public class AvaliacaoFilmeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AvaliacaoFilmeResponseDTO> findById(@PathVariable UUID id){
+    public ResponseEntity<AvaliacaoFilmeResponseDTO> findById(@PathVariable UUID id) {
 
         AvaliacaoFilmeResponseDTO avaliacao = service.findById(id);
 
@@ -43,25 +44,26 @@ public class AvaliacaoFilmeController {
     }
 
     @PostMapping
-    public ResponseEntity<AvaliacaoFilmeResponseDTO> inserir(@Valid @RequestBody AvaliacaoFilmeRequestDTO dto){
+    public ResponseEntity<AvaliacaoFilmeResponseDTO> inserir(@Valid @RequestBody AvaliacaoFilmeRequestDTO dto) {
 
         AvaliacaoFilmeResponseDTO criado = service.inserir(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
 
-    @PutMapping("/{id}") 
-    public ResponseEntity<AvaliacaoFilmeResponseDTO> atualizar(@PathVariable UUID id, @Valid @RequestBody AvaliacaoFilmeRequestDTO dto){
-        
+    @PutMapping("/{id}")
+    public ResponseEntity<AvaliacaoFilmeResponseDTO> atualizar(@PathVariable UUID id,
+            @Valid @RequestBody AvaliacaoFilmeRequestDTO dto) {
+
         AvaliacaoFilmeResponseDTO atualizado = service.atualizar(id, dto);
 
         return ResponseEntity.ok(atualizado);
     }
 
-    @DeleteMapping("/{id}") 
-    public ResponseEntity<Void> deletar(@PathVariable UUID id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
 
-            return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 }

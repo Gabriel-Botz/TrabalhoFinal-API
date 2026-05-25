@@ -6,11 +6,12 @@ import java.util.UUID;
 
 import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
+import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,8 +56,8 @@ public class UsuarioController {
         @GetMapping("/id")
         @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
         public UsuarioResponseDTO buscar(
-                        @Parameter(description = "ID único do usuario", example = "1") @Valid @RequestParam UUID id) { // trows
-                                                                                                                       // Exception
+                        @Parameter(description = "ID único do usuario", example = "1") @Valid @RequestParam UUID id)
+                        throws RecursoNaoEncontradoException {
                 return service.buscar(id);
         }
 
@@ -68,7 +69,6 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "400", description = "Dados da requisição inválidos ou mal formatados")
         })
         @PostMapping
-        @PreAuthorize("permitAll()")
         public ResponseEntity<UsuarioResponseDTO> salvar(@Valid @RequestBody UsuarioRequestDTO request) {
                 UsuarioResponseDTO response = service.salvar(request);
 
@@ -106,7 +106,7 @@ public class UsuarioController {
         @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
         public UsuarioResponseDTO atualizar(
                         @Parameter(description = "ID do animal a ser modificado", example = "1") @Valid @PathVariable UUID id,
-                        @Valid @RequestBody UsuarioRequestDTO request) {// throws RecursoNaoEncontradoException
+                        @Valid @RequestBody UsuarioRequestDTO request) throws RecursoNaoEncontradoException {
 
                 return service.atualizar(id, request);
         }
@@ -114,8 +114,9 @@ public class UsuarioController {
         @DeleteMapping("/{id}")
         @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
         public ResponseEntity<Void> deletar(
-                        @Parameter(description = "ID do usuario a ser deletado", example = "1") @PathVariable UUID id) { // throws
-                                                                                                                         // RecursoNaoEncontradoException
+                        @Parameter(description = "ID do usuario a ser deletado", example = "1") @PathVariable UUID id)
+                        throws RecursoNaoEncontradoException {
+
                 service.excluir(id);
                 return ResponseEntity.noContent().build();
         }

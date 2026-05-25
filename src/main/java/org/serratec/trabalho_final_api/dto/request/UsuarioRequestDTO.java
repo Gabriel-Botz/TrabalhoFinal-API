@@ -1,11 +1,10 @@
 package org.serratec.trabalho_final_api.dto.request;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.enumerated.TipoUsuario;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.EnumType;
@@ -32,8 +31,8 @@ public record UsuarioRequestDTO(
         String fotoPerfil
 
 ) {
-    @Autowired
-    private static BCryptPasswordEncoder encoder;
+    // @Autowired
+    // private static BCryptPasswordEncoder encoder;
 
     public Usuario toUsuario() {
 
@@ -42,8 +41,8 @@ public record UsuarioRequestDTO(
         usuario.setNome(this.nome());
         usuario.setEmail(this.email());
         usuario.setUsername(this.username());
-        usuario.setSenha(encoder.encode(this.senha()));
-        usuario.setDataCriacao(this.dataCriacao());
+        usuario.setSenha(this.senha());
+        usuario.setDataCriacao(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         usuario.setTipoUsuario(this.tipoUsuario());
         usuario.setFotoPerfil(this.fotoPerfil());
 
