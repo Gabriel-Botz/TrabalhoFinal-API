@@ -6,21 +6,33 @@
 
 :root {
     --bg: #0a0a0f;
-    --surface: #13131a;
-    --surface2: #1e1e2a;
-    --accent: #8b5cf6;
-    --accent-dark: #6d28d9;
-    --cyan: #06b6d4;
+    --surface: #0d0d1a;
+    --surface2: #12122a;
+    --accent: #3b82f6;
+    --accent-dark: #1d4ed8;
+    --cyan: #00ff88;
     --text: #f1f1f1;
     --muted: #888;
     --gold: #f5c518;
 }
 
 body {
-    background: var(--bg);
+    background: linear-gradient(135deg, #0a0f0a 0%, #050d14 100%);
     color: var(--text);
     font-family: sans-serif;
     min-height: 100vh;
+}
+
+.logo {
+    text-shadow: 0 0 10px #1e3a8a, 0 0 20px #1e3a8a;
+}
+
+.btn-login, .auth-btn, .btn-buscar {
+    box-shadow: 0 0 10px rgba(30, 58, 138, 0.6);
+}
+
+.toggle-btn.active {
+    box-shadow: 0 0 8px rgba(30, 58, 138, 0.6);
 }
 
 /* ===== NAVBAR ===== */
@@ -518,4 +530,202 @@ body {
 
 .auth-btn:hover {
     opacity: 0.85;
+}
+
+/* ===== MODAL DETALHES ===== */
+.modal-detalhes-box {
+    background: var(--surface);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.detalhes-backdrop {
+    height: 260px;
+    background-size: cover;
+    background-position: center top;
+    border-radius: 16px 16px 0 0;
+}
+
+.detalhes-content {
+    padding: 24px;
+}
+
+.detalhes-topo {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.detalhes-poster {
+    width: 120px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.detalhes-info {
+    flex: 1;
+}
+
+.detalhes-titulo {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.detalhes-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    align-items: center;
+}
+
+.meta-nota {
+    background: rgba(245, 197, 24, 0.15);
+    color: var(--gold);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.detalhes-desc {
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.detalhes-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* ===== AVALIACOES ===== */
+.detalhes-avaliacoes {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 20px;
+}
+
+.avaliacoes-titulo {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.avaliacao-form {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.avaliacao-form-label {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.avaliacao-nota-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.avaliacao-nota-row input[type="range"] {
+    flex: 1;
+}
+
+.nota-valor {
+    color: var(--gold);
+    font-weight: 600;
+    min-width: 28px;
+}
+
+.avaliacao-textarea {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    resize: none;
+}
+
+.avaliacao-textarea::placeholder {
+    color: var(--muted);
+}
+
+.avaliacao-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+.avaliacao-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.avaliacao-usuario {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.avaliacao-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--cyan));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.avaliacao-nome {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.avaliacao-username {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.avaliacao-nota-badge {
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.avaliacao-comentario {
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.5;
+}
+
+.avaliacao-data {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
 }

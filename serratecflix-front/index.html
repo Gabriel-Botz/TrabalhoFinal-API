@@ -96,8 +96,8 @@
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-poster">
+        <div class="card" onclick="abrirDetalhes('Interestelar','Uma equipe de exploradores viaja através de um buraco de minhoca no espaço numa tentativa de garantir a sobrevivência da humanidade.','8.6','2014','https://image.tmdb.org/t/p/w500/xJHokMbljvjADYdit5fK5VQsXEG.jpg','https://image.tmdb.org/t/p/original/xJHokMbljvjADYdit5fK5VQsXEG.jpg')">
+        <div class="card-poster">
                 <img src="https://image.tmdb.org/t/p/w500/xJHokMbljvjADYdit5fK5VQsXEG.jpg" alt="Interestelar"/>
                 <span class="card-nota">★ 8.6</span>
                 <span class="card-badge">Filme</span>
@@ -385,6 +385,54 @@
             <button class="auth-btn" onclick="cadastrar()">Criar conta</button>
         </div>
 
+    </div>
+</div>
+
+<!-- MODAL DETALHES -->
+<div class="modal-overlay" id="modal-detalhes">
+    <div class="modal-detalhes-box">
+
+        <button class="modal-close" onclick="fecharDetalhes()">×</button>
+
+        <!-- BACKDROP -->
+        <div class="detalhes-backdrop" id="detalhes-backdrop"></div>
+
+        <!-- CONTEUDO -->
+        <div class="detalhes-content">
+
+            <div class="detalhes-topo">
+                <img class="detalhes-poster" id="detalhes-poster" src="" alt=""/>
+                <div class="detalhes-info">
+                    <h2 class="detalhes-titulo" id="detalhes-titulo"></h2>
+                    <div class="detalhes-meta" id="detalhes-meta"></div>
+                    <p class="detalhes-desc" id="detalhes-desc"></p>
+                    <div class="detalhes-buttons">
+                        <button class="btn-play">▶ Assistir</button>
+                        <button class="btn-fav" id="btn-fav-detalhes">♡ Favoritar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AVALIACOES -->
+            <div class="detalhes-avaliacoes">
+                <h3 class="avaliacoes-titulo">Avaliações</h3>
+
+                <div class="avaliacao-form">
+                    <p class="avaliacao-form-label">Sua avaliação</p>
+                    <div class="avaliacao-nota-row">
+                        <span>Nota:</span>
+                        <input type="range" min="0" max="10" step="0.5" value="8" id="input-nota" oninput="atualizarNota(this.value)"/>
+                        <span class="nota-valor" id="nota-valor">8</span>
+                    </div>
+                    <textarea class="avaliacao-textarea" id="input-comentario" placeholder="Escreva um comentário..." rows="2"></textarea>
+                    <button class="auth-btn" onclick="enviarAvaliacao()">Enviar</button>
+                </div>
+
+                <div class="avaliacoes-lista" id="avaliacoes-lista"></div>
+
+            </div>
+
+        </div>
     </div>
 </div>
 </body>
