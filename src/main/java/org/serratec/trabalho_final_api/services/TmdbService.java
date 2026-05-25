@@ -1,5 +1,6 @@
 package org.serratec.trabalho_final_api.services;
 
+import org.serratec.trabalho_final_api.dto.response.TmdbDetalhesDTO;
 import org.serratec.trabalho_final_api.dto.response.TmdbResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,19 +16,21 @@ public class TmdbService {
         this.webClient = webClientBuilder.baseUrl("https://api.themoviedb.org/3").build();//DIFININFO O BASE URL DA API :)
     }
 
-    public String buscarFilmeExterno(Long tmdbId) {
+    public TmdbDetalhesDTO buscarFilmeExterno(Long tmdbId) {
         try {
-            return this.webClient.get()//INFORMANDO QUE É UMA REQUISIÇÃO DO TIPO GET :)
-                    .uri(uriBuilder -> uriBuilder//CONSTRÓI O RESTANTE DO ENDEREÇO DA REQUISIÇÃO, INCLUINDO O ID DO FILME E A CHAVE DE AUTENTICAÇÃO :)
+            return this.webClient.get()
+                    .uri(uriBuilder -> uriBuilder
                             .path("/movie/" + tmdbId)
                             .queryParam("api_key", apiKey)
                             .queryParam("language", "pt-BR")
+                            .queryParam("append_to_response", "release_dates")
                             .build())
-                            .retrieve()//VALIDA A URL E DISPARA A REQUISIÇÃO :)
-                            .bodyToMono(String.class)//DIZ COMO QUEREMOS RECEBER A RESPOSTA, COMO A API DO TMDB RESPONDE COM UM TEXTO EM FORMATO JSON, NÓS PEDIMOS PARA O SPRING CAPTURAR ESSE JSON BRUTO COMO UMA STRIN COMUM DO JAVA :)
-                            .block();//AVISA PRO JAVA NÃO SER APRESSADINHO E ESPERAR A REQUISIÇÃO DA API CHEGAR, ANTES DE SEGUIR PRA PRÓXIMA LINHA
+                    .retrieve()
+                    .bodyToMono(TmdbDetalhesDTO.class) // Garanta que está convertendo para a classe aqui
+                    .block();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao consultar o TMDB: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -37,7 +40,7 @@ public class TmdbService {
                     .uri(uriBuilder -> uriBuilder
                             .path("/search/movie") // Endpoint de busca do TMDB
                             .queryParam("api_key", apiKey)
-                            .queryParam("query", query) // O termo digitado (ex: Batman)
+                            .queryParam("query", query)
                             .queryParam("language", "pt-BR")
                             .build())
                     .retrieve()
