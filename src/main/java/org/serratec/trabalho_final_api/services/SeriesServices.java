@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.transaction.Transactional;
 import org.serratec.trabalho_final_api.domain.Categoria;
 import org.serratec.trabalho_final_api.domain.Series;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
@@ -16,6 +15,8 @@ import org.serratec.trabalho_final_api.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class SeriesServices {
@@ -39,7 +40,7 @@ public class SeriesServices {
 
     @Transactional
     public SeriesResponseDTO ListarSeriesPorId(@PathVariable UUID id) {
-        Series series =  seriesRepository.findById(id)
+        Series series = seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
 
         return new SeriesResponseDTO(series);
@@ -76,9 +77,9 @@ public class SeriesServices {
     }
 
     @Transactional
-    public SeriesResponseDTO vincularCategoria (UUID id,Long idCategoria) {
+    public SeriesResponseDTO vincularCategoria(UUID id, Long idCategoria) {
 
-        Series series =  seriesRepository.findById(id)
+        Series series = seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
 
         Categoria categoria = categoriaRepository.findById(idCategoria)
@@ -90,8 +91,9 @@ public class SeriesServices {
     }
 
     @Transactional
-    public List<SeriesResponseDTO> buscarPorCategoria(Long idCategoria){
-        return seriesRepository.findByCategoria_id(idCategoria)
+    public List<SeriesResponseDTO> buscarPorCategoria(Long idCategoria) {
+        // o repository utiliza a classe domain como base e não a DB
+        return seriesRepository.findByCategoriasId(idCategoria)// <-- erro
                 .stream()
                 .map(SeriesResponseDTO::new)
                 .toList();
@@ -99,7 +101,7 @@ public class SeriesServices {
 
     @Transactional
     public SeriesResponseDTO atualizarSeries(SeriesRequestDTO seriesRequest, UUID id) {
-        Series series =  seriesRepository.findById(id)
+        Series series = seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
 
         series.setTitulo(seriesRequest.getTitulo());
@@ -115,7 +117,7 @@ public class SeriesServices {
 
     @Transactional
     public void removerSeries(UUID id) {
-        Series series =  seriesRepository.findById(id)
+        Series series = seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não encontrada"));
         seriesRepository.delete(series);
     }
