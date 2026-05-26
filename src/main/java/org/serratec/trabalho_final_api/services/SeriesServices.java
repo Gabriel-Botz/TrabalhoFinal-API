@@ -150,7 +150,7 @@ public class SeriesServices {
         TmdbSerieDetalhesDTO detalhes = tmdbService.buscarSerieExterna(tmdbId);
         if (detalhes != null) {
             dto.setTemporadas(detalhes.getQuantidadeTemporadas());
-            dto.setEspisodios(detalhes.getQuantidadeEpisodios()); // Respeitando a grafia da equipe
+            dto.setEpisodios(detalhes.getQuantidadeEpisodios()); // Respeitando a grafia da equipe
         }
     }
 }
