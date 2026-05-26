@@ -43,7 +43,7 @@ public class Usuario implements UserDetails {
     private String email;
     private String username;
     private String senha;
-    private String fotoPerfilUrl;
+    private String fotoPerfil;
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
     private LocalDateTime dataCriacao;
@@ -52,7 +52,6 @@ public class Usuario implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        // verificar se aconteceu erro aqui
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.getTipoUsuario().name()));
         return authorities;
     }

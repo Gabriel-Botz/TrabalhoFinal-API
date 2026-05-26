@@ -28,11 +28,9 @@ public record UsuarioRequestDTO(
 
         @Enumerated(EnumType.STRING) @NotNull(message = "Campo tipoUsuario deve ser informado como USER ou ADMIN") TipoUsuario tipoUsuario,
 
-        String fotoPerfilUrl
+        String fotoPerfil
 
 ) {
-    // @Autowired
-    // private static BCryptPasswordEncoder encoder;
 
     public Usuario toUsuario() {
 
@@ -44,7 +42,7 @@ public record UsuarioRequestDTO(
         usuario.setSenha(this.senha());
         usuario.setDataCriacao(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         usuario.setTipoUsuario(this.tipoUsuario());
-        usuario.setFotoPerfilUrl(this.fotoPerfilUrl());
+        usuario.setFotoPerfil(this.fotoPerfil());
 
         return usuario;
     }

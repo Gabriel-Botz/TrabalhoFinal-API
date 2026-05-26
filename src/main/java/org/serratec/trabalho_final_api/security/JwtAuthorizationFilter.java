@@ -27,29 +27,35 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-            FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+
+        // String servletPath = request.getServletPath();
+
+        // if (servletPath.contains("swagger") || servletPath.contains("api-docs")) {
+        // chain.doFilter(request, response);
+        // return;
+        // }
 
         String header = request.getHeader("Authorization");
 
-        if (header != null && header.startsWith("Bearer ")) {
-            UsernamePasswordAuthenticationToken auth = getAuthentication(header.substring(7));
-
-            if (auth != null) {
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
+        if (header == null || !header.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
+            return;
         }
-        filterChain.doFilter(request, response);
-    }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        String token = header.substring(7);
 
         if (jwtUtil.isValidToken(token)) {
             String username = jwtUtil.getUsername(token);
-            UserDetails user = userDetailsService.loadUserByUsername(username);
-            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
 
-        return null;
+        chain.doFilter(request, response);
     }
 }

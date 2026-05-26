@@ -9,6 +9,7 @@ import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,7 +27,8 @@ public class PermissaoService {
         Usuario usuario = repository.findById(id) // verifica se o usuario existe
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario de ID '" + id + "' não encontrado"));
 
-        String username = autenticacao.getName(); // pega o username do usuario
+        String username = (autenticacao.getPrincipal() instanceof UserDetails ud) ? ud.getUsername()
+                : autenticacao.getName();
 
         boolean admin = autenticacao.getAuthorities().stream().anyMatch( // verifica se é ou não ADMIN
                 authority -> authority.getAuthority().equals("ROLE_ADMIN"));

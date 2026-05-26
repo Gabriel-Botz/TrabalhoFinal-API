@@ -97,6 +97,33 @@ public class AvaliacaoFilmeService {
 
         avaliacaoFilmeRepository.delete(avaliacaoFilme);    
     }
+    // para poder fazer o top5 verrendo a lista e buscando as informações nescessarias.
+    public List<AvaliacaoFilmeResponseDTO> buscarTop5(){
 
+        List<AvaliacaoFilme> avaliacoes = avaliacaoFilmeRepository.findAllByOrderByNotaDesc();
+        
+        List<AvaliacaoFilmeResponseDTO> avaliacoesDTO = new ArrayList<>();
 
+        List<UUID> filmesAdicionados = new ArrayList<>();
+
+        for(AvaliacaoFilme avaliacao:avaliacoes){
+
+            UUID filmeId = avaliacao.getFilme().getId();
+
+        if(!filmesAdicionados.contains(filmeId)){
+        
+        avaliacoesDTO.add(new AvaliacaoFilmeResponseDTO(avaliacao));
+
+        filmesAdicionados.add(filmeId);
+        
+
+        if(avaliacoesDTO.size() == 5){
+            break;
+        }
+        
+    }
+
+} 
+    return avaliacoesDTO;
+}
 }
