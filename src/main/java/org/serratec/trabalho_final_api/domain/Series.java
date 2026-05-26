@@ -3,8 +3,11 @@ package org.serratec.trabalho_final_api.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Getter
@@ -37,5 +40,9 @@ public class Series {
     @ManyToMany
     @JoinTable(name = "serie_categoria", joinColumns = @JoinColumn(name = "id_series"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     private List<Categoria> categorias;
+
+    @ManyToMany(mappedBy = "series")
+    @JsonBackReference
+    private List<ListaFavoritos> listaFavoritos = new ArrayList<>();
 
 }
