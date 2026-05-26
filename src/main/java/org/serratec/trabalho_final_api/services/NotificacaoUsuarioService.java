@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +25,7 @@ public class NotificacaoUsuarioService {
     @Value("${spring.mail.username}")
     private String remetente;
 
-    // notifica um usuario expecifico o que foi realizado (ADMIN OU USER)
+    @Async // notifica um usuario expecifico o que foi realizado (ADMIN OU USER)
     public void avisarUsuario(Usuario usuario, String assunto, String mensagem) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setFrom(remetente);
@@ -40,7 +41,7 @@ public class NotificacaoUsuarioService {
         }
     }
 
-    // notifica a todos os administradores o que foi feito
+    @Async // notifica a todos os administradores o que foi feito
     public void avisarVariosAdmin(String titulo, String mensagem) {
         List<String> adminEmails = usuarioRepository.findEmailsByTipoUsuario(TipoUsuario.ADMIN);
 
@@ -60,6 +61,7 @@ public class NotificacaoUsuarioService {
         }
     }
 
+    @Async
     // notifica a todos os usuários comuns o que foi feito
     public void avisarVariosUsuarios(String titulo, String mensagem) {
         List<String> userEmails = usuarioRepository.findEmailsByTipoUsuario(TipoUsuario.USER);
