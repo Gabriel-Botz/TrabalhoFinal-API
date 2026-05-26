@@ -1,5 +1,9 @@
 package org.serratec.trabalho_final_api.domain;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +19,14 @@ public class Categoria {
 	
 	@Column(nullable = true, length = 300)
 	private String descricao;
+
+	@ManyToMany(mappedBy = "categorias")
+    @JsonIgnore
+    private List<Filme> filmes;
+
+    @ManyToMany(mappedBy = "categorias")
+    @JsonIgnore 
+    private List<Series> series;
 
 	//Construtor Vazio ↓
 	public Categoria() {

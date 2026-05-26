@@ -78,9 +78,7 @@ public class ListaFavoritosService {
                 }
             }
         }
-
         return listaFavoritosDTO;
-
     }
 
     public ListaFavoritosResponseDTO buscarPorId(UUID id) {

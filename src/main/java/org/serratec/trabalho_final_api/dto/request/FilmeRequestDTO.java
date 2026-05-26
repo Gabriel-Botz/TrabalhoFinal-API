@@ -20,6 +20,8 @@ import lombok.Setter;
 @Schema(description = "DTO para requisição de criação de filme")
 public class FilmeRequestDTO {
 
+    private Long tmdbId; // ID numérico vindo lá do TMDB
+
     @Schema(description = "Titulo do filme", example = "O Poderoso Chefão")
     @NotBlank(message = "O campo titulo é obrigatório")
     @Size(max = 40, message = "O campo titulo deve conter no máximo 40 caracteres")
