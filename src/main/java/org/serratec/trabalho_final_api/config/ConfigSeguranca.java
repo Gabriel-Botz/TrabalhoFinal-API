@@ -2,7 +2,8 @@ package org.serratec.trabalho_final_api.config;
 
 import java.util.Arrays;
 
-import org.serratec.trabalho_final_api.security.JwtAuthorizationFilter;
+import org.serratec.trabalho_final_api.security.JwtAuthenticationFilter;
+import org.serratec.trabalho_final_api.security.JwtAuthorizationFilter; // Certifique-se de importar
 import org.serratec.trabalho_final_api.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -37,7 +39,9 @@ public class ConfigSeguranca {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         AuthenticationManager authManager = authenticationConfiguration.getAuthenticationManager();
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authManager, jwtUtil);
 
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(configurationSource()))
@@ -48,8 +52,9 @@ public class ConfigSeguranca {
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
-                .addFilter(new JwtAuthorizationFilter(authManager, jwtUtil, userDetailsService));
-
+                .addFilter(jwtAuthenticationFilter)
+                .addFilterBefore(new JwtAuthorizationFilter(authManager, jwtUtil, userDetailsService),
+                        UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -69,7 +74,7 @@ public class ConfigSeguranca {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:6000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

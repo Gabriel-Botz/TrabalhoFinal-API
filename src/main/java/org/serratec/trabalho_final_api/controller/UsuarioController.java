@@ -44,8 +44,8 @@ public class UsuarioController {
         @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
         @GetMapping
         @PreAuthorize("hasRole('ADMIN')")
-        public List<UsuarioResponseDTO> listar() {
-                return service.listarTodos();
+        public ResponseEntity<List<UsuarioResponseDTO>> listar() {
+                return ResponseEntity.ok(service.listarTodos());
         }
 
         @Operation(summary = "Buscar animal por ID", description = "Retorna os detalhes completos de um animal específico com base no ID informado.")
@@ -55,10 +55,10 @@ public class UsuarioController {
         })
         @GetMapping("/id")
         @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-        public UsuarioResponseDTO buscar(
+        public ResponseEntity<UsuarioResponseDTO> buscar(
                         @Parameter(description = "ID único do usuario", example = "1") @Valid @RequestParam UUID id)
                         throws RecursoNaoEncontradoException {
-                return service.buscar(id);
+                return ResponseEntity.ok(service.buscar(id));
         }
 
         /* Métodos POSTs */
@@ -104,11 +104,11 @@ public class UsuarioController {
         })
         @PutMapping("/{id}")
         @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-        public UsuarioResponseDTO atualizar(
+        public ResponseEntity<UsuarioResponseDTO> atualizar(
                         @Parameter(description = "ID do animal a ser modificado", example = "1") @Valid @PathVariable UUID id,
                         @Valid @RequestBody UsuarioRequestDTO request) throws RecursoNaoEncontradoException {
 
-                return service.atualizar(id, request);
+                return ResponseEntity.ok(service.atualizar(id, request));
         }
 
         @DeleteMapping("/{id}")
