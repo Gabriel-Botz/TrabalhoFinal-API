@@ -1,9 +1,6 @@
 package org.serratec.trabalho_final_api.services;
 
-import org.serratec.trabalho_final_api.dto.response.TmdbFilmeDetalhesDTO;
-import org.serratec.trabalho_final_api.dto.response.TmdbFilmesResponseDTO;
-import org.serratec.trabalho_final_api.dto.response.TmdbSerieDetalhesDTO;
-import org.serratec.trabalho_final_api.dto.response.TmdbSerieResponseDTO;
+import org.serratec.trabalho_final_api.dto.response.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -96,6 +93,23 @@ public class TmdbService {
                             .build())
                     .retrieve()
                     .bodyToMono(TmdbSerieDetalhesDTO.class)
+                    .block();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public TmdbCreditosResponseDTO buscarElencoDoFilme(Long tmdbId) {
+        try {
+            return this.webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/movie/" + tmdbId + "/credits")
+                            .queryParam("api_key", apiKey)
+                            .queryParam("language", "pt-BR")
+                            .build())
+                    .retrieve()
+                    .bodyToMono(TmdbCreditosResponseDTO.class)
                     .block();
         } catch (Exception e) {
             e.printStackTrace();
