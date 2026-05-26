@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.serratec.trabalho_final_api.dto.request.FilmeRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbCreditosResponseDTO;
 import org.serratec.trabalho_final_api.dto.response.TmdbFilmeDetalhesDTO;
 import org.serratec.trabalho_final_api.services.FilmeService;
 import org.serratec.trabalho_final_api.services.TmdbService;
@@ -84,5 +85,14 @@ public class FilmeController {
     @Operation(summary = "Busca filmes no banco local e na API do TMDB de forma unificada")
     public ResponseEntity<List<FilmeResponseDTO>> buscarFilmes(@RequestParam String query) {
         return ResponseEntity.ok(filmeService.buscarCatalogoUnificado(query));
+    }
+
+    @Operation(summary = "Busca o elenco de um filme pelo ID do TMDB", description = "Retorna a lista de atores e personagens direto da API externa")
+    @GetMapping("/{tmdbId}/elenco")
+    public ResponseEntity<TmdbCreditosResponseDTO> obterElenco(@PathVariable Long tmdbId) {
+        // Chama o método do serviço que criamos ali em cima
+        TmdbCreditosResponseDTO elenco = tmdbService.buscarElencoDoFilme(tmdbId);
+
+        return ResponseEntity.ok(elenco);
     }
 }
