@@ -50,6 +50,11 @@ public class ConfigSeguranca {
                         .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/usuarios/**").permitAll()//rota de id
+                        .requestMatchers("/api-docs", "/api-docs/").permitAll()
+                        .requestMatchers("/swagger-ui", "/swagger-ui/", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-resources", "/swagger-resources/").permitAll()
+                        .requestMatchers("/webjars/").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
                 .addFilter(jwtAuthenticationFilter)
