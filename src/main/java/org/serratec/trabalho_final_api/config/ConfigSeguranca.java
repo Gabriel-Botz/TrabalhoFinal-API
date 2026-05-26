@@ -54,6 +54,12 @@ public class ConfigSeguranca {
                         // Permitir registrar (POST /usuarios) sem estar logado
                         .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/usuarios/**").permitAll()// rota de id
+                        .requestMatchers("/api-docs", "/api-docs/").permitAll()
+                        .requestMatchers("/swagger-ui", "/swagger-ui/", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-resources", "/swagger-resources/").permitAll()
+                        .requestMatchers("/webjars/").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
                         // Permitir acesso anônimo para listagem e buscas de filmes e séries
                         .requestMatchers(HttpMethod.GET, "/filmes", "/filmes/**").permitAll()
@@ -67,10 +73,13 @@ public class ConfigSeguranca {
 
                         // =================================================================
                         // 2. REGRAS COMPARTILHADAS (ROLE_USER e ROLE_ADMIN)// =============
-                        // Operações de escrita em filmes/séries e gerenciamento de conta exigem autenticação
+                        // Operações de escrita em filmes/séries e gerenciamento de conta exigem
+                        // autenticação
                         .requestMatchers(HttpMethod.POST, "/filmes", "/series").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/usuarios/{id}", "/filmes/{id}", "/series/{id}").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}", "/filmes/{id}", "/series/{id}").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/{id}", "/filmes/{id}", "/series/{id}")
+                        .hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}", "/filmes/{id}", "/series/{id}")
+                        .hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/usuarios/id").hasAnyRole("ADMIN")
 
                         // =================================================================
@@ -80,10 +89,10 @@ public class ConfigSeguranca {
                         .requestMatchers("/usuarios/salvar-lista").hasRole("ADMIN")
                         .requestMatchers("/categorias/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                        .addFilter(jwtAuthenticationFilter)
-                        .addFilterBefore(new JwtAuthorizationFilter(authManager, jwtUtil, userDetailsService),
+                .addFilter(jwtAuthenticationFilter)
+                .addFilterBefore(new JwtAuthorizationFilter(authManager, jwtUtil, userDetailsService),
                         UsernamePasswordAuthenticationFilter.class);
-                return http.build();
+        return http.build();
     }
 
     @Bean
