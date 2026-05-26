@@ -70,4 +70,7 @@ public class Filme {
     @ManyToMany(mappedBy = "filmes")
     private List<ListaFavoritos> listaFavoritos = new ArrayList<>();
 
+    public String getTitulo() {
+        return this.titulo;
+    }
 }

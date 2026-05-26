@@ -61,4 +61,8 @@ public class Usuario implements UserDetails {
     public String getPassword() {
         return this.senha;
     }
+
+    public String getNome() {
+        return this.nome;
+    }
 }

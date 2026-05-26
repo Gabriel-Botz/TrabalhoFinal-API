@@ -17,5 +17,4 @@ public class TrabalhoFinalApiApplication {
 
 		SpringApplication.run(TrabalhoFinalApiApplication.class, args);
 	}
-
 }
