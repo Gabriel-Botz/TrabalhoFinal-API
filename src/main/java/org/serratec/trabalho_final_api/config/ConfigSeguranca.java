@@ -47,6 +47,7 @@ public class ConfigSeguranca {
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+
                         // =================================================================
                         // 1. ACESSO PÚBLICO (ALL: Com ou Sem Cadastro)
                         // =================================================================
