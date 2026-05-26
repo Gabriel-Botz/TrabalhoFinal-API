@@ -7,6 +7,7 @@ import org.serratec.trabalho_final_api.enumerated.TipoUsuario;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class NotificacaoUsuarioService {
         try {
             mailSender.send(mail);
             System.out.println("E-mail real enviado com sucesso para: " + usuario.getEmail());
-        } catch (Exception e) {
+        } catch (MailException e) {
             throw new RuntimeException("Falha ao disparar e-mail via Gmail: " + e.getMessage(), e);
         }
     }
@@ -53,7 +54,7 @@ public class NotificacaoUsuarioService {
             try {
                 mailSender.send(mail);
                 System.out.println("E-mail em massa enviado para os Administradores.");
-            } catch (Exception e) {
+            } catch (MailException e) {
                 throw new RuntimeException("Falha ao disparar e-mail em massa para Admins: " + e.getMessage(), e);
             }
         }
@@ -73,7 +74,7 @@ public class NotificacaoUsuarioService {
             try {
                 mailSender.send(mail);
                 System.out.println("E-mail em massa enviado para os Usuários comuns.");
-            } catch (Exception e) {
+            } catch (MailException e) {
                 throw new RuntimeException("Falha ao disparar e-mail em massa para Usuários: " + e.getMessage(), e);
             }
         }

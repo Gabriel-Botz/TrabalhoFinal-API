@@ -109,7 +109,7 @@ public class SeriesServices {
     }
 
     // =========================================================================
-    //                        BUSCA HÍBRIDA ENRIQUECIDA
+    // BUSCA HÍBRIDA ENRIQUECIDA
     // =========================================================================
 
     @Transactional
@@ -128,7 +128,8 @@ public class SeriesServices {
             for (TmdbSerieResponseDTO.TmdbSerieItem itemExterno : seriesExternas.getResultados()) {
 
                 boolean jaExisteLocalmente = locaisFiltradas.stream()
-                        .anyMatch(s -> itemExterno.getName() != null && itemExterno.getName().equalsIgnoreCase(s.getTitulo()));
+                        .anyMatch(s -> itemExterno.getName() != null
+                                && itemExterno.getName().equalsIgnoreCase(s.getTitulo()));
 
                 if (!jaExisteLocalmente) {
                     SeriesResponseDTO dtoExterno = itemExterno.paraSerieResponseDTO();
