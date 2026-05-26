@@ -47,6 +47,7 @@ public class ConfigSeguranca {
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+
                         // =================================================================
                         // 1. ACESSO PÚBLICO (ALL: Com ou Sem Cadastro)
                         // =================================================================
@@ -79,10 +80,10 @@ public class ConfigSeguranca {
                         .requestMatchers("/usuarios/salvar-lista").hasRole("ADMIN")
                         .requestMatchers("/categorias/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                    .addFilter(jwtAuthenticationFilter)
-                    .addFilterBefore(new JwtAuthorizationFilter(authManager, jwtUtil, userDetailsService),
+                        .addFilter(jwtAuthenticationFilter)
+                        .addFilterBefore(new JwtAuthorizationFilter(authManager, jwtUtil, userDetailsService),
                         UsernamePasswordAuthenticationFilter.class);
-            return http.build();
+                return http.build();
     }
 
     @Bean
