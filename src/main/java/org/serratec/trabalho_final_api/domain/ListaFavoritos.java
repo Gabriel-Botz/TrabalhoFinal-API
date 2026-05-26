@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +17,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -40,18 +40,18 @@ public class ListaFavoritos {
     @Size(max = 120, message = "O nome da lista deve ter no máximo 120 caracteres")
     private String nomeLista;
 
-    @NotBlank(message = "O status de privacidade é obrigatório")
+    @NotNull(message = "O status de privacidade é obrigatório")
     private Boolean privada;
 
-    @NotBlank(message = "A data de criação é obrigatória")
+    @NotNull(message = "A data de criação é obrigatória")
     private LocalDate dataCriacao;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "lista_favoritos_filme", joinColumns = @JoinColumn(name = "lista_id"), inverseJoinColumns = @JoinColumn(name = "filme_id"))
     @JsonManagedReference
     private List<Filme> filmes;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "lista_favoritos_series", joinColumns = @JoinColumn(name = "lista_id"), inverseJoinColumns = @JoinColumn(name = "series_id"))
     @JsonManagedReference
     private List<Series> series;
