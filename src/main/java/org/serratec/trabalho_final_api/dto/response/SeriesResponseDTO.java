@@ -9,7 +9,7 @@ public class SeriesResponseDTO {
     private String titulo;
     private String descricao;
     private Integer temporadas;
-    private Integer espisodios;
+    private Integer episodios;
     private LocalDate dataLancamento;
     private Double notaMedia;
 
@@ -21,7 +21,7 @@ public class SeriesResponseDTO {
         this.titulo = series.getTitulo();
         this.descricao = series.getDescricao();
         this.temporadas = series.getTemporadas();
-        this.espisodios = series.getEpisodios();
+        this.episodios = series.getEpisodios();
         this.dataLancamento = series.getDataLancamento();
         this.notaMedia = series.getNotaMedia();
     }
@@ -59,11 +59,11 @@ public class SeriesResponseDTO {
     }
 
     public Integer getEspisodios() {
-        return espisodios;
+        return episodios;
     }
 
-    public void setEspisodios(Integer espisodios) {
-        this.espisodios = espisodios;
+    public void setEpisodios(Integer episodios) {
+        this.episodios = episodios;
     }
 
     public LocalDate getDataLancamento() {

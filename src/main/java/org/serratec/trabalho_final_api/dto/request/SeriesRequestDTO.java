@@ -21,7 +21,7 @@ public class SeriesRequestDTO {
 
     @NotBlank(message = "episodios é obrigatório")
     @NotNull(message = "episodios não pode ser nulo")
-    private Integer espisodios;
+    private Integer episodios;
 
     @NotBlank(message = "Data de lançamento é obrigatório")
     @NotNull(message = "Data de lançamento não pode ser nulo")
@@ -58,12 +58,12 @@ public class SeriesRequestDTO {
         this.temporadas = temporadas;
     }
 
-    public Integer getEspisodios() {
-        return espisodios;
+    public Integer getEpisodios() {
+        return episodios;
     }
 
-    public void setEspisodios(Integer espisodios) {
-        this.espisodios = espisodios;
+    public void setEpisodios(Integer espisodios) {
+        this.episodios = espisodios;
     }
 
     public LocalDate getDataLancamento() {

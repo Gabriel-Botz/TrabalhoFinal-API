@@ -3,7 +3,6 @@ package org.serratec.trabalho_final_api.security;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,29 +25,58 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        setFilterProcessesUrl("/login");
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
         try {
-            UsuarioRequestDTO login = new ObjectMapper().readValue(request.getInputStream(), UsuarioRequestDTO.class);
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    login.username(), login.senha(), new ArrayList<>());
-            Authentication auth = authenticationManager.authenticate(authToken);
+            LoginRequest loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
 
-            return auth;
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(), loginRequest.getSenha(), new ArrayList<>());
+
+            return authenticationManager.authenticate(authenticationToken);
         } catch (IOException e) {
-            throw new RuntimeException("Falha ao autenticar o usuário", e);
+            throw new RuntimeException("Falha ao ler os dados da requisição de login", e);
         }
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-            FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+            Authentication authResult) throws IOException, ServletException {
+
         String username = ((UserDetails) authResult.getPrincipal()).getUsername();
+
         String token = jwtUtil.generateToken(username);
+
         response.addHeader("Authorization", "Bearer " + token);
-        response.addHeader("Access-Control-Expose-Headers", "Authorization");
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(String.format("{\"token\": \"Bearer %s\"}", token));
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException, ServletException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"error\": \"Usuário ou senha inválidos.\"}");
+    }
+
+    private static class LoginRequest {
+        private String username;
+        private String senha;
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getSenha() {
+            return senha;
+        }
     }
 }

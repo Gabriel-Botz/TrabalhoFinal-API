@@ -5,7 +5,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.serratec.trabalho_final_api.dto.request.FilmeRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbFilmeDetalhesDTO;
 import org.serratec.trabalho_final_api.services.FilmeService;
+import org.serratec.trabalho_final_api.services.TmdbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ public class FilmeController {
 
     @Autowired
     private FilmeService filmeService;
+
+    @Autowired
+    private TmdbService tmdbService;
 
     @GetMapping
     @Operation(summary = "Lista todos os filmes")
@@ -66,5 +71,18 @@ public class FilmeController {
     @Operation(summary = "Busca filmes por categoria")
     public ResponseEntity<List<FilmeResponseDTO>> buscarFilmesPorCategoria(@PathVariable Long categoriaId) {
         return ResponseEntity.ok(filmeService.buscarFilmesPorCategoria(categoriaId));
+    }
+
+    @GetMapping("/tmdb/{tmdbId}")
+    @Operation(summary = "Endpoint temporário para testar conexão com o TMDB")
+    public ResponseEntity<TmdbFilmeDetalhesDTO> testarTmdb(@PathVariable Long tmdbId) {
+        TmdbFilmeDetalhesDTO detalhes = tmdbService.buscarFilmeExterno(tmdbId);
+        return ResponseEntity.ok(detalhes);
+    }
+
+    @GetMapping("/buscar")
+    @Operation(summary = "Busca filmes no banco local e na API do TMDB de forma unificada")
+    public ResponseEntity<List<FilmeResponseDTO>> buscarFilmes(@RequestParam String query) {
+        return ResponseEntity.ok(filmeService.buscarCatalogoUnificado(query));
     }
 }
