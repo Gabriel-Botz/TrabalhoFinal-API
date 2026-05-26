@@ -2,15 +2,10 @@ package org.serratec.trabalho_final_api.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.dto.request.ListaFavoritosRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.ListaFavoritosResponseDTO;
-import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
-import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
-import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.serratec.trabalho_final_api.services.ListaFavoritosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +31,6 @@ public class ListaFavoritosController {
 
     @Autowired
     private ListaFavoritosService listaFavoritosService;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
     // Listas públicas
     @Operation(

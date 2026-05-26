@@ -16,7 +16,6 @@ import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.ListaFavoritosRepository;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -29,9 +28,6 @@ public class ListaFavoritosService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
-    @Autowired
-    private PermissaoService permissaoService;
 
     // Listars públicas
     public List<ListaFavoritosResponseDTO> listarPublicas() {
