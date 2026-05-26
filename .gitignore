@@ -1,4 +1,6 @@
 HELP.md
+
+# Maven e Compilação
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -32,6 +34,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### Rafael Albino Settings ###
+### Configurações locais e Variáveis de Ambiente ###
 .env
 application.properties
