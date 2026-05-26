@@ -14,8 +14,6 @@ public class TrabalhoFinalApiApplication {
 				.ignoreIfMissing()
 				.load();
 		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
-
 		SpringApplication.run(TrabalhoFinalApiApplication.class, args);
 	}
-
 }
