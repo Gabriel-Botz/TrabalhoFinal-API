@@ -31,8 +31,6 @@ public record UsuarioRequestDTO(
         String fotoPerfil
 
 ) {
-    // @Autowired
-    // private static BCryptPasswordEncoder encoder;
 
     public Usuario toUsuario() {
 

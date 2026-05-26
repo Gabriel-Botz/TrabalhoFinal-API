@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -48,15 +47,14 @@ public class UsuarioController {
                 return ResponseEntity.ok(service.listarTodos());
         }
 
-        @Operation(summary = "Buscar animal por ID", description = "Retorna os detalhes completos de um animal específico com base no ID informado.")
+        @Operation(summary = "Buscar usuários por ID", description = "Retorna os detalhes completos de um usuário específico com base no ID informado.")
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "Animal encontrado com sucesso"),
-                        @ApiResponse(responseCode = "404", description = "Nenhum animal encontrado com o ID informado")
+                        @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
+                        @ApiResponse(responseCode = "404", description = "Nenhum usuário encontrado com o ID informado")
         })
-        @GetMapping("/id")
-        @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+        @GetMapping("/{id}")
         public ResponseEntity<UsuarioResponseDTO> buscar(
-                        @Parameter(description = "ID único do usuario", example = "1") @Valid @RequestParam UUID id)
+                        @Parameter(description = "ID único do usuario", example = "1") @Valid @PathVariable UUID id)
                         throws RecursoNaoEncontradoException {
                 return ResponseEntity.ok(service.buscar(id));
         }
@@ -87,7 +85,6 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "400", description = "Um ou mais elementos da lista contêm dados inválidos")
         })
         @PostMapping("/salvar-lista")
-        @PreAuthorize("hasRole('ADMIN')")
         public ResponseEntity<List<UsuarioResponseDTO>> salvarVarios(
                         @Valid @RequestBody List<UsuarioRequestDTO> request) {
                 List<UsuarioResponseDTO> response = service.salvarList(request);
@@ -103,16 +100,14 @@ public class UsuarioController {
                         @ApiResponse(responseCode = "404", description = "Usuario não localizado para atualização")
         })
         @PutMapping("/{id}")
-        @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
         public ResponseEntity<UsuarioResponseDTO> atualizar(
-                        @Parameter(description = "ID do animal a ser modificado", example = "1") @Valid @PathVariable UUID id,
+                        @Parameter(description = "ID do usuário a ser modificado", example = "1") @Valid @PathVariable UUID id,
                         @Valid @RequestBody UsuarioRequestDTO request) throws RecursoNaoEncontradoException {
 
                 return ResponseEntity.ok(service.atualizar(id, request));
         }
 
         @DeleteMapping("/{id}")
-        @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
         public ResponseEntity<Void> deletar(
                         @Parameter(description = "ID do usuario a ser deletado", example = "1") @PathVariable UUID id)
                         throws RecursoNaoEncontradoException {
