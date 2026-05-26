@@ -8,7 +8,9 @@ import java.util.UUID;
 import org.serratec.trabalho_final_api.domain.ListaFavoritos;
 import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.dto.request.ListaFavoritosRequestDTO;
+import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
 import org.serratec.trabalho_final_api.dto.response.ListaFavoritosResponseDTO;
+import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
 import org.serratec.trabalho_final_api.exception.AcessoNegadoException;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.ListaFavoritosRepository;
@@ -28,58 +30,86 @@ public class ListaFavoritosService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // @Autowired
-    // private PermissaoService permissaoService;
+    @Autowired
+    private PermissaoService permissaoService;
 
-    // Listar somente as listas públicas
+    // Listars públicas
     public List<ListaFavoritosResponseDTO> listarPublicas() {
 
         List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
         List<ListaFavoritosResponseDTO> listaFavoritosDTO = new ArrayList<>();
-
+        
         for (ListaFavoritos lista : listaFavoritos) {
+            List<FilmeResponseDTO> filmes = new ArrayList<>();
+            List<SeriesResponseDTO> series = new ArrayList<>();
 
             // Adiciona somente listas públicas
             if (!lista.getPrivada()) {
+
+                lista.getFilmes().forEach(filme -> {
+                    filmes.add(new FilmeResponseDTO(filme));
+                });
+                lista.getSeries().forEach(serie -> {
+                    series.add(new SeriesResponseDTO(serie));
+                });
+
                 listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
+                    lista.getId(),
+                    lista.getNomeLista(),
+                    lista.getPrivada(),
+                    lista.getDataCriacao(),
+                    lista.getUsuario(),
+                    filmes,
+                    series
+                ));
+            }
+        }
+
+        return listaFavoritosDTO;
+
+    }
+
+
+    // Listas privadas
+    public List<ListaFavoritosResponseDTO> listarPrivadas(String username) {
+
+        List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
+        List<ListaFavoritosResponseDTO> listaFavoritosDTO = new ArrayList<>();
+        
+        for (ListaFavoritos lista : listaFavoritos) {
+
+            if(username.equals(lista.getUsuario().getUsername())){
+
+                List<FilmeResponseDTO> filmes = new ArrayList<>();
+                List<SeriesResponseDTO> series = new ArrayList<>();
+    
+                if (lista.getPrivada()) {
+    
+                    lista.getFilmes().forEach(filme -> {
+                        filmes.add(new FilmeResponseDTO(filme));
+                    });
+                    lista.getSeries().forEach(serie -> {
+                        series.add(new SeriesResponseDTO(serie));
+                    });
+    
+                    listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
                         lista.getId(),
                         lista.getNomeLista(),
                         lista.getPrivada(),
                         lista.getDataCriacao(),
-                        lista.getUsuario()));
-            }
-        }
-
-        return listaFavoritosDTO;
-
-    }
-
-    // Listar somente as listas privadas do usuário logado
-    public List<ListaFavoritosResponseDTO> listarPrivadas() {
-
-        List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
-        List<ListaFavoritosResponseDTO> listaFavoritosDTO = new ArrayList<>();
-
-        for (ListaFavoritos lista : listaFavoritos) {
-
-            if (!lista.getPrivada()) {
-
-                // Verificar se o usuário logado é igual ao proprietario da lista
-                // Se sim, mostrar somente listas onde o usuário logado é o proprietário da lista
-                if (true) {
-
-                    listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
-                            lista.getId(),
-                            lista.getNomeLista(),
-                            lista.getPrivada(),
-                            lista.getDataCriacao(),
-                            lista.getUsuario()));
-
+                        lista.getUsuario(),
+                        filmes,
+                        series
+                    ));
+    
                 }
+
             }
+
         }
         return listaFavoritosDTO;
     }
+
 
     public ListaFavoritosResponseDTO buscarPorId(UUID id) {
 
@@ -87,30 +117,27 @@ public class ListaFavoritosService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException(
                         "Lista de favoritos não encontrada com ID: " + id));
 
+        List<FilmeResponseDTO> filmes = new ArrayList<>();
+        List<SeriesResponseDTO> series = new ArrayList<>();
+
+        lista.getFilmes().forEach(filme -> {
+            filmes.add(new FilmeResponseDTO(filme));
+        });
+        lista.getSeries().forEach(serie -> {
+            series.add(new SeriesResponseDTO(serie));
+        });
+
         return new ListaFavoritosResponseDTO(
                 lista.getId(),
                 lista.getNomeLista(),
                 lista.getPrivada(),
                 lista.getDataCriacao(),
-                lista.getUsuario());
-
-        // Verificar se a lista é pública. Se sim, retorna a lista
-        // Se não, verifica se o usuário logado é proprietário do id informado
-        // Se sim, mostra a lista. Se não, lança excessão não encontrado.
-
-        // if (true) {
-        // return new ListaFavoritosResponseDTO(
-        // lista.getId(),
-        // lista.getNomeLista(),
-        // lista.getPrivada(),
-        // lista.getDataCriacao(),
-        // lista.getUsuario());
-        // } else {
-        // throw new RecursoNaoEncontradoException(
-        // "Lista não encontrada");
-        // }
+                lista.getUsuario(),
+                filmes,
+                series);
 
     }
+
 
     // Busca por nome, mas somente as listas públicas
     public List<ListaFavoritosResponseDTO> buscarPorNomePublicas(String nome) {
@@ -122,60 +149,70 @@ public class ListaFavoritosService {
         List<ListaFavoritos> listas = listaFavoritosRepository.findByNomeListaContainingIgnoreCase(nome);
         List<ListaFavoritosResponseDTO> listasDTO = new ArrayList<>();
         listas.forEach(lista -> {
+            
+        List<FilmeResponseDTO> filmes = new ArrayList<>();
+        List<SeriesResponseDTO> series = new ArrayList<>();
+            
+        lista.getFilmes().forEach(filme -> {
+            filmes.add(new FilmeResponseDTO(filme));
+        });
+        lista.getSeries().forEach(serie -> {
+            series.add(new SeriesResponseDTO(serie));
+        });
 
             listasDTO.add(new ListaFavoritosResponseDTO(
                     lista.getId(),
                     lista.getNomeLista(),
                     lista.getPrivada(),
                     lista.getDataCriacao(),
-                    lista.getUsuario()));
+                    lista.getUsuario(),
+                    filmes,
+                    series));
 
         });
 
         return listasDTO;
     }
 
-    // Busca por nome, mas somente as listas privadas
-    public List<ListaFavoritosResponseDTO> buscarPorNomePrivadas(String nome) {
+    
+    // // Busca por nome, mas somente as listas privadas
+    // public List<ListaFavoritosResponseDTO> buscarPorNomePrivadas(String nome) {
 
-        if (nome.isBlank() || nome == null) {
-            throw new RecursoNaoEncontradoException("Nenhuma lista contendo \"" + nome + "\"foi encontrada");
-        }
+    //     if (nome.isBlank() || nome == null) {
+    //         throw new RecursoNaoEncontradoException("Nenhuma lista contendo \"" + nome + "\"foi encontrada");
+    //     }
 
-        List<ListaFavoritos> listas = listaFavoritosRepository.findByNomeListaContainingIgnoreCase(nome);
-        List<ListaFavoritosResponseDTO> listasDTO = new ArrayList<>();
-        listas.forEach(lista -> {
+    //     List<ListaFavoritos> listas = listaFavoritosRepository.findByNomeListaContainingIgnoreCase(nome);
+    //     List<ListaFavoritosResponseDTO> listasDTO = new ArrayList<>();
+    //     listas.forEach(lista -> {
 
-            listasDTO.add(new ListaFavoritosResponseDTO(
-                    lista.getId(),
-                    lista.getNomeLista(),
-                    lista.getPrivada(),
-                    lista.getDataCriacao(),
-                    lista.getUsuario()));
+    //         listasDTO.add(new ListaFavoritosResponseDTO(
+    //                 lista.getId(),
+    //                 lista.getNomeLista(),
+    //                 lista.getPrivada(),
+    //                 lista.getDataCriacao(),
+    //                 lista.getUsuario(),
+    //                 lista.getFilmes(),
+    //                 lista.getSeries()));
 
-        });
+    //     });
 
-        return listasDTO;
-    }
+    //     return listasDTO;
+    // }
+
 
     @Transactional
-    public ListaFavoritosResponseDTO criar(ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
+    public ListaFavoritosResponseDTO criar(String username, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
-        // captura o username do usuario logado
-        String usuario = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        // captura a entidade do usuario
-        Usuario donoDaLista = usuarioRepository.findByUsername(usuario)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário autenticado não encontrado."));
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
         ListaFavoritos lista = new ListaFavoritos();
 
         lista.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
         lista.setPrivada(listaFavoritosRequestDTO.getPrivada());
         lista.setDataCriacao(LocalDate.now());
-
-        // vinculando a lista ao usuario
-        lista.setUsuario(donoDaLista);
+        lista.setUsuario(usuario);
 
         ListaFavoritos novaLista = listaFavoritosRepository.save(lista);
 
@@ -184,44 +221,68 @@ public class ListaFavoritosService {
                 novaLista.getNomeLista(),
                 novaLista.getPrivada(),
                 novaLista.getDataCriacao(),
-                novaLista.getUsuario());
+                novaLista.getUsuario(),
+                new ArrayList<>(),
+                new ArrayList<>());
 
     }
 
+
+    // Atualizar lista de favoritos
     @Transactional
     public ListaFavoritosResponseDTO atualizar(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO,
-            String usuario) { // <- Aqui
+            String username) {
 
         ListaFavoritos listaExistente = listaFavoritosRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException(
                         "Lista de favoritos não encontrada com ID: " + id));
+                        
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
-        if (!listaExistente.getUsuario().getUsername().equals(usuario)) // <- Aqui
+        if (!listaExistente.getUsuario().equals(usuario)) // <- Aqui
             throw new AcessoNegadoException("Você não tem permissão para alterar esta lista.");
 
         listaExistente.setNomeLista(listaFavoritosRequestDTO.getNomeLista());
         listaExistente.setPrivada(listaFavoritosRequestDTO.getPrivada());
-        listaExistente.setDataCriacao(LocalDate.now());
 
         ListaFavoritos listaAtualizada = listaFavoritosRepository.save(listaExistente);
+
+        List<FilmeResponseDTO> filmes = new ArrayList<>();
+        List<SeriesResponseDTO> series = new ArrayList<>();
+        
+        listaAtualizada.getFilmes().forEach(filme -> {
+            filmes.add(new FilmeResponseDTO(filme));
+        });
+        listaAtualizada.getSeries().forEach(serie -> {
+            series.add(new SeriesResponseDTO(serie));
+        });
 
         return new ListaFavoritosResponseDTO(
                 listaAtualizada.getId(),
                 listaAtualizada.getNomeLista(),
                 listaAtualizada.getPrivada(),
                 listaAtualizada.getDataCriacao(),
-                listaAtualizada.getUsuario());
+                listaAtualizada.getUsuario(),
+                filmes,
+                series
+            );
 
     }
 
-    @Transactional
-    public boolean deletar(UUID id) {
 
-        if (!listaFavoritosRepository.existsById(id)) {
-            throw new RecursoNaoEncontradoException("Lista com o id " + id + " não encontrada");
-        } else {
-            listaFavoritosRepository.deleteById(id);
-            return true;
-        }
+    @Transactional
+    public void deletar(String username, UUID id) {
+
+        ListaFavoritos listaExistente = listaFavoritosRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Lista não encontrada"));
+        
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+
+        if(!listaExistente.getUsuario().equals(usuario))
+            throw new AcessoNegadoException("Você não tem permissão para deletar esta lista.");
+
+        listaFavoritosRepository.delete(listaExistente);
     }
 }

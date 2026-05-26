@@ -1,8 +1,11 @@
 package org.serratec.trabalho_final_api.dto.response;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
+import org.serratec.trabalho_final_api.domain.Filme;
+import org.serratec.trabalho_final_api.domain.Series;
 import org.serratec.trabalho_final_api.domain.Usuario;
 
 import lombok.AllArgsConstructor;
@@ -21,5 +24,7 @@ public class ListaFavoritosResponseDTO {
     private Boolean privada;
     private LocalDate dataCriacao;
     private Usuario usuario;
+    private List<FilmeResponseDTO> filmes;
+    private List<SeriesResponseDTO> series;
 
 }
