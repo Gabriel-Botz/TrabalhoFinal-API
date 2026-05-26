@@ -15,14 +15,15 @@
         <a href="#" onclick="filtrarPorTipo('todos')">Início</a>
         <a href="#" onclick="filtrarPorTipo('filmes')">Filmes</a>
         <a href="#" onclick="filtrarPorTipo('series')">Séries</a>
-        <a href="#" onclick="abrirListas()">Minhas Listas</a>    </div>
+        <a href="#" onclick="abrirListas()">Minhas Listas</a>
+    </div>
 
     <div class="nav-right">
-        <button class="btn-login" onclick="abrirModal()">Entrar</button>    </div>
+        <button class="btn-login" onclick="abrirModal()">Entrar</button>
+    </div>
 </nav>
 
 <div class="filters-bar">
-
     <input type="text" class="filter-search" placeholder="🔍 Buscar filmes e séries..."/>
 
     <div class="filter-toggle">
@@ -41,7 +42,6 @@
     </select>
 
     <button class="btn-buscar">Buscar</button>
-
 </div>
 
 <section class="hero">
@@ -58,81 +58,24 @@
         <p class="hero-desc">Uma equipe de exploradores viaja através de um buraco de minhoca no espaço numa tentativa de garantir a sobrevivência da humanidade.</p>
         <div class="hero-buttons">
             <button class="btn-play">▶ Assistir</button>
-            <button class="btn-fav" id="btn-fav-detalhes" onclick="abrirSelecionarLista()">♡ Favoritar</button>        </div>
+            <button class="btn-fav" id="btn-fav-detalhes" onclick="abrirSelecionarLista()">♡ Favoritar</button>
+        </div>
     </div>
 </section>
 
+<!-- SEÇÃO DE FILMES POPULARES (DINÂMICA) -->
 <section class="carousel-section">
     <h2 class="carousel-title">Filmes Populares</h2>
-    <div class="carousel">
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/godmFdpBaRTZOEGaHcBPMqnBqoh.jpg" alt="O Poderoso Chefão"/>
-                <span class="card-nota">★ 9.2</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">O Poderoso Chefão</p>
-                <p class="card-year">1972</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" alt="Batman"/>
-                <span class="card-nota">★ 9.0</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Batman: O Cavaleiro das Trevas</p>
-                <p class="card-year">2008</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="abrirDetalhes('Interestelar','Uma equipe de exploradores viaja através de um buraco de minhoca no espaço numa tentativa de garantir a sobrevivência da humanidade.','8.6','2014','https://image.tmdb.org/t/p/w500/xJHokMbljvjADYdit5fK5VQsXEG.jpg','https://image.tmdb.org/t/p/original/xJHokMbljvjADYdit5fK5VQsXEG.jpg')">
-        <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/xJHokMbljvjADYdit5fK5VQsXEG.jpg" alt="Interestelar"/>
-                <span class="card-nota">★ 8.6</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Interestelar</p>
-                <p class="card-year">2014</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" alt="A Origem"/>
-                <span class="card-nota">★ 8.8</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">A Origem</p>
-                <p class="card-year">2010</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg" alt="Matrix"/>
-                <span class="card-nota">★ 8.7</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Matrix</p>
-                <p class="card-year">1999</p>
-            </div>
-        </div>
-
+    <!-- Adicionamos o id="container-filmes-api" para o JavaScript injetar os dados aqui -->
+    <div class="carousel" id="container-filmes-api">
+        <!-- Os cards de filmes do seu banco de dados serão injetados aqui via JS -->
+        <p style="color: var(--muted); padding: 20px;">Carregando filmes...</p>
     </div>
 </section>
 
 <section class="carousel-section">
     <h2 class="carousel-title">Séries em Alta</h2>
     <div class="carousel">
-
         <div class="card">
             <div class="card-poster">
                 <img src="https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg" alt="Breaking Bad"/>
@@ -192,14 +135,12 @@
                 <p class="card-year">2019</p>
             </div>
         </div>
-
     </div>
 </section>
 
 <section class="carousel-section">
     <h2 class="carousel-title">Ação & Aventura</h2>
     <div class="carousel">
-
         <div class="card">
             <div class="card-poster">
                 <img src="https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg" alt="John Wick"/>
@@ -259,14 +200,12 @@
                 <p class="card-year">2021</p>
             </div>
         </div>
-
     </div>
 </section>
 
 <section class="carousel-section">
     <h2 class="carousel-title">Sci-fi & Fantasia</h2>
     <div class="carousel">
-
         <div class="card">
             <div class="card-poster">
                 <img src="https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg" alt="Matrix Resurrections"/>
@@ -326,7 +265,6 @@
                 <p class="card-year">2010</p>
             </div>
         </div>
-
     </div>
 </section>
 
@@ -337,16 +275,15 @@
         document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById('btn-' + tipo).classList.add('active');
 
-        const categoriaSelect = document.getElementById('filter-categoria');
-        categoriaSelect.disabled = tipo === 'series';
-        categoriaSelect.style.opacity = tipo === 'series' ? '0.4' : '1';
+        const categorySelect = document.getElementById('filter-categoria');
+        categorySelect.disabled = tipo === 'series';
+        categorySelect.style.opacity = tipo === 'series' ? '0.4' : '1';
     }
 </script>
+
 <div class="modal-overlay" id="modal-auth">
     <div class="modal-box">
-
         <button class="modal-close" onclick="fecharModal()">×</button>
-
         <h1 class="modal-logo">SerratecFlix</h1>
         <p class="modal-sub">Sua plataforma geek de streaming</p>
 
@@ -371,19 +308,15 @@
             <div class="auth-error" id="erro-cadastro"></div>
             <button class="auth-btn" onclick="cadastrar()">Criar conta</button>
         </div>
-
     </div>
 </div>
 
 <div class="modal-overlay" id="modal-detalhes">
     <div class="modal-detalhes-box">
-
         <button class="modal-close" onclick="fecharDetalhes()">×</button>
-
         <div class="detalhes-backdrop" id="detalhes-backdrop"></div>
 
         <div class="detalhes-content">
-
             <div class="detalhes-topo">
                 <img class="detalhes-poster" id="detalhes-poster" src="" alt=""/>
                 <div class="detalhes-info">
@@ -399,7 +332,6 @@
 
             <div class="detalhes-avaliacoes">
                 <h3 class="avaliacoes-titulo">Avaliações</h3>
-
                 <div class="avaliacao-form">
                     <p class="avaliacao-form-label">Sua avaliação</p>
                     <div class="avaliacao-nota-row">
@@ -410,21 +342,16 @@
                     <textarea class="avaliacao-textarea" id="input-comentario" placeholder="Escreva um comentário..." rows="2"></textarea>
                     <button class="auth-btn" onclick="enviarAvaliacao()">Enviar</button>
                 </div>
-
                 <div class="avaliacoes-lista" id="avaliacoes-lista"></div>
-
             </div>
-
         </div>
     </div>
 </div>
+
 <div class="modal-overlay" id="modal-listas">
     <div class="modal-detalhes-box">
-
         <button class="modal-close" onclick="fecharListas()">×</button>
-
         <div class="detalhes-content">
-
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
                 <h2>Minhas Listas</h2>
                 <button class="btn-buscar" onclick="mostrarFormLista()">+ Nova lista</button>
@@ -440,14 +367,11 @@
                     <button class="btn-fav" onclick="ocultarFormLista()">Cancelar</button>
                 </div>
             </div>
-
             <div id="container-listas"></div>
-
         </div>
     </div>
 </div>
-<!-- MODAL SELECIONAR LISTA -->
-<div class="modal-overlay" id="modal-selecionar-lista">
-</div>
+
+<div class="modal-overlay" id="modal-selecionar-lista"></div>
 </body>
 </html>
