@@ -9,12 +9,12 @@ target/
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -31,6 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Rafael Albino Settings ###
+### ignorar .env
 .env
+.env.*
+!.env.example
