@@ -48,12 +48,12 @@ public class UsuarioController {
                 return ResponseEntity.ok(service.listarTodos());
         }
 
-        @Operation(summary = "Buscar animal por ID", description = "Retorna os detalhes completos de um animal específico com base no ID informado.")
+        @Operation(summary = "Buscar usuários por ID", description = "Retorna os detalhes completos de um usuário específico com base no ID informado.")
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "Animal encontrado com sucesso"),
-                        @ApiResponse(responseCode = "404", description = "Nenhum animal encontrado com o ID informado")
+                        @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
+                        @ApiResponse(responseCode = "404", description = "Nenhum usuário encontrado com o ID informado")
         })
-        @GetMapping("/id")
+        @GetMapping("/{id}")
         @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
         public ResponseEntity<UsuarioResponseDTO> buscar(
                         @Parameter(description = "ID único do usuario", example = "1") @Valid @RequestParam UUID id)

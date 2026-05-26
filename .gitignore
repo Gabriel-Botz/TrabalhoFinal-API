@@ -11,12 +11,12 @@ target/
 .classpath
 .factorypath
 .project
-.settings/
+.settings
 .springBeans
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea/
+.idea
 *.iws
 *.iml
 *.ipr
@@ -36,5 +36,4 @@ build/
 
 ### Configurações locais e Variáveis de Ambiente ###
 .env
-.env.*
-!.env.example
+application.properties
