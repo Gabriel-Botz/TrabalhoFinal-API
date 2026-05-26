@@ -34,3 +34,4 @@ build/
 
 ### Rafael Albino Settings ###
 .env
+application.properties
