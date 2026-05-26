@@ -52,7 +52,6 @@ public class Usuario implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        // verificar se aconteceu erro aqui
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.getTipoUsuario().name()));
         return authorities;
     }

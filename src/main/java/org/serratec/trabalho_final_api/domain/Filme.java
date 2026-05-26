@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -68,6 +69,7 @@ public class Filme {
     private List<AvaliacaoFilme> avaliacoes = new ArrayList<>();
 
     @ManyToMany(mappedBy = "filmes")
+    @JsonBackReference
     private List<ListaFavoritos> listaFavoritos = new ArrayList<>();
 
 }

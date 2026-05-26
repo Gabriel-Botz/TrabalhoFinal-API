@@ -11,12 +11,12 @@ target/
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -33,7 +33,10 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Configurações locais e Variáveis de Ambiente ###
+### ignorar .env
 .env
-application.properties
+.env.*
+!.env.example
+
+# application.properties 
+src/main/resources/
