@@ -10,6 +10,7 @@ import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,14 @@ public class UsuarioService {
 
     @Transactional
     public List<UsuarioResponseDTO> listarTodos() {
+
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin)
+            throw new org.serratec.trabalho_final_api.exception.AcessoNegadoException(
+                    "Acesso negado: Apenas administradores podem listar todos os usuários.");
+
         return repository.findAll().stream().map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
     }
 
@@ -75,14 +84,14 @@ public class UsuarioService {
                         .append("\n Obrigado por se registrar em nosso sistema serratecFlix XD");
 
                 mensagemAdm // método de mensagem para o ADMIN
-                        .append("Avido do Sistem: Um novo usuário foi cadastrado.")
-                        .append("\nId: '").append(usuario.getId()).append("'")
-                        .append("\nNome: '").append(usuario.getNome()).append("'")
-                        .append("\nUsername: '").append(usuario.getUsername()).append("'")
-                        .append("\nEmail: '").append(usuario.getEmail()).append("'")
-                        .append("\n")
-                        .append("\nData da Criação: '").append(usuario.getDataCriacao()).append("'")
-                        .append("\nTipo de Usuário: '").append(usuario.getTipoUsuario()).append("'");
+                        .append("Avido do Sistem: Um novo usuário foi cadastrado.\n")
+                        .append("➤ Id: '").append(usuario.getId()).append("'\n")
+                        .append("➤ Nome: '").append(usuario.getNome()).append("'\n")
+                        .append("➤ Username: '").append(usuario.getUsername()).append("'\n")
+                        .append("➤ Email: '").append(usuario.getEmail()).append("'\n")
+                        .append("➤ ")
+                        .append("➤ Data da Criação: '").append(usuario.getDataCriacao()).append("'\n")
+                        .append("➤ Tipo de Usuário: '").append(usuario.getTipoUsuario()).append("'\n");
 
                 // Chamando os métodos e passando as informações para o envio de e-mail
                 notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso", mensagem.toString());
@@ -117,18 +126,18 @@ public class UsuarioService {
                     .append("' realizado com sucesso,")
                     .append("às '")
                     .append(usuario.getDataCriacao())
-                    .append("'")
-                    .append("\n Obrigado por se registrar em nosso sistema serratecFlix XD");
+                    .append("'\n")
+                    .append("Obrigado por se registrar em nosso sistema serratecFlix XD");
 
             mensagemAdm // método de mensagem para o ADMIN
                     .append("Avido do Sistem: Um novo usuário foi cadastrado.")
-                    .append("\nId: '").append(usuario.getId()).append("'")
-                    .append("\nNome: '").append(usuario.getNome()).append("'")
-                    .append("\nUsername: '").append(usuario.getUsername()).append("'")
-                    .append("\nEmail: '").append(usuario.getEmail()).append("'")
-                    .append("\n")
-                    .append("\nData da Criação: '").append(usuario.getDataCriacao()).append("'")
-                    .append("\nTipo de Usuário: '").append(usuario.getTipoUsuario()).append("'");
+                    .append("➤ Id: '").append(usuario.getId()).append("'\n")
+                    .append("➤ Nome: '").append(usuario.getNome()).append("'\n")
+                    .append("➤ Username: '").append(usuario.getUsername()).append("'\n")
+                    .append("➤ Email: '").append(usuario.getEmail()).append("'\n")
+                    .append("➤ ")
+                    .append("➤ Data da Criação: '").append(usuario.getDataCriacao()).append("'\n")
+                    .append("➤ Tipo de Usuário: '").append(usuario.getTipoUsuario()).append("'\n");
 
             // Chamando os métodos e passando as informações para o envio de e-mail
             notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso",
@@ -156,26 +165,26 @@ public class UsuarioService {
         Usuario existe = permissao.validarObter(id);
 
         StringBuilder mensagem = new StringBuilder();
-        mensagem.append("Alerta! \nAlteração nos dados do usuario: '").append(existe.getUsername()).append("'");
+        mensagem.append("Alerta! \nAlteração nos dados do usuario: \n'").append(existe.getUsername()).append("'");
 
         if (request.nome() != null && !request.nome().isBlank()) {
             existe.setNome(request.nome());
-            mensagem.append("Nome realizado com sucesso!");
+            mensagem.append("➤ Nome realizado com sucesso!\n");
         }
 
         if (request.email() != null && !request.email().isBlank()) {
             existe.setEmail(request.email());
-            mensagem.append("Email realizado com sucesso!");
+            mensagem.append("➤ Email realizado com sucesso!\n");
         }
 
         if (request.username() != null && !request.username().isBlank()) {
             existe.setUsername(request.username());
-            mensagem.append("Username realizado com sucesso!");
+            mensagem.append("➤ Username realizado com sucesso!\n");
         }
 
         if (request.senha() != null && !request.senha().isBlank()) {
             existe.setSenha(passwordEncoder.encode(request.senha()));
-            mensagem.append("Senha realizado com sucesso!");
+            mensagem.append("➤ Senha realizado com sucesso!\n");
         }
 
         notificacao.avisarUsuario(existe,
@@ -198,4 +207,5 @@ public class UsuarioService {
 
         repository.delete(existe);
     }
+
 }
