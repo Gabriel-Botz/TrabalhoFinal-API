@@ -33,8 +33,8 @@ public class JwtUtil {
 
     public String generateToken(String username) {
         return Jwts.builder()
-                .setSubject(username)
-                .setExpiration(new Date(System.currentTimeMillis() + this.jwtExpirationMsiliseg))
+                .subject(username)
+                .expiration(new Date(System.currentTimeMillis() + this.jwtExpirationMsiliseg))
                 .signWith(secretKey)
                 .compact();
     }
@@ -62,9 +62,11 @@ public class JwtUtil {
 
     public Claims getClaims(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(secretKey).build()
-                    .parseClaimsJws(token).getBody();
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
         } catch (ExpiredJwtException | MalformedJwtException | UnsupportedJwtException
                 | IllegalArgumentException e) {
             return null;

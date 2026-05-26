@@ -1,11 +1,10 @@
 package org.serratec.trabalho_final_api.services;
 
-import java.io.IOException;
-import java.net.URI;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
+
 import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
@@ -13,8 +12,6 @@ import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.transaction.Transactional;
 
@@ -33,24 +30,19 @@ public class UsuarioService {
     @Autowired
     private PermissaoService permissao;
 
-    @Autowired
-    private FotoUsuarioService fotoService;
-
     /* --> Métodos GETs */
 
     @Transactional
     public List<UsuarioResponseDTO> listarTodos() {
-        List<UsuarioResponseDTO> usuarios = repository.findAll()
-                .stream().map(this::adicionarImagemUrl)
-                .toList();
-        return usuarios;
+        return repository.findAll().stream().map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
     }
 
     @Transactional
     public UsuarioResponseDTO buscar(UUID id) {
 
         Usuario usuario = permissao.validarObter(id);
-        return this.adicionarImagemUrl(usuario);
+        return UsuarioResponseDTO.toUsuarioResponseDTO(usuario);
+
     }
 
     /* Métodos POSTs */
@@ -102,17 +94,17 @@ public class UsuarioService {
             }
         }
 
-        return salvos.stream().map(this::adicionarImagemUrl).toList();
+        return salvos.stream().map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
     }
 
     @Transactional
-    public UsuarioResponseDTO salvar(UsuarioRequestDTO request, MultipartFile file) throws IOException {
+    public UsuarioResponseDTO salvar(UsuarioRequestDTO request) {
 
         Usuario usuario = request.toUsuario();
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
         Usuario usuarioSalvo = repository.save(usuario);
-        fotoService.inserir(usuarioSalvo, file);
+        UsuarioResponseDTO response = UsuarioResponseDTO.toUsuarioResponseDTO(usuarioSalvo);
 
         try {
             // criando a mensagem com o StringBuilder para ficar mais organizado
@@ -150,15 +142,17 @@ public class UsuarioService {
             System.err.println("Erro ao tentar enviar e-mails de notificação: " +
                     e.getMessage());
         }
-        return adicionarImagemUrl(usuarioSalvo);
+
+        return response;
+
     }
 
     /* Métodos PUT */
 
     @Transactional
-    public UsuarioResponseDTO atualizar(UUID id, UsuarioRequestDTO request, MultipartFile file) throws IOException {
+    public UsuarioResponseDTO atualizar(UUID id, UsuarioRequestDTO request) {
 
-        // valida a permissao e retorna o id
+        // valida a permissao e retorna o id --> Olhar casse PermissaoService
         Usuario existe = permissao.validarObter(id);
 
         StringBuilder mensagem = new StringBuilder();
@@ -166,35 +160,28 @@ public class UsuarioService {
 
         if (request.nome() != null && !request.nome().isBlank()) {
             existe.setNome(request.nome());
-            mensagem.append("∙ Nome realizado com sucesso!\n");
+            mensagem.append("Nome realizado com sucesso!");
         }
 
         if (request.email() != null && !request.email().isBlank()) {
             existe.setEmail(request.email());
-            mensagem.append("∙ Email realizado com sucesso!\n");
+            mensagem.append("Email realizado com sucesso!");
         }
 
         if (request.username() != null && !request.username().isBlank()) {
             existe.setUsername(request.username());
-            mensagem.append("∙ Username realizado com sucesso!\n");
+            mensagem.append("Username realizado com sucesso!");
         }
 
         if (request.senha() != null && !request.senha().isBlank()) {
             existe.setSenha(passwordEncoder.encode(request.senha()));
-            mensagem.append("∙ Senha realizado com sucesso!\n");
-        }
-
-        if (file != null && !file.isEmpty()) {
-            fotoService.inserir(existe, file);
-            mensagem.append("∙ Foto de Perfil atualizada com sucesso!\n");
+            mensagem.append("Senha realizado com sucesso!");
         }
 
         notificacao.avisarUsuario(existe,
                 ("Alteração de dados do Usuário às" + LocalTime.now(ZoneId.of("America/Sao_Paulo"))),
                 mensagem.toString());
-
-        Usuario usuarioAtualizado = repository.save(existe);
-        return adicionarImagemUrl(usuarioAtualizado);
+        return UsuarioResponseDTO.toUsuarioResponseDTO(repository.save(existe));
     }
 
     @Transactional
@@ -211,23 +198,4 @@ public class UsuarioService {
 
         repository.delete(existe);
     }
-
-    private UsuarioResponseDTO adicionarImagemUrl(Usuario usuario) {
-
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/usuarios/{id}/foto")
-                .buildAndExpand(usuario.getId())
-                .toUri();
-
-        return new UsuarioResponseDTO(
-                usuario.getId(),
-                usuario.getNome(),
-                usuario.getEmail(),
-                usuario.getUsername(),
-                usuario.getTipoUsuario(),
-                usuario.getDataCriacao(),
-                uri.toString());
-    }
-
 }

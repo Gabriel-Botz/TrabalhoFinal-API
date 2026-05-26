@@ -2,14 +2,19 @@ package org.serratec.trabalho_final_api.config;
 
 import java.util.Arrays;
 
+import org.serratec.trabalho_final_api.security.JwtAuthorizationFilter;
+import org.serratec.trabalho_final_api.security.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -21,39 +26,38 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class ConfigSeguranca {
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthenticationConfiguration authenticationConfiguration;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        AuthenticationManager authManager = authenticationConfiguration.getAuthenticationManager();
+
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll() // Garante sub-rotas se houver
+                        .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/lista-favoritos/filmes/publica").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/lista-favoritos/series/publica").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
+                .addFilter(new JwtAuthorizationFilter(authManager, jwtUtil, userDetailsService));
+
         return http.build();
     }
-    // @Bean
-    // public InMemoryUserDetailsManager userDetailsService() {
-    // // Usuario padrão teste
-    // UserDetails user = User.builder()
-    // .username("usuario_comum")
-    // .password(bCryptPasswordEncoder().encode("123456"))
-    // .roles("USER")
-    // .build();
 
-    // // Usuario admin teste
-    // UserDetails admin = User.builder()
-    // .username("admin")
-    // .password(bCryptPasswordEncoder().encode("admin123"))
-    // .roles("ADMIN")
-    // .build();
-
-    // return new InMemoryUserDetailsManager(user, admin);
-    // }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -63,10 +67,10 @@ public class ConfigSeguranca {
     @Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:6000")); // rota de acesso, para o front
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:6000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Importante adicionar se usar cabeçalhos customizados
-
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
