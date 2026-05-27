@@ -2,9 +2,9 @@ package org.serratec.trabalho_final_api.repository;
 
 import java.util.List;
 import java.util.UUID;
-
 import org.serratec.trabalho_final_api.domain.Series;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -13,4 +13,15 @@ public interface SeriesRepository extends JpaRepository<Series, UUID> {
 
     // o repository utiliza a classe domain Categoria como base e o DB
     List<Series> findByCategoriasId(Long idCategoria);
+
+   @Query("SELECT DISTINCT sr FROM series sr " +
+           " JOIN sr.categorias ct " +
+           " WHERE ct.id IN :categorias " +
+           " AND sr.id " +
+           " NOT IN (SELECT av.series.id " +
+           "         FROM AvaliacaoSerie av " +
+           " WHERE av.usuario.id = :usuarioID)" +
+           " ORDER BY sr.notaMedia DESC"
+   )
+ List<Series> recomendarSerie(List<UUID> categoriasId,UUID usuarioId);
 }

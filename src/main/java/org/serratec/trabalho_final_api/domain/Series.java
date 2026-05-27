@@ -20,7 +20,6 @@ public class Series {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     @Column(name = "titulo", nullable = false)
     private String titulo;
     @Column(name = "descricao", nullable = false)
