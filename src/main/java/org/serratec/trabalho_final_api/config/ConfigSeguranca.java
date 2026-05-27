@@ -75,7 +75,8 @@ public class ConfigSeguranca {
                         .requestMatchers("/webjars/**").permitAll()
 
                         // =================================================================
-                        // 2. REGRAS COMPARTILHADAS (ROLE_USER e ROLE_ADMIN)// =============
+                        // 2. REGRAS COMPARTILHADAS (ROLE_USER e ROLE_ADMIN)
+                        // =================================================================
                         // Operações de escrita em filmes/séries e gerenciamento de conta exigem
                         // autenticação
                         .requestMatchers(HttpMethod.POST, "/filmes", "/series").hasAnyRole("ADMIN", "USER")

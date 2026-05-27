@@ -69,7 +69,7 @@ public class SeriesServices {
         serie.setNotaMedia(seriesRequest.getNotaMedia());
 
         List<Categoria> categorias = categoriaRepository
-                             .findAllById(seriesRequest.getIdCategorias());
+                .findAllById(seriesRequest.getIdCategorias());
 
         serie.setCategorias(categorias);
 

@@ -71,6 +71,19 @@ public class ListaFavoritosService {
                 ));
             }
         }
+        
+        System.out.println();
+        System.out.println("                        _//_");
+        System.out.println("                       (o  )>");
+        System.out.println("                _      /   /");
+        System.out.println("               \\\\ \\\\  /   /");
+        System.out.println("                \\\\ \\\\/   /");
+        System.out.println("                 \\\\    /");
+        System.out.println("                  \\\\__/");
+        System.out.println("                  |  |");
+        System.out.println("                 _|_ _|_");
+        System.out.println("...............OLHA O GALO AÍ....");
+
 
         return listaFavoritosDTO;
 
