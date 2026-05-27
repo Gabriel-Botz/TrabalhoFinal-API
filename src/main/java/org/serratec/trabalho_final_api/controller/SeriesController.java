@@ -91,7 +91,7 @@ public class SeriesController {
             @ApiResponse(responseCode = "500", description = "Erro interno do Servidor")
     })
     @PutMapping("/{id}/categorias/{categoriaId}")
-    public ResponseEntity<SeriesResponseDTO> vincularCategoria(@PathVariable UUID id, @PathVariable Long categoriaId) {
+    public ResponseEntity<SeriesResponseDTO> vincularCategoria(@PathVariable UUID id, @PathVariable UUID categoriaId) {
         return ResponseEntity.ok(seriesServices.vincularCategoria(id, categoriaId));
     }
 

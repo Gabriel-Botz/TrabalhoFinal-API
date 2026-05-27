@@ -77,7 +77,7 @@ public class SeriesServices {
     }
 
     @Transactional
-    public SeriesResponseDTO vincularCategoria(UUID id, Long idCategoria) {
+    public SeriesResponseDTO vincularCategoria(UUID id, UUID idCategoria) {
         Series series = seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
         Categoria categoria = categoriaRepository.findById(idCategoria)
