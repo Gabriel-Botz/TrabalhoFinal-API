@@ -139,7 +139,7 @@ public class SeriesServices {
                                 && itemExterno.getName().equalsIgnoreCase(s.getTitulo()));
 
                 if (!jaExisteLocalmente) {
-                    SeriesResponseDTO dtoExterno = itemExterno.paraSerieResponseDTO();
+                    SeriesResponseDTO dtoExterno = itemExterno.paraSeriesResponseDTO();
 
                     // Chamada extra para buscar o número de temporadas e episódios reais
                     enriquecerTemporadasEEpisodios(dtoExterno, itemExterno.getId());

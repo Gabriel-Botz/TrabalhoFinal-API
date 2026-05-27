@@ -2,7 +2,8 @@
 
 <p align="center"> API de streaming geek com autenticação, avaliações e integração externa 🚀 </p> <p align="center"> <img src="https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"/> <img src="https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white"/> <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white"/> <img src="https://img.shields.io/badge/Security-JWT-black?style=for-the-badge"/> <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge"/> </p>
 
-<img src="./serratecflix-front/img/image.png"/>
+<img width="1905" height="1079" alt="image" src="https://github.com/user-attachments/assets/d579b1ef-8180-408b-9e67-2ff5f9bcdd68" />
+
 
 ## 📌 Sobre o Projeto
 

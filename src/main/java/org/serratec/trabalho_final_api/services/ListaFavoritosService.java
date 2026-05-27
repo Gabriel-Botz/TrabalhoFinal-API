@@ -45,7 +45,7 @@ public class ListaFavoritosService {
 
         List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
         List<ListaFavoritosResponseDTO> listaFavoritosDTO = new ArrayList<>();
-        
+
         for (ListaFavoritos lista : listaFavoritos) {
             List<FilmeResponseDTO> filmes = new ArrayList<>();
             List<SeriesResponseDTO> series = new ArrayList<>();
@@ -91,28 +91,28 @@ public class ListaFavoritosService {
 
 
     // Listas privadas
+    // No seu ListaFavoritosService.java, altere este método:
     public List<ListaFavoritosResponseDTO> listarPrivadas(String username) {
 
         List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
         List<ListaFavoritosResponseDTO> listaFavoritosDTO = new ArrayList<>();
-        
+
         for (ListaFavoritos lista : listaFavoritos) {
 
             if(username.equals(lista.getUsuario().getUsername())){
 
                 List<FilmeResponseDTO> filmes = new ArrayList<>();
                 List<SeriesResponseDTO> series = new ArrayList<>();
-    
-                if (lista.getPrivada()) {
-    
-                    lista.getFilmes().forEach(filme -> {
-                        filmes.add(new FilmeResponseDTO(filme));
-                    });
-                    lista.getSeries().forEach(serie -> {
-                        series.add(new SeriesResponseDTO(serie));
-                    });
-    
-                    listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
+
+
+                lista.getFilmes().forEach(filme -> {
+                    filmes.add(new FilmeResponseDTO(filme));
+                });
+                lista.getSeries().forEach(serie -> {
+                    series.add(new SeriesResponseDTO(serie));
+                });
+
+                listaFavoritosDTO.add(new ListaFavoritosResponseDTO(
                         lista.getId(),
                         lista.getNomeLista(),
                         lista.getPrivada(),
@@ -120,12 +120,9 @@ public class ListaFavoritosService {
                         lista.getUsuario(),
                         filmes,
                         series
-                    ));
-    
-                }
-
+                ));
+                // }
             }
-
         }
         return listaFavoritosDTO;
     }

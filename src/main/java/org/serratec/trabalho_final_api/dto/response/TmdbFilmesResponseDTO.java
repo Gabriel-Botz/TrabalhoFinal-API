@@ -9,7 +9,6 @@ import java.util.List;
 @Setter
 public class TmdbFilmesResponseDTO {
 
-    // O TMDB sempre devolve os resultados dentro de uma lista chamada "results"
     @JsonProperty("results")
     private List<TmdbFilmeItem> resultados;
 
@@ -26,17 +25,28 @@ public class TmdbFilmesResponseDTO {
         private String overview;
 
         @JsonProperty("release_date")
-        private String releaseDate; // Vem como texto "AAAA-MM-DD" do TMDB
+        private String releaseDate;
 
-        // Esse método faz a mágica de adaptar o formato do TMDB para o SEU FilmeResponseDTO
+        @JsonProperty("poster_path")
+        private String posterPath;
+
+        @JsonProperty("backdrop_path")
+        private String backdropPath;
+
         public FilmeResponseDTO paraFilmeResponseDTO() {
             FilmeResponseDTO dto = new FilmeResponseDTO();
-            // Como é um filme vindo de fora, o ID do nosso banco (UUID) fica nulo temporariamente
             dto.setTmdbId(this.id);
             dto.setTitulo(this.title);
             dto.setDescricao(this.overview);
 
-            // Tratamento simples para evitar quebra caso o filme não tenha data de lançamento
+            if (this.posterPath != null) {
+                dto.setPoster("https://image.tmdb.org/t/p/w500" + this.posterPath);
+            }
+
+            if (this.backdropPath != null) {
+                dto.setBackdrop("https://image.tmdb.org/t/p/original" + this.backdropPath);
+            }
+
             if (this.releaseDate != null && !this.releaseDate.isEmpty()) {
                 try {
                     dto.setDataLancamento(java.time.LocalDate.parse(this.releaseDate));
@@ -45,7 +55,7 @@ public class TmdbFilmesResponseDTO {
                 }
             }
 
-            dto.setNotaMedia(0.0); // Ou mapear o "vote_average" do TMDB se seu front exibir
+            dto.setNotaMedia(0.0);
             return dto;
         }
     }
