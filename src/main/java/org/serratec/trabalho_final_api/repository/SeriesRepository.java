@@ -2,8 +2,6 @@ package org.serratec.trabalho_final_api.repository;
 
 import java.util.List;
 import java.util.UUID;
-
-import org.serratec.trabalho_final_api.domain.Categoria;
 import org.serratec.trabalho_final_api.domain.Series;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,6 +24,4 @@ public interface SeriesRepository extends JpaRepository<Series, UUID> {
            " ORDER BY sr.notaMedia DESC"
    )
  List<Series> recomendarSerie(List<UUID> categoriasId,UUID usuarioId);
-
-
 }

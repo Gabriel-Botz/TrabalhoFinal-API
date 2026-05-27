@@ -2,10 +2,11 @@ package org.serratec.trabalho_final_api.controller;
 
 import java.util.List;
 import java.util.UUID;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
+import org.serratec.trabalho_final_api.dto.response.SeriesRecomendadasResponseDTO;
 import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
+import org.serratec.trabalho_final_api.services.SeriesRecomendadasService;
 import org.serratec.trabalho_final_api.services.SeriesServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,6 +32,9 @@ public class SeriesController {
 
     @Autowired
     private SeriesServices seriesServices;
+
+    @Autowired
+    private SeriesRecomendadasService seriesRecomendadasService;
 
     @Operation(summary = "Busca híbrida de séries", description = "Busca séries por título combinando o banco de dados local com a API do TMDB")
     @ApiResponses(value = {
@@ -102,6 +105,18 @@ public class SeriesController {
     @GetMapping("/categoria/{categoriaId}")
     public ResponseEntity<List<SeriesResponseDTO>> filtrarPorCategoria(@PathVariable Long categoriaId) {
         return ResponseEntity.ok(seriesServices.buscarPorCategoria(categoriaId));
+    }
+
+    @Operation(summary = "recomendação de séries baseada na avaliação do usuário ", description = "recomenda séries ao usuário pela avaliação da nota")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Series encontradas com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição Inválida"),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do Servidor")
+    })
+    @GetMapping("/recomendacao/{usuarioId}")
+    private ResponseEntity<List<SeriesRecomendadasResponseDTO>> recomendacaoSeries(@PathVariable UUID usuarioId) {
+        return ResponseEntity.ok(seriesRecomendadasService.recomendadas(usuarioId));
     }
 
     @Operation(summary = "Inserir uma Serie", description = "Inserir uma Série no Banco de Dados")

@@ -5,13 +5,13 @@ import org.serratec.trabalho_final_api.domain.Series;
 import java.util.List;
 import java.util.UUID;
 
-public class SeriesRecomendadasDTO {
+public class SeriesRecomendadasResponseDTO {
         UUID id;
         String titulo;
         Double notaMedia;
         List<String> categoria;
 
-        public SeriesRecomendadasDTO(Series series) {
+        public SeriesRecomendadasResponseDTO(Series series) {
             this.id = series.getId();
             this.titulo = series.getTitulo();
             this.notaMedia = series.getNotaMedia();

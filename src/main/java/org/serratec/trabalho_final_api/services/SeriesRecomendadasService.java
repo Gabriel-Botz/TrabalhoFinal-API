@@ -1,6 +1,6 @@
 package org.serratec.trabalho_final_api.services;
 
-import org.serratec.trabalho_final_api.dto.response.SeriesRecomendadasDTO;
+import org.serratec.trabalho_final_api.dto.response.SeriesRecomendadasResponseDTO;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.AvaliacaoSerieRepository;
 import org.serratec.trabalho_final_api.repository.SeriesRepository;
@@ -18,7 +18,7 @@ public class SeriesRecomendadasService {
   @Autowired
   private AvaliacaoSerieRepository avaliacaoSerieRepository;
 
-  List<SeriesRecomendadasDTO> recomendadas(UUID usuarioId){
+  public List<SeriesRecomendadasResponseDTO> recomendadas(UUID usuarioId){
 
       List<UUID> categoriasFav = avaliacaoSerieRepository.buscarCatFavDoUsuario(usuarioId);
 
@@ -27,8 +27,7 @@ public class SeriesRecomendadasService {
       }
 
       return seriesRepository.recomendarSerie
-              (categoriasFav,usuarioId).stream().map(SeriesRecomendadasDTO::new).toList();
+              (categoriasFav,usuarioId).stream().map(SeriesRecomendadasResponseDTO::new).toList();
   }
-
 
 }
