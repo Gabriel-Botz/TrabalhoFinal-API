@@ -59,7 +59,7 @@ public class UsuarioService {
 
     @Transactional
     public List<UsuarioResponseDTO> buscarPorUsername(String username) {
-        return repository.findByUsernameEndsWith(username.toUpperCase()).stream()
+        return repository.procurarUsername(username).stream()
                 .map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
     }
 
