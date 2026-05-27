@@ -1,5 +1,6 @@
 package org.serratec.trabalho_final_api.services;
 
+import jakarta.transaction.Transactional;
 import org.serratec.trabalho_final_api.dto.response.SeriesRecomendadasResponseDTO;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
 import org.serratec.trabalho_final_api.repository.AvaliacaoSerieRepository;
@@ -18,6 +19,7 @@ public class SeriesRecomendadasService {
   @Autowired
   private AvaliacaoSerieRepository avaliacaoSerieRepository;
 
+  @Transactional
   public List<SeriesRecomendadasResponseDTO> recomendadas(UUID usuarioId){
 
       List<UUID> categoriasFav = avaliacaoSerieRepository.buscarCatFavDoUsuario(usuarioId);
