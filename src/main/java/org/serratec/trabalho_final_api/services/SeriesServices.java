@@ -67,6 +67,7 @@ public class SeriesServices {
         serie.setTemporadas(seriesRequest.getTemporadas());
         serie.setDataLancamento(seriesRequest.getDataLancamento());
         serie.setNotaMedia(seriesRequest.getNotaMedia());
+        serie.setEpisodios(seriesRequest.getEpisodios());
 
         List<Categoria> categorias = categoriaRepository
                 .findAllById(seriesRequest.getIdCategorias());
