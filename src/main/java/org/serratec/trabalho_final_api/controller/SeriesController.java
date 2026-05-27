@@ -103,13 +103,13 @@ public class SeriesController {
             @ApiResponse(responseCode = "500", description = "Erro interno do Servidor")
     })
     @GetMapping("/categoria/{categoriaId}")
-    public ResponseEntity<List<SeriesResponseDTO>> filtrarPorCategoria(@PathVariable Long categoriaId) {
+    public ResponseEntity<List<SeriesResponseDTO>> filtrarPorCategoria(@PathVariable UUID categoriaId) {
         return ResponseEntity.ok(seriesServices.buscarPorCategoria(categoriaId));
     }
 
     @Operation(summary = "recomendação de séries baseada na avaliação do usuário ", description = "recomenda séries ao usuário pela avaliação da nota")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Series encontradas com sucesso"),
+            @ApiResponse(responseCode = "200", description = "Recomendacao feita com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição Inválida"),
             @ApiResponse(responseCode = "404", description = "Recurso não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do Servidor")
