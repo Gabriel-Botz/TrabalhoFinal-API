@@ -78,7 +78,7 @@ public class ConfigSeguranca {
                         // 2. REGRAS COMPARTILHADAS (ROLE_USER e ROLE_ADMIN)// =============
                         // Operações de escrita em filmes/séries e gerenciamento de conta exigem
                         // autenticação
-                        .requestMatchers(HttpMethod.POST, "/filmes", "/series").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/filmes", "/series").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT, "/usuarios/{id}", "/filmes/{id}", "/series/{id}")
                         .hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}", "/filmes/{id}", "/series/{id}")

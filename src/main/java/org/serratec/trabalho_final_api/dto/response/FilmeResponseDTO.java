@@ -27,6 +27,7 @@ public class FilmeResponseDTO {
         this.classificacaoIndicativa = filme.getClassificacaoIndicativa();
         this.tmdbId = filme.getTmdbId();
         this.poster = filme.getPoster();
+        this.backdrop = filme.getBackdrop();
     }
 
     private UUID id;

@@ -194,7 +194,7 @@ async function dispararBuscaCatalogo() {
 }
 
 // --- MODAL DE DETALHES DINÂMICO (ABRE FILMES E SÉRIES) ---
-window.abrirDetalhesMidia = function(midia, tipo) {
+window.abrirDetalhesMidia = function(midia, tipo) { // <-- Abre a função (1)
     const modal = document.getElementById('modal-detalhes');
     if (!modal) return;
 
@@ -202,11 +202,10 @@ window.abrirDetalhesMidia = function(midia, tipo) {
 
     // Backdrop
     const backdropEl = document.getElementById('detalhes-backdrop');
-    if (backdropEl) {
-        backdropEl.style.backgroundImage = midia.poster
-            ? `url(${midia.poster})`
-            : 'none';
-    }
+    if (backdropEl) { // <-- Abre o if (2)
+        const imagemBanner = midia.backdrop || midia.poster;
+        backdropEl.style.backgroundImage = imagemBanner ? `url(${imagemBanner})` : 'none';
+    } // <-- Fecha o if (2)
 
     // Poster
     const posterEl = document.getElementById('detalhes-poster');
@@ -222,7 +221,7 @@ window.abrirDetalhesMidia = function(midia, tipo) {
     const ano = midia.dataLancamento ? midia.dataLancamento.substring(0, 4) : '—';
     const classificacao = midia.classificacaoIndicativa || '—';
 
-    if (tipo === 'serie') {
+    if (tipo === 'serie') { // <-- Abre o if (3)
         metaEl.innerHTML = `
             <span style="color:var(--detail-color);font-weight:700">★ ${nota}</span>
             <span>${ano}</span>
@@ -230,20 +229,19 @@ window.abrirDetalhesMidia = function(midia, tipo) {
             <span>${midia.episodios || '—'} episódios</span>
             <span style="background:rgba(0,240,255,0.1);border:1px solid var(--accent-color);padding:2px 8px;border-radius:4px;font-size:12px">${classificacao}</span>
         `;
-    } else {
+    } else { // <-- Fecha o if (3) e abre o else (4)
         metaEl.innerHTML = `
             <span style="color:var(--detail-color);font-weight:700">★ ${nota}</span>
             <span>${ano}</span>
             <span>${midia.duracao ? midia.duracao + ' min' : '—'}</span>
             <span style="background:rgba(0,240,255,0.1);border:1px solid var(--accent-color);padding:2px 8px;border-radius:4px;font-size:12px">${classificacao}</span>
         `;
-    }
+    } // <-- Fecha o else (4)
 
-    // Reseta para aba de avaliações
     setDetalhesTab('avaliacoes');
 
-    // Carrega elenco se tiver tmdbId
     if (midia.tmdbId) carregarElenco(midia.tmdbId, tipo);
+
 
     modal.classList.add('ativo');
 };
@@ -254,6 +252,198 @@ window.setDetalhesTab = function(tab) {
 
     document.getElementById('tab-' + tab).classList.add('active');
     document.getElementById('content-' + tab).classList.remove('hidden');
+};
+
+// --- FLUXO DE FAVORITAR USANDO O BOTÃO E MODAL EXISTENTES ---
+
+// 1. Função disparada ao clicar no botão de Coração do modal de detalhes
+window.abrirSelecaoDeListaParaFavoritar = async function() {
+    if (!authService.isAuthenticated()) {
+        alert('Você precisa estar logado para favoritar uma mídia!');
+        window.abrirModal(); // Abre o modal de login se não estiver logado
+        return;
+    }
+
+    const modalSelecao = document.getElementById('modal-selecionar-lista');
+    const containerListas = document.getElementById('lista-selecionar-container'); // Container interno do seu modal de seleção
+
+    if (!modalSelecao || !containerListas) return;
+
+    // Exibe o modal de seleção de lista na tela
+    modalSelecao.classList.add('ativo');
+    containerListas.innerHTML = '<p style="color:var(--muted); font-size:13px;">Carregando suas listas...</p>';
+
+    const user = authService.getCurrentUser();
+    const token = localStorage.getItem('token');
+
+    try {
+        // Busca as listas do usuário (usando o endpoint que traz tudo dele)
+        const resp = await fetch(`http://localhost:8082/lista-favoritos/privadas/${user.username}`, {
+            headers: { 'Authorization': token }
+        });
+
+        if (!resp.ok) throw new Error();
+        const listas = await resp.json();
+
+        if (listas.length === 0) {
+            containerListas.innerHTML = `
+                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">Você ainda não tem nenhuma lista criada.</p>
+                <button class="auth-btn" style="margin-top:0; padding:6px 12px; font-size:12px;" onclick="document.getElementById('modal-selecionar-lista').classList.remove('ativo'); window.abrirListas();">+ Criar uma Lista</button>
+            `;
+            return;
+        }
+
+        // Renderiza as listas como botões clicáveis dentro do modal de seleção
+        containerListas.innerHTML = listas.map(lista => `
+            <button class="auth-btn" 
+                    style="margin-top: 0; margin-bottom: 8px; width: 100%; text-align: left; background: var(--surface2); border: 1px solid rgba(0,240,255,0.2); justify-content: space-between; display: flex; align-items: center;" 
+                    onclick="window.confirmarAdicionarMidia('${lista.id}')">
+                <span>📂 ${lista.nomeLista}</span>
+                <span style="font-size:11px; color:var(--muted);">${lista.privada ? '🔒 Privada' : '🌍 Pública'}</span>
+            </button>
+        `).join('');
+
+    } catch (err) {
+        console.error(err);
+        containerListas.innerHTML = '<p style="color:#fca5a5; font-size:13px;">Erro ao carregar listas.</p>';
+    }
+};
+
+// 2. Função executada quando o usuário clica em cima de uma das listas listadas no modal
+window.confirmarAdicionarMidia = async function(idLista) {
+    if (!midiaSelecionadaAtg) {
+        console.error("Nenhuma mídia selecionada.");
+        return;
+    }
+
+    // DEBUG: Verifique no console do navegador (F12) se o ID está chegando certo
+    console.log("Tentando adicionar:", midiaSelecionadaAtg.id, "na lista:", idLista);
+
+    const user = authService.getCurrentUser();
+    const token = localStorage.getItem('token');
+    const ehSerie = midiaSelecionadaAtg.tipoMidiaCorrente === 'serie';
+
+    // Usamos o ID que vem do seu banco (geralmente midiaSelecionadaAtg.id)
+    const rota = ehSerie
+        ? `http://localhost:8082/lista-favoritos/series/${user.username}?idLista=${idLista}&idSerie=${midiaSelecionadaAtg.id}`
+        : `http://localhost:8082/lista-favoritos/filmes/${user.username}?idLista=${idLista}&idFilme=${midiaSelecionadaAtg.id}`;
+
+    try {
+        const resp = await fetch(rota, {
+            method: 'POST',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (resp.status === 400 || resp.status === 409) {
+            alert('Esta mídia já está nesta lista!');
+            return;
+        }
+
+        if (!resp.ok) throw new Error('Erro na requisição');
+
+        alert('Mídia adicionada com sucesso!');
+        document.getElementById('modal-selecionar-lista').classList.remove('ativo');
+    } catch (err) {
+        console.error("Erro no catch:", err);
+        alert('Erro ao comunicar com o servidor. Verifique o console.');
+    }
+};
+
+window.abrirSelecionarLista = async function() {
+    if (!authService.isAuthenticated()) {
+        alert('Você precisa estar logado para favoritar uma mídia!');
+        window.abrirModal(); // Abre o modal de login se não estiver logado
+        return;
+    }
+
+    // Buscando o seu modal original e a div exata que você mencionou
+    const modalSelecao = document.getElementById('modal-selecionar-lista'); // Verifique se o ID do modal pai é esse mesmo
+    const containerListas = document.getElementById('lista-selecionavel-container');
+
+    if (!modalSelecao || !containerListas) return;
+
+    // Exibe o modal na tela e mostra mensagem de carregamento
+    modalSelecao.classList.add('ativo');
+    containerListas.innerHTML = '<p style="color:var(--muted); font-size:13px;">Carregando suas listas...</p>';
+
+    const user = authService.getCurrentUser();
+    const token = localStorage.getItem('token');
+
+    try {
+        // Busca as listas do usuário no seu banco de dados
+        const resp = await fetch(`http://localhost:8082/lista-favoritos/privadas/${user.username}`, {
+            headers: { 'Authorization': token }
+        });
+
+        if (!resp.ok) throw new Error();
+        const listas = await resp.json();
+
+        // Se o usuário não tiver listas
+        if (listas.length === 0) {
+            containerListas.innerHTML = `
+                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">Você ainda não tem nenhuma lista criada.</p>
+                <button class="auth-btn" style="margin-top:0; padding:6px 12px; font-size:12px;" onclick="document.getElementById('modal-selecionar-lista').classList.remove('ativo'); window.abrirListas();">+ Criar uma Lista</button>
+            `;
+            return;
+        }
+
+        // Renderiza as listas como botões clicáveis, já chamando a adição da mídia
+        containerListas.innerHTML = listas.map(lista => `
+            <button class="auth-btn" 
+                    style="margin-top: 0; margin-bottom: 8px; width: 100%; text-align: left; background: var(--surface2); border: 1px solid rgba(0,240,255,0.2); justify-content: space-between; display: flex; align-items: center;" 
+                    onclick="window.confirmarAdicionarMidia('${lista.id}')">
+                <span>📂 ${lista.nomeLista}</span>
+                <span style="font-size:11px; color:var(--muted);">${lista.privada ? '🔒 Privada' : '🌍 Pública'}</span>
+            </button>
+        `).join('');
+
+    } catch (err) {
+        console.error(err);
+        containerListas.innerHTML = '<p style="color:#fca5a5; font-size:13px;">Erro ao carregar listas.</p>';
+    }
+};
+
+window.abrirListas = async function() {
+    if (!authService.isAuthenticated()) {
+        alert('Faça login para ver suas listas!');
+        window.abrirModal();
+        return;
+    }
+    document.getElementById('modal-listas').classList.add('ativo');
+    await carregarListasPrivadasDoUsuario();
+};
+
+window.fecharListas = function() {
+    document.getElementById('modal-listas').classList.remove('ativo');
+};
+
+window.mostrarFormLista = function() {
+    document.getElementById('form-nova-lista').classList.remove('hidden');
+};
+
+window.ocultarFormLista = function() {
+    document.getElementById('form-nova-lista').classList.add('hidden');
+    document.getElementById('input-nome-lista').value = '';
+    document.getElementById('input-privada').checked = false;
+};
+
+window.criarNovaListaUsuario = async function() {
+    const nome = document.getElementById('input-nome-lista').value.trim();
+    const privada = document.getElementById('input-privada').checked;
+
+    if (!nome) return alert('Insira o nome da lista!');
+
+    try {
+        await listaService.criarLista(nome, privada);
+        window.ocultarFormLista();
+        await carregarListasPrivadasDoUsuario();
+    } catch (err) {
+        console.error(err);
+        alert('Erro ao criar lista.');
+    }
 };
 
 async function carregarElenco(tmdbId, tipo) {
@@ -364,6 +554,7 @@ window.abrirListas = async function() {
     }
 
     document.getElementById('modal-listas').classList.add('ativo');
+    setListasTab('minhas'); // Força abrir na aba de minhas listas primeiro
     renderizarListasUsuario();
 };
 
@@ -385,8 +576,21 @@ window.criarNovaListaUsuario = async function() {
 
     if (!nome) return alert('Insira o nome da lista!');
 
+    const user = authService.getCurrentUser();
+    const token = localStorage.getItem('token');
+
     try {
-        await listaService.criarLista(nome, privada);
+        const resp = await fetch(`http://localhost:8082/lista-favoritos/${user.username}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify({ nomeLista: nome, privada: privada })
+        });
+
+        if (!resp.ok) throw new Error();
+
         document.getElementById('input-nome-lista').value = '';
         window.ocultarFormLista();
         renderizarListasUsuario();
@@ -396,44 +600,163 @@ window.criarNovaListaUsuario = async function() {
 };
 
 async function renderizarListasUsuario() {
-    const container = document.getElementById('container-listas');
-    if (!container) return;
+    const containerMinhas = document.getElementById('content-minhas-listas');
+    const containerPublicas = document.getElementById('content-listas-publicas');
+
+    const user = authService.getCurrentUser();
+    const token = localStorage.getItem('token');
 
     try {
-        const publicas = await listaService.listarPublicas();
-        container.innerHTML = '';
-
-        if (publicas.length === 0) {
-            container.innerHTML = '<p style="color:var(--muted); font-size:13px;">Nenhuma lista criada.</p>';
-            return;
+        // 1. Renderizar as Minhas Listas (traz do endpoint privado do usuário logado)
+        if (user && user.username) {
+            const respPrivadas = await fetch(`http://localhost:8082/lista-favoritos/privadas/${user.username}`, {
+                headers: { 'Authorization': token }
+            });
+            if (respPrivadas.ok) {
+                const minhasListas = await respPrivadas.json();
+                renderizarListaNoContainer(containerMinhas, minhasListas, true);
+            }
         }
 
-        publicas.forEach(lista => {
-            container.innerHTML += `
-                <div style="background:var(--surface2); padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <p style="font-size:14px; font-weight:600;">${lista.nomeLista || 'Favoritos'}</p>
-                        <span style="font-size:11px; color:var(--muted);">${lista.privada ? '🔒 Privada' : '🌍 Pública'}</span>
-                    </div>
-                    <button class="modal-close" style="position:static; font-size:18px;" onclick="window.removerListaReal('${lista.id}')">×</button>
-                </div>
-            `;
-        });
+        // 2. Renderizar as Listas Públicas Gerais
+        const publicas = await listaService.listarPublicas();
+        renderizarListaNoContainer(containerPublicas, publicas, false);
+
     } catch (err) {
-        container.innerHTML = '<p style="color:#fca5a5;">Erro ao obter listas.</p>';
+        console.error("Erro ao renderizar listas:", err);
     }
+}
+
+function renderizarListaNoContainer(container, listas, ehDono) {
+    if (!container) return;
+
+    // Mantém o formulário de nova lista intacto se for o container de "minhas"
+    const formHtml = ehDono ? document.getElementById('form-nova-lista')?.outerHTML || '' : '';
+
+    if (!listas || listas.length === 0) {
+        container.innerHTML = formHtml + '<p style="color:var(--muted); font-size:13px; padding: 10px;">Nenhuma lista encontrada.</p>';
+        return;
+    }
+
+    let htmlConteudo = '';
+    listas.forEach(lista => {
+        // Só exibe o botão de remover se o usuário logado for o dono da lista
+        const botaoDeletar = ehDono
+            ? `<button class="modal-close" style="position:static; font-size:18px; background:none; border:none; color:var(--muted); cursor:pointer;" onclick="window.removerListaReal('${lista.id}')">×</button>`
+            : '';
+
+        htmlConteudo += `
+            <div style="background:var(--surface2); padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <div>
+                    <p style="font-size:14px; font-weight:600; margin:0;">${lista.nomeLista || 'Favoritos'}</p>
+                    <span style="font-size:11px; color:var(--muted);">${lista.privada ? '🔒 Privada' : '🌍 Pública'}</span>
+                </div>
+                ${botaoDeletar}
+            </div>
+        `;
+    });
+
+    container.innerHTML = formHtml + htmlConteudo;
 }
 
 window.removerListaReal = async function(id) {
     if (confirm('Deseja apagar essa lista?')) {
+        const user = authService.getCurrentUser();
+        const token = localStorage.getItem('token');
         try {
-            await listaService.deletarLista(id);
+            const resp = await fetch(`http://localhost:8082/lista-favoritos/${user.username}/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': token }
+            });
+            if (!resp.ok) throw new Error();
             renderizarListasUsuario();
         } catch (err) {
             alert('Erro ao remover lista.');
         }
     }
 };
+
+// --- LÓGICA PARA ADICIONAR MÍDIA À LISTA DE FAVORITOS ---
+
+// Carrega as listas do usuário logado dentro do select do modal
+async function carregarListasNoSelectModal() {
+    const select = document.getElementById('select-minhas-listas-modal');
+    if (!select) return;
+
+    if (!authService.isAuthenticated()) {
+        select.innerHTML = '<option value="">Faça login para favoritar</option>';
+        select.disabled = true;
+        return;
+    }
+
+    select.disabled = false;
+    const user = authService.getCurrentUser();
+    const token = localStorage.getItem('token');
+
+    try {
+        const resp = await fetch(`http://localhost:8082/lista-favoritos/privadas/${user.username}`, {
+            headers: { 'Authorization': token }
+        });
+
+        if (resp.ok) {
+            const listas = await resp.json();
+            select.innerHTML = '<option value="">Selecione uma lista...</option>';
+
+            listas.forEach(lista => {
+                const option = document.createElement('option');
+                option.value = lista.id;
+                option.textContent = lista.nomeLista;
+                select.appendChild(option);
+            });
+        }
+    } catch (err) {
+        console.error('Erro ao popular select de favoritos no modal:', err);
+    }
+}
+
+// Executa a ação de favoritar baseado no tipo da mídia corrente aberta
+window.adicionarMidiaAoFavorito = async function() {
+    if (!authService.isAuthenticated()) {
+        alert('Você precisa estar logado para favoritar!');
+        window.abrirModal();
+        return;
+    }
+
+    if (!midiaSelecionadaAtg) return;
+
+    const idLista = document.getElementById('select-minhas-listas-modal').value;
+    if (!idLista) return alert('Por favor, selecione uma lista!');
+
+    const user = authService.getCurrentUser();
+    const token = localStorage.getItem('token');
+
+    const ehSerie = midiaSelecionadaAtg.tipoMidiaCorrente === 'serie';
+
+    // Monta a URL de acordo com os endpoints definidos no seu ListaFavoritosController
+    const rota = ehSerie
+        ? `http://localhost:8082/lista-favoritos/series/${user.username}?idLista=${idLista}&idSerie=${midiaSelecionadaAtg.id}`
+        : `http://localhost:8082/lista-favoritos/filmes/${user.username}?idLista=${idLista}&idFilme=${midiaSelecionadaAtg.id}`;
+
+    try {
+        const resp = await fetch(rota, {
+            method: 'POST',
+            headers: { 'Authorization': token }
+        });
+
+        if (!resp.ok) {
+            throw new Error('Erro ao adicionar');
+        }
+
+        alert('Adicionado à lista de favoritos com sucesso!');
+    } catch (err) {
+        if (midiaSelecionadaAtg.id === null) {
+            alert('Este filme veio da busca externa (TMDB) e ainda não está cadastrado no banco. Não é possível favoritar.');
+        } else {
+            alert('Erro ao favoritar. Tente novamente.');
+        }
+    }
+};
+
 async function popularCarrosseis() {
     const container = document.getElementById('container-carrosseis');
     if (!container) return;
@@ -578,3 +901,198 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- CONTROLE DAS ABAS DA CENTRAL DE LISTAS (MINHAS VS PÚBLICAS) ---
+window.setListasTab = async function(aba) {
+    const tabMinhas = document.getElementById('tab-minhas-listas');
+    const tabPublicas = document.getElementById('tab-listas-publicas');
+    const contentMinhas = document.getElementById('content-minhas-listas');
+    const contentPublicas = document.getElementById('content-listas-publicas');
+
+    if (!tabMinhas || !tabPublicas || !contentMinhas || !contentPublicas) return;
+
+    if (aba === 'minhas') {
+        // Chaveamento visual das abas
+        tabMinhas.classList.add('active');
+        tabPublicas.classList.remove('active');
+        contentMinhas.classList.remove('hidden');
+        contentPublicas.classList.add('hidden');
+
+        // Carrega as listas privadas do usuário logado
+        await carregarListasPrivadasDoUsuario();
+    }
+    else if (aba === 'publicas') {
+        // Chaveamento visual das abas
+        tabPublicas.classList.add('active');
+        tabMinhas.classList.remove('active');
+        contentPublicas.classList.remove('hidden');
+        contentMinhas.classList.add('hidden');
+
+        // Consome o endpoint: GET /lista-favoritos/publicas
+        await carregarListasPublicasGerais();
+    }
+};
+
+// Função para buscar do back-end e renderizar as Listas Públicas da Comunidade
+async function carregarListasPublicasGerais() {
+    const container = document.getElementById('content-listas-publicas');
+    if (!container) return;
+
+    container.innerHTML = '<p style="color:var(--muted); padding:20px;">Carregando listas públicas...</p>';
+
+    try {
+        const token = localStorage.getItem('token');
+        // URL aponta para o endpoint público do seu ListaFavoritosController
+        const resp = await fetch('http://localhost:8082/lista-favoritos/publicas', {
+            headers: { 'Authorization': token }
+        });
+
+        if (!resp.ok) throw new Error('Erro ao obter listas públicas.');
+        const listasPublicas = await resp.json();
+
+        if (listasPublicas.length === 0) {
+            container.innerHTML = '<p style="color:var(--muted); padding:20px;">Nenhuma lista pública compartilhada ainda.</p>';
+            return;
+        }
+
+        // Renderiza dinamicamente as listas públicas mantendo seu tema cyberpunk
+        container.innerHTML = listasPublicas.map(lista => `
+            <div class="lista-card-item" style="border:1px solid var(--border-color); padding:15px; margin-bottom:12px; border-radius:8px; background:var(--card-bg);">
+                <h3 style="color:var(--accent-color); margin-bottom:4px;">${lista.nomeLista}</h3>
+                <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">Compartilhada por: <span style="color:#fff;">@${lista.usuario?.username || 'anônimo'}</span></p>
+                <div style="font-size:13px; color:#fff; display:flex; gap:15px;">
+                    <span>🎬 Filmes: <strong>${lista.filmes?.length || 0}</strong></span>
+                    <span>📺 Séries: <strong>${lista.series?.length || 0}</strong></span>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p style="color:#fca5a5; padding:20px;">Erro ao carregar a central de listas públicas.</p>';
+    }
+}
+
+// Função adaptada para renderizar as Listas Privadas usando seu endpoint /privadas/{username}
+async function carregarListasPrivadasDoUsuario() {
+    const container = document.getElementById('container-listas');
+    if (!container) return;
+
+    const user = authService.getCurrentUser();
+    if (!user || !user.username) {
+        container.innerHTML = '<p style="color:#fca5a5; padding:20px;">Efetue login para visualizar suas listas privadas.</p>';
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('token');
+        const resp = await fetch(`http://localhost:8082/lista-favoritos/privadas/${user.username}`, {
+            headers: { 'Authorization': token }
+        });
+
+        if (!resp.ok) throw new Error('Erro ao buscar listas privadas.');
+        const listasPrivadas = await resp.json();
+
+        if (listasPrivadas.length === 0) {
+            container.innerHTML = '<p style="color:var(--muted); padding:20px;">Você não possui listas privadas.</p>';
+            return;
+        }
+
+        container.innerHTML = listasPrivadas.map(lista => `
+            <div class="lista-card-item" style="border:1px solid rgba(57, 255, 20, 0.2); padding:15px; margin-bottom:12px; border-radius:8px; background:var(--card-bg);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="color:#fff;">${lista.nomeLista}</h3>
+                    <span style="font-size:11px; background:${lista.privada ? 'rgba(57,255,20,0.1)' : 'rgba(0,240,255,0.1)'}; color:${lista.privada ? 'var(--detail-color)' : 'var(--accent-color)'}; border:1px solid ${lista.privada ? 'var(--detail-color)' : 'var(--accent-color)'}; padding:2px 6px; border-radius:4px;">
+                        ${lista.privada ? '🔒 Privada' : '🌍 Pública'}</span>
+
+                </div>
+                <p style="font-size:12px; color:var(--muted); margin-top:4px; margin-bottom:10px;">Criada em ${new Date(lista.dataCriacao).toLocaleDateString('pt-BR')}</p>
+                <div style="font-size:13px; color:#fff;">
+                    🎬 Filmes: <strong>${lista.filmes?.length || 0}</strong> | 📺 Séries: <strong>${lista.series?.length || 0}</strong>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p style="color:#fca5a5; padding:20px;">Erro ao carregar suas listas privadas.</p>';
+    }
+}
+
+// --- ABRIR/FECHAR MODAL DE LISTAS ---
+window.abrirListas = async function() {
+    if (!authService.isAuthenticated()) {
+        alert('Faça login para ver suas listas!');
+        window.abrirModal();
+        return;
+    }
+    document.getElementById('modal-listas').classList.add('ativo');
+    await carregarListasPrivadasDoUsuario();
+};
+
+window.fecharListas = function() {
+    document.getElementById('modal-listas').classList.remove('ativo');
+};
+
+// --- FORM DE CRIAR LISTA ---
+window.mostrarFormLista = function() {
+    document.getElementById('form-nova-lista').classList.remove('hidden');
+};
+
+window.ocultarFormLista = function() {
+    document.getElementById('form-nova-lista').classList.add('hidden');
+    document.getElementById('input-nome-lista').value = '';
+    document.getElementById('input-privada').checked = false;
+};
+
+window.criarNovaListaUsuario = async function() {
+    const nome = document.getElementById('input-nome-lista').value.trim();
+    const privada = document.getElementById('input-privada').checked;
+
+    if (!nome) return alert('Insira o nome da lista!');
+
+    try {
+        await listaService.criarLista(nome, privada);
+        window.ocultarFormLista();
+        await carregarListasPrivadasDoUsuario();
+    } catch (err) {
+        console.error(err);
+        alert('Erro ao criar lista.');
+    }
+};
+
+async function garantirFilmeNoBanco(midia) {
+    if (midia.id) return midia.id; // já tem UUID local, usa direto
+
+    const token = localStorage.getItem('token');
+
+    const body = {
+        tmdbId: midia.tmdbId || null,
+        titulo: (midia.titulo || '').substring(0, 40),
+        descricao: (midia.descricao || 'Sem descrição').substring(0, 200),
+        duracao: midia.duracao || 0,
+        dataLancamento: midia.dataLancamento || '2000-01-01',
+        classificacaoIndicativa: midia.classificacaoIndicativa || 'LIVRE'
+    };
+
+    const resp = await fetch('http://localhost:8082/filmes', {
+        method: 'POST',
+        headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!resp.ok) throw new Error('Erro ao cadastrar filme');
+
+    const filmeSalvo = await resp.json();
+    return filmeSalvo.id;
+}
+const idParaUsar = midiaSelecionadaAtg.tipoMidiaCorrente === 'serie'
+    ? midiaSelecionadaAtg.id
+    : await garantirFilmeNoBanco(midiaSelecionadaAtg);
+
+const rota = ehSerie
+    ? `http://localhost:8082/lista-favoritos/series/${user.username}?idLista=${idLista}&idSerie=${idParaUsar}`
+    : `http://localhost:8082/lista-favoritos/filmes/${user.username}?idLista=${idLista}&idFilme=${idParaUsar}`;

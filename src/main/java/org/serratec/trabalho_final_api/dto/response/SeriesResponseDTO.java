@@ -19,6 +19,7 @@ public class SeriesResponseDTO {
     private LocalDate dataLancamento;
     private Double notaMedia;
     private String poster;
+    private String backdrop;
     private Long tmdbId;
 
     public SeriesResponseDTO(Series series) {
@@ -31,5 +32,6 @@ public class SeriesResponseDTO {
         this.notaMedia = series.getNotaMedia();
         this.poster = series.getPoster();
         this.tmdbId = series.getTmdbId();
+        this.backdrop = series.getBackdrop();
     }
 }

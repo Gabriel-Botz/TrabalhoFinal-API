@@ -154,8 +154,6 @@ body {
     font-size: 13px;
 }
 
-
-
 /* =================================================================
    4. HERO SELECTION (DESTAQUE)
    ================================================================= */
@@ -212,7 +210,7 @@ body {
 
 .hero-title {
     font-size: 3.5rem;
-    margin: 15px 0;
+    margin: 12px 0 16px 0;
     font-weight: 800;
 }
 
@@ -241,12 +239,6 @@ body {
     line-height: 1.6;
     margin-bottom: 28px;
     max-width: 500px;
-}
-
-.hero-title {
-    font-size: 3.5rem;
-    margin: 12px 0 16px 0;
-    font-weight: 800;
 }
 
 .btn-play {
@@ -384,7 +376,7 @@ body {
     border-color: var(--detail-color);
 }
 
-.card-content, .card-info {
+.card-content {
     padding: 12px;
 }
 
@@ -406,12 +398,14 @@ body {
 }
 
 /* =================================================================
-   6. MODAIS TOTALMENTE REVISADOS E CORRIGIDOS (LOGIN/CADASTRO FIX)
+   6. MODAIS E CONTEÚDO DE DETALHES (GLASSMORPHISM & ENQUADRAMENTO)
    ================================================================= */
+
+/* Cortina de fundo de tela cheia super sutil */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(5, 8, 13, 0.9);
+    background-color: rgba(5, 8, 13, 0.4) !important; /* Deixa passar bem os carrosséis ao fundo */
     display: flex; justify-content: center; align-items: center;
     opacity: 0; pointer-events: none;
     transition: opacity 0.3s ease;
@@ -426,7 +420,7 @@ body {
 /* Caixa do Modal de Login/Cadastro */
 .modal-box {
     background-color: var(--card-bg);
-    border: 1px solid var(--accent-color); /* Linha neon azul ao redor */
+    border: 1px solid var(--accent-color);
     padding: 40px;
     border-radius: 8px;
     width: 90%;
@@ -435,17 +429,6 @@ body {
     box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
     display: flex;
     flex-direction: column;
-}
-
-.modal-detalhes-box {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    width: 90%;
-    max-width: 850px;
-    max-height: 90vh;
-    border-radius: 8px;
-    overflow-y: auto;
-    position: relative;
 }
 
 .modal-close {
@@ -469,8 +452,6 @@ body {
     font-size: 32px;
     text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
 }
-
-
 
 .modal-sub {
     color: var(--muted);
@@ -516,15 +497,14 @@ body {
 }
 
 .auth-form.hidden {
-    display: none !important; /* Força sumir quando JavaScript mandar esconder */
+    display: none !important;
 }
 
-/* Inputs internos corrigidos */
 .auth-input, .avaliacao-textarea {
     background-color: #1e293b;
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    color: white !important; /* Garante que a digitação seja branca */
+    color: white !important;
     padding: 12px;
     font-size: 14px;
     outline: none;
@@ -541,10 +521,9 @@ body {
     box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
 }
 
-/* Botões do Modal */
 .auth-btn {
-    background-color: var(--detail-color); /* Botão de ação em Verde Neon */
-    color: #000 !important; /* Texto preto para legibilidade total */
+    background-color: var(--detail-color);
+    color: #000 !important;
     border: none;
     padding: 14px;
     font-weight: 700;
@@ -569,63 +548,9 @@ body {
     text-align: center;
 }
 
-/* Detalhes da Mídia Interna */
-.detalhes-backdrop {
-    height: 300px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
-
-.detalhes-backdrop::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to top, var(--card-bg), transparent);
-}
-
-.detalhes-content {
-    padding: 30px;
-}
-
-.detalhes-topo {
-    display: flex; gap: 30px; margin-bottom: 30px;
-}
-
-.detalhes-poster {
-    width: 180px; height: 270px;
-    object-fit: cover; border-radius: 6px;
-    border: 1px solid var(--border-color);
-}
-
-.detalhes-info { flex: 1; }
-.detalhes-titulo { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
-
-.detalhes-meta {
-    display: flex; gap: 15px; color: var(--muted); font-size: 14px; margin-bottom: 15px;
-}
-
-.detalhes-desc { color: #e5e5e5; font-size: 15px; line-height: 1.5; margin-bottom: 20px; }
-.detalhes-buttons { display: flex; gap: 10px; }
-
-/* Formulário de avaliação */
-.avaliacao-form {
-    display: flex; flex-direction: column; gap: 12px;
-    background-color: #0a0f18; padding: 15px;
-    border-radius: 6px; margin-bottom: 20px;
-    border: 1px solid var(--border-color);
-}
-
-.avaliacao-nota-row input[type="range"] {
-    accent-color: var(--accent-color);
-}
-
-.nota-valor { color: var(--detail-color); font-weight: bold; }
-.avaliacoes-lista { display: flex; flex-direction: column; gap: 15px; }
-
-/* Correções Críticas para o Modal de Detalhes */
-
-/* Força o modal a ter uma estrutura de coluna/linha organizada */
+/* -----------------------------------------------------------------
+   CONTAINER DO MODAL DE DETALHES (GLASSMORPHISM ULTRA TRANSPARENTE)
+   ----------------------------------------------------------------- */
 .modal-detalhes-box {
     display: flex;
     flex-direction: column;
@@ -633,36 +558,136 @@ body {
     width: 95%;
     max-height: 90vh;
     overflow-y: auto;
-    background-color: var(--card-bg);
+    position: relative;
+
+    /* Vidro fumê super translúcido sem duplicatas */
+    background-color: rgba(10, 15, 24, 0.35) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+
+    border: 1px solid rgba(0, 240, 255, 0.25) !important;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
 }
 
+/* Evita acúmulo de fundos escuros */
+.detalhes-content {
+    background: transparent !important;
+}
+
+/* BANNER: Mais alto e preso no Topo para nunca cortar cabeças */
+.detalhes-backdrop {
+    position: absolute;  /* Torna o banner independente do fluxo, indo para o fundo */
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    /* O SEGREDO: Mantém a proporção perfeita de cinema 16:9 sem distorcer nada */
+    aspect-ratio: 16 / 9;
+    max-height: 440px;   /* Evita que o banner fique gigante em telas muito largas */
+
+    background-size: cover;
+    background-position: center top;
+    background-color: var(--border-color);
+    border-radius: 8px 8px 0 0;
+    z-index: 1;          /* Garante que ele fique na camada de trás */
+}
+
+.detalhes-backdrop::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, rgba(10, 15, 24, 0.2), transparent);
+    z-index: 1;
+}
+
+.detalhes-backdrop::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            to bottom,
+            transparent 0%,
+            rgba(10, 15, 24, 0.05) 40%,
+            rgba(10, 15, 24, 0.2) 75%,
+            rgba(10, 15, 24, 0.35) 100
+    ) !important;
+    border-radius: 8px 8px 0 0;
+    z-index: 1;
+}
+
+/* CARD DE INFOS: Senta mais abaixo para não avançar nos rostos */
 .detalhes-topo {
     display: flex;
-    flex-direction: row; /* Coloca Imagem e Texto lado a lado */
-    gap: 20px;
-    padding: 20px;
+    flex-direction: row;
+    gap: 24px;
+    padding: 24px;
+    margin: 180px 20px 20px 20px;
+    position: relative;
+    z-index: 2;
+
+    /* RESTRUTURAÇÃO DA TRANSPARÊNCIA:
+       Mudamos a opacidade de 0.65 para 0.35 (bem mais invisível) */
+    background: rgba(10, 15, 24, 0.35) !important;
+
+    /* RESTRUTURAÇÃO DO BLUR:
+       Reduzido de 14px para 8px para que os detalhes do banner passem com mais nitidez */
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+
+    /* Aumentamos levemente o brilho da borda neon para o card não sumir no fundo */
+    border: 1px solid rgba(0, 240, 255, 0.25) !important;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
 }
 
 .detalhes-poster {
-    width: 200px;
+    width: 180px;
     height: auto;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
 }
 
 .detalhes-info {
-    flex: 1; /* Faz o texto ocupar o resto do espaço */
+    flex: 1;
 }
 
-/* Responsividade: Se a tela for pequena, empilha */
-@media (max-width: 600px) {
-    .detalhes-topo {
-        flex-direction: column;
-        align-items: center;
-    }
+.detalhes-titulo {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* ===== TABS DO MODAL DETALHES ===== */
+.detalhes-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+/* Aplicando o ajuste diretamente nos textos internos da meta */
+.detalhes-meta span {
+    color: #e2e8f0 !important;      /* Troca o cinza apagado por um branco/platina bem nítido */
+    font-weight: 600 !important;    /* Deixa a escrita mais "gordinha" (negrito) para destacar */
+
+    /* O SEGREDO DO CONTRASTE: Uma linha de sombra escura que separa o texto do banner de trás */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9), 0px 0px 5px rgba(0, 0, 0, 0.9) !important;
+}
+
+.detalhes-desc {
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.detalhes-buttons {
+    display: flex; gap: 10px;
+}
+
+/* ABAS INTERNAS */
 .detalhes-tabs {
     display: flex;
     border-bottom: 2px solid var(--border-color);
@@ -691,19 +716,19 @@ body {
     border-bottom: 2px solid var(--accent-color);
 }
 
-/* ===== CONTEUDO DAS TABS ===== */
 .detalhes-tab-content {
     padding: 24px 30px;
+    background: transparent !important; /* Transparência total */
 }
 
 .detalhes-tab-content.hidden {
-    display: none;
+    display: none !important;
 }
 
-/* ===== AVALIAÇÃO REFORMULADA ===== */
+/* FORMULÁRIO DE AVALIAÇÃO */
 .avaliacao-form {
-    background: rgba(0, 240, 255, 0.04);
-    border: 1px solid rgba(0, 240, 255, 0.15);
+    background: rgba(30, 41, 59, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
     border-radius: 8px;
     padding: 18px;
     margin-bottom: 20px;
@@ -740,12 +765,16 @@ body {
     min-width: 28px;
 }
 
+/* LISTA DE COMENTÁRIOS */
+.avaliacoes-lista {
+    display: flex; flex-direction: column; gap: 15px;
+}
+
 .avaliacao-item {
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 14px;
-    margin-bottom: 10px;
 }
 
 .avaliacao-header {
@@ -802,7 +831,7 @@ body {
     margin-top: 6px;
 }
 
-/* ===== ELENCO ===== */
+/* ELENCO */
 .elenco-grid {
     display: flex;
     gap: 16px;
@@ -835,20 +864,107 @@ body {
     white-space: nowrap;
 }
 
-/* ===== BACKDROP CORRIGIDO ===== */
-.detalhes-backdrop {
-    height: 280px;
-    background-size: cover;
-    background-position: center top;
-    background-color: var(--border-color);
-    border-radius: 8px 8px 0 0;
-    position: relative;
+/* RESPONSIVIDADE DO MODAL COESA */
+/* Procure pela sua media query atual e atualize a margem */
+@media (max-width: 600px) {
+    .detalhes-topo {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 100px; /* Reduzido para encaixar com o banner menor do celular */
+    }
+}
+    .detalhes-poster {
+        width: 140px;
+    }
+    .detalhes-tabs {
+        margin: 0 15px;
+    }
+    .detalhes-tab-content {
+        padding: 16px 15px;
+    }
+/* =================================================================
+   7. REESTRUTURAÇÃO DO MODAL DE CENTRAL DE LISTAS
+   ================================================================= */
+
+.listas-modal-header {
+    padding: 30px 30px 10px 30px;
 }
 
-.detalhes-backdrop::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, transparent 40%, var(--card-bg) 100%);
-    border-radius: 8px 8px 0 0;
+.listas-modal-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-color);
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+.listas-modal-header .modal-sub {
+    text-align: left !important;
+    margin-bottom: 0 !important;
+    margin-top: 4px;
+}
+
+/* Grid responsivo para alinhar os blocos das listas */
+.listas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 10px;
+}
+
+/* Design dos cards das listas individuais */
+.lista-card {
+    background: rgba(30, 41, 59, 0.15) !important;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 110px;
+}
+
+.lista-card:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.lista-card-titulo {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.lista-card-meta {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Ajuste para o Modal de Seleção de Lista */
+#modal-selecionar-lista {
+    background: var(--surface); /* Ajuste para o tom de fundo das suas modais */
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    color: white;
+}
+
+#lista-selecionavel-container .auth-btn {
+    background: var(--surface2) !important;
+    border: 1px solid var(--accent-color) !important;
+    color: white !important;
+    padding: 10px 15px !important;
+    border-radius: 6px !important;
+    transition: 0.3s;
+}
+
+#lista-selecionavel-container .auth-btn:hover {
+    background: var(--accent-color) !important;
+    color: black !important;
 }

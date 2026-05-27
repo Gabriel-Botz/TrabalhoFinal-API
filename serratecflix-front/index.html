@@ -8,16 +8,15 @@
 </head>
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar">
     <span class="logo">SerratecFlix</span>
-
     <div class="nav-links">
         <a href="#" onclick="setTipo('todos')">Início</a>
         <a href="#" onclick="setTipo('filmes')">Filmes</a>
         <a href="#" onclick="setTipo('series')">Séries</a>
         <a href="#" onclick="abrirListas()">Minhas Listas</a>
     </div>
-
     <div class="nav-center">
         <input type="search" class="filter-search" id="input-busca" placeholder="🔍 Buscar..." autocomplete="off"/>
         <select class="filter-select" id="filter-categoria">
@@ -30,12 +29,12 @@
         </div>
         <button class="btn-buscar">Buscar</button>
     </div>
-
     <div class="nav-right">
         <button class="btn-login">Entrar</button>
     </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
@@ -63,10 +62,10 @@
     </div>
 </section>
 
-<!-- CARROSSÉIS DINÂMICOS (populados pelo JS) -->
+<!-- CARROSSÉIS DINÂMICOS -->
 <div id="container-carrosseis"></div>
 
-<!-- MODAL AUTH -->
+<!-- MODAL AUTH (LOGIN/CADASTRO) -->
 <div class="modal-overlay" id="modal-auth">
     <div class="modal-box">
         <button class="modal-close" onclick="fecharModal()">×</button>
@@ -91,6 +90,56 @@
             <div class="auth-error" id="erro-cadastro"></div>
             <button class="auth-btn" onclick="executarCadastro()">Criar conta</button>
         </div>
+    </div>
+</div>
+
+<!-- MODAL CENTRAL DE LISTAS -->
+<div class="modal-overlay" id="modal-listas">
+    <div class="modal-detalhes-box">
+        <button class="modal-close" onclick="fecharListas()">×</button>
+
+        <div class="listas-modal-header" style="padding: 24px 24px 0;">
+            <h2>Central de Listas</h2>
+            <p class="modal-sub">Explore coleções da comunidade ou gerencie as suas próprias</p>
+        </div>
+
+        <div class="detalhes-tabs">
+            <button class="detalhes-tab active" id="tab-minhas-listas" onclick="setListasTab('minhas')">Minhas Listas</button>
+            <button class="detalhes-tab" id="tab-listas-publicas" onclick="setListasTab('publicas')">Listas Públicas</button>
+        </div>
+
+        <!-- ABA: MINHAS LISTAS -->
+        <div class="detalhes-tab-content" id="content-minhas-listas">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="font-size:16px; color:#fff; font-weight:600;">Suas Coleções</h3>
+                <button class="btn-buscar" onclick="mostrarFormLista()">+ Nova lista</button>
+            </div>
+
+            <div class="auth-form hidden" id="form-nova-lista" style="background:rgba(30,41,59,0.2); padding:20px; border-radius:8px; border:1px solid rgba(0,240,255,0.15); margin-bottom:20px;">
+                <input type="text" class="auth-input" id="input-nome-lista" placeholder="Nome da lista *"/>
+                <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); cursor:pointer;">
+                    <input type="checkbox" id="input-privada"/> Lista privada
+                </label>
+                <div style="display:flex; gap:10px;">
+                    <button class="auth-btn" style="margin-top:0" onclick="criarNovaListaUsuario()">Criar</button>
+                    <button class="btn-fav" onclick="ocultarFormLista()">Cancelar</button>
+                </div>
+            </div>
+
+            <div id="container-listas" class="listas-grid"></div>
+        </div>
+
+        <!-- ABA: LISTAS PÚBLICAS -->
+        <div class="detalhes-tab-content hidden" id="content-listas-publicas">
+            <div style="margin-bottom:20px;">
+                <h3 style="font-size:16px; color:#fff; font-weight:600;">Feed da Comunidade</h3>
+                <p style="font-size:13px; color:var(--muted); margin-top:4px;">Veja e explore as listas criadas publicamente por outros usuários.</p>
+            </div>
+            <div id="container-listas-publicas" class="listas-grid">
+                <p style="color:var(--muted); font-size:14px; padding:10px 0;">Carregando listas públicas...</p>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -135,37 +184,13 @@
     </div>
 </div>
 
-<!-- MODAL MINHAS LISTAS -->
-<div class="modal-overlay" id="modal-listas">
-    <div class="modal-detalhes-box">
-        <button class="modal-close" onclick="fecharListas()">×</button>
-        <div class="detalhes-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-                <h2>Minhas Listas</h2>
-                <button class="btn-buscar" onclick="mostrarFormLista()">+ Nova lista</button>
-            </div>
-            <div class="auth-form hidden" id="form-nova-lista">
-                <input type="text" class="auth-input" id="input-nome-lista" placeholder="Nome da lista *"/>
-                <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); cursor:pointer;">
-                    <input type="checkbox" id="input-privada"/> Lista privada
-                </label>
-                <div style="display:flex; gap:10px;">
-                    <button class="auth-btn" style="margin-top:0" onclick="criarNovaListaUsuario()">Criar</button>
-                    <button class="btn-fav" onclick="ocultarFormLista()">Cancelar</button>
-                </div>
-            </div>
-            <div id="container-listas"></div>
-        </div>
-    </div>
-</div>
-
 <!-- MODAL SELECIONAR LISTA -->
 <div class="modal-overlay" id="modal-selecionar-lista">
-    <div class="modal-box" style="max-width: 400px;">
+    <div class="modal-box" style="max-width:400px;">
         <button class="modal-close" onclick="document.getElementById('modal-selecionar-lista').classList.remove('ativo')">×</button>
         <h2>Adicionar a uma lista</h2>
-        <p class="modal-sub" style="margin-bottom: 20px;">Escolha uma das suas listas abaixo:</p>
-        <div id="lista-selecionavel-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
+        <p class="modal-sub" style="margin-bottom:20px;">Escolha uma das suas listas abaixo:</p>
+        <div id="lista-selecionavel-container" style="display:flex; flex-direction:column; gap:10px;"></div>
     </div>
 </div>
 

@@ -37,6 +37,9 @@ public class TmdbSerieResponseDTO { // Classe principal casando com o nome do ar
         @JsonProperty("poster_path")
         private String posterPath;
 
+        @JsonProperty("backdrop_path")
+        private String backdropPath;
+
         // Instancia a sua classe de saída oficial: SeriesResponseDTO
         public SeriesResponseDTO paraSeriesResponseDTO() {
             SeriesResponseDTO dto = new SeriesResponseDTO();
@@ -49,6 +52,10 @@ public class TmdbSerieResponseDTO { // Classe principal casando com o nome do ar
                 dto.setPoster("https://image.tmdb.org/t/p/w500" + this.posterPath);
             } else {
                 dto.setPoster(null);
+            }
+
+            if (this.backdropPath != null && !this.backdropPath.isEmpty()) {
+                dto.setBackdrop("https://image.tmdb.org/t/p/original" + this.backdropPath);
             }
 
             if (this.firstAirDate != null && !this.firstAirDate.isEmpty()) {
