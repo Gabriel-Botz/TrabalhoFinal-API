@@ -25,4 +25,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     @Query("SELECT u FROM Usuario u WHERE u.tipoUsuario = :tipo")
     List<Usuario> findByTipoUsername(@Param("tipo") TipoUsuario tipo);
 
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByUsernames(List<String> usernames);
+
+    boolean existsByEmails(List<String> emails);
+
 }
