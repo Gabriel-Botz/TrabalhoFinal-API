@@ -71,7 +71,9 @@ public class SeriesServices {
 
         List<Categoria> categorias = categoriaRepository
                 .findAllById(seriesRequest.getIdCategorias());
+
         serie.setCategorias(categorias);
+
         return new SeriesResponseDTO(seriesRepository.save(serie));
     }
 
