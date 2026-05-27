@@ -88,7 +88,7 @@ public class SeriesServices {
     }
 
     @Transactional
-    public List<SeriesResponseDTO> buscarPorCategoria(UUID idCategoria) {
+    public List<SeriesResponseDTO> buscarPorCategoria(Long idCategoria) {
         return seriesRepository.findByCategoriasId(idCategoria)
                 .stream()
                 .map(SeriesResponseDTO::new)
