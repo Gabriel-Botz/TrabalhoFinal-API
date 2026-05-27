@@ -10,6 +10,7 @@ import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
 import org.serratec.trabalho_final_api.enumerated.TipoUsuario;
 import org.serratec.trabalho_final_api.exception.AcessoNegadoException;
+import org.serratec.trabalho_final_api.exception.RecursoJaExistenteException;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -74,6 +75,22 @@ public class UsuarioService {
     @Transactional
     public List<UsuarioResponseDTO> salvarList(List<UsuarioRequestDTO> requests) {
 
+        List<String> usernames = requests.stream().map(UsuarioRequestDTO::username).toList();
+        List<String> emails = requests.stream().map(UsuarioRequestDTO::email).toList();
+
+        if (repository.existsByUsernames(usernames))
+            throw new RecursoJaExistenteException(
+                    "Já existe usuário cadastrado utilizando um dos usernames enviados:" + usernames + "\n");
+
+        if (repository.existsByEmails(emails))
+            throw new RecursoJaExistenteException(
+                    "Já existe usuário cadastrado utilizando  um dos emails enviados:" + emails + "\n");
+
+        Long usernamesUnicos = usernames.stream().distinct().count();
+        if (usernamesUnicos < requests.size()) {
+            throw new RecursoJaExistenteException("A lista enviada possui dados usernames/emails duplicados entre si.");
+        }
+
         List<Usuario> usuarios = requests.stream()
                 .map(request -> {
                     Usuario user = request.toUsuario();
@@ -100,17 +117,17 @@ public class UsuarioService {
 
                 mensagemAdm // método de mensagem para o ADMIN
                         .append("Avido do Sistem: Um novo usuário foi cadastrado.\n")
-                        .append("➤ Id: '").append(usuario.getId()).append("'\n")
-                        .append("➤ Nome: '").append(usuario.getNome()).append("'\n")
-                        .append("➤ Username: '").append(usuario.getUsername()).append("'\n")
-                        .append("➤ Email: '").append(usuario.getEmail()).append("'\n")
-                        .append("➤ ")
-                        .append("➤ Data da Criação: '").append(usuario.getDataCriacao()).append("'\n")
-                        .append("➤ Tipo de Usuário: '").append(usuario.getTipoUsuario()).append("'\n");
+                        .append("- Id: '").append(usuario.getId()).append("'\n")
+                        .append("- Nome: '").append(usuario.getNome()).append("'\n")
+                        .append("- Username: '").append(usuario.getUsername()).append("'\n")
+                        .append("- Email: '").append(usuario.getEmail()).append("'\n")
+                        .append("- ")
+                        .append("- Data da Criação: '").append(usuario.getDataCriacao()).append("'\n")
+                        .append("- Tipo de Usuário: '").append(usuario.getTipoUsuario()).append("'\n");
 
                 // Chamando os métodos e passando as informações para o envio de e-mail
                 notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso", mensagem.toString());
-                notificacao.avisarVariosAdmin("Cadastro Realizado com Sucesso", mensagem.toString());
+                notificacao.avisarVariosAdmin("Cadastro Realizado com Sucesso", mensagemAdm.toString());
 
             } catch (Exception e) {
                 System.err.println("Falha ao enviar notificação por e-mail para o usuário " + usuario.getUsername()
@@ -123,6 +140,12 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponseDTO salvar(UsuarioRequestDTO request) {
+
+        if (repository.existsByUsername(request.username()))
+            throw new RecursoJaExistenteException("Usuário com o username '" + request.username() + "' já existe\n");
+
+        if (repository.existsByEmail(request.username()))
+            throw new RecursoJaExistenteException("Usuário com o username '" + request.username() + "' já existe\n");
 
         Usuario usuario = request.toUsuario();
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
@@ -146,13 +169,13 @@ public class UsuarioService {
 
             mensagemAdm // método de mensagem para o ADMIN
                     .append("Avido do Sistem: Um novo usuário foi cadastrado.")
-                    .append("➤ Id: '").append(usuario.getId()).append("'\n")
-                    .append("➤ Nome: '").append(usuario.getNome()).append("'\n")
-                    .append("➤ Username: '").append(usuario.getUsername()).append("'\n")
-                    .append("➤ Email: '").append(usuario.getEmail()).append("'\n")
-                    .append("➤ ")
-                    .append("➤ Data da Criação: '").append(usuario.getDataCriacao()).append("'\n")
-                    .append("➤ Tipo de Usuário: '").append(usuario.getTipoUsuario()).append("'\n");
+                    .append("-> Id: '").append(usuario.getId()).append("'\n")
+                    .append("-> Nome: '").append(usuario.getNome()).append("'\n")
+                    .append("-> Username: '").append(usuario.getUsername()).append("'\n")
+                    .append("-> Email: '").append(usuario.getEmail()).append("'\n")
+                    .append("-> ")
+                    .append("-> Data da Criação: '").append(usuario.getDataCriacao()).append("'\n")
+                    .append("-> Tipo de Usuário: '").append(usuario.getTipoUsuario()).append("'\n");
 
             // Chamando os métodos e passando as informações para o envio de e-mail
             notificacao.avisarUsuario(usuario, "Cadastro Realizado com Sucesso",
@@ -176,7 +199,6 @@ public class UsuarioService {
     @Transactional
     public UsuarioResponseDTO atualizar(UUID id, UsuarioRequestDTO request) {
 
-        // valida a permissao e retorna o id --> Olhar casse PermissaoService
         Usuario existe = permissao.validarObter(id);
 
         StringBuilder mensagem = new StringBuilder();
@@ -184,22 +206,22 @@ public class UsuarioService {
 
         if (request.nome() != null && !request.nome().isBlank()) {
             existe.setNome(request.nome());
-            mensagem.append("➤ Nome realizado com sucesso!\n");
+            mensagem.append("-> Nome realizado com sucesso!\n");
         }
 
         if (request.email() != null && !request.email().isBlank()) {
             existe.setEmail(request.email());
-            mensagem.append("➤ Email realizado com sucesso!\n");
+            mensagem.append("-> Email realizado com sucesso!\n");
         }
 
         if (request.username() != null && !request.username().isBlank()) {
             existe.setUsername(request.username());
-            mensagem.append("➤ Username realizado com sucesso!\n");
+            mensagem.append("-> Username realizado com sucesso!\n");
         }
 
         if (request.senha() != null && !request.senha().isBlank()) {
             existe.setSenha(passwordEncoder.encode(request.senha()));
-            mensagem.append("➤ Senha realizado com sucesso!\n");
+            mensagem.append("-> Senha realizado com sucesso!\n");
         }
 
         notificacao.avisarUsuario(existe,
