@@ -23,6 +23,7 @@ import org.serratec.trabalho_final_api.repository.SeriesRepository;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,8 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private CategoriaRepository categoriaRepository;
     @Autowired
@@ -71,8 +74,8 @@ public class DataLoader implements CommandLineRunner {
             user.setNome("Usuário " + i);
             user.setEmail("usuario" + i + "@email.com");
             user.setUsername("user" + i);
-            // Exemplo de hash BCrypt para 'senha123'
-            user.setSenha("$2a$10$7R7MvEOnBebhWw9Sg7mUvO8L7v79wKkF8NqH3K1t8N3g5L4k3r2sO");
+            // Exemplo de hash BCrypt para '1234'
+            user.setSenha(passwordEncoder.encode("1234"));
             user.setTipoUsuario(i == 1 ? TipoUsuario.ADMIN : TipoUsuario.USER); // O primeiro é ADMIN, o resto USER
             user.setDataCriacao(LocalDateTime.now());
             usuarios.add(usuarioRepository.save(user));
