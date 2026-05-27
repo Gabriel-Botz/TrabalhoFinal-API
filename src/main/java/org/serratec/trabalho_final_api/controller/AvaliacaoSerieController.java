@@ -92,4 +92,19 @@ public class AvaliacaoSerieController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/top5")
+    @Operation(summary = "Buscar top 5 filmes", description = "Retorna as 5 séries com as maiores notas cadastradas.")
+    @ApiResponses(value = {
+                    @ApiResponse(responseCode = "200", description = "Top 5 filmes retornado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Nenhuma avaliação encontrada")
+    })
+    public ResponseEntity<List<AvaliacaoSerieResponseDTO>> buscarTop5(){
+
+        List<AvaliacaoSerieResponseDTO> avaliacoes = service.buscartop5();
+
+        return ResponseEntity.ok(avaliacoes);
+
+
+}
 }
