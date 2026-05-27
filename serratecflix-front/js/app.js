@@ -732,10 +732,15 @@ window.adicionarMidiaAoFavorito = async function() {
 
     const ehSerie = midiaSelecionadaAtg.tipoMidiaCorrente === 'serie';
 
-    // Monta a URL de acordo com os endpoints definidos no seu ListaFavoritosController
+    // AQUI ENTRA O NOVO TRECHO
+    const idParaUsar = ehSerie
+        ? midiaSelecionadaAtg.id
+        : await garantirFilmeNoBanco(midiaSelecionadaAtg);
+
+    // agora usa idParaUsar
     const rota = ehSerie
-        ? `http://localhost:8082/lista-favoritos/series/${user.username}?idLista=${idLista}&idSerie=${midiaSelecionadaAtg.id}`
-        : `http://localhost:8082/lista-favoritos/filmes/${user.username}?idLista=${idLista}&idFilme=${midiaSelecionadaAtg.id}`;
+        ? `http://localhost:8082/lista-favoritos/series/${user.username}?idLista=${idLista}&idSerie=${idParaUsar}`
+        : `http://localhost:8082/lista-favoritos/filmes/${user.username}?idLista=${idLista}&idFilme=${idParaUsar}`;
 
     try {
         const resp = await fetch(rota, {
@@ -756,7 +761,6 @@ window.adicionarMidiaAoFavorito = async function() {
         }
     }
 };
-
 async function popularCarrosseis() {
     const container = document.getElementById('container-carrosseis');
     if (!container) return;
@@ -1089,10 +1093,3 @@ async function garantirFilmeNoBanco(midia) {
     const filmeSalvo = await resp.json();
     return filmeSalvo.id;
 }
-const idParaUsar = midiaSelecionadaAtg.tipoMidiaCorrente === 'serie'
-    ? midiaSelecionadaAtg.id
-    : await garantirFilmeNoBanco(midiaSelecionadaAtg);
-
-const rota = ehSerie
-    ? `http://localhost:8082/lista-favoritos/series/${user.username}?idLista=${idLista}&idSerie=${idParaUsar}`
-    : `http://localhost:8082/lista-favoritos/filmes/${user.username}?idLista=${idLista}&idFilme=${idParaUsar}`;
