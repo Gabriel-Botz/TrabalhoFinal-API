@@ -67,6 +67,12 @@ public class SeriesServices {
         serie.setTemporadas(seriesRequest.getTemporadas());
         serie.setDataLancamento(seriesRequest.getDataLancamento());
         serie.setNotaMedia(seriesRequest.getNotaMedia());
+
+        List<Categoria> categorias = categoriaRepository
+                             .findAllById(seriesRequest.getIdCategorias());
+
+        serie.setCategorias(categorias);
+
         return new SeriesResponseDTO(seriesRepository.save(serie));
     }
 
@@ -81,7 +87,7 @@ public class SeriesServices {
     }
 
     @Transactional
-    public List<SeriesResponseDTO> buscarPorCategoria(Long idCategoria) {
+    public List<SeriesResponseDTO> buscarPorCategoria(UUID idCategoria) {
         return seriesRepository.findByCategoriasId(idCategoria)
                 .stream()
                 .map(SeriesResponseDTO::new)
