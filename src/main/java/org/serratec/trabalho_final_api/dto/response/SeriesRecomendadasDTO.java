@@ -4,7 +4,7 @@ import org.serratec.trabalho_final_api.domain.Categoria;
 import org.serratec.trabalho_final_api.domain.Series;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 public class SeriesRecomendadasDTO {
         UUID id;
