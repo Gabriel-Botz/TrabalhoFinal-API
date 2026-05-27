@@ -27,9 +27,7 @@ public class SeriesRecomendadasService {
       if(categoriasFav == null || categoriasFav.isEmpty()){
          throw new RecursoNaoEncontradoException("Categoria favorita nao encontrado");
       }
-
       return seriesRepository.recomendarSerie
               (categoriasFav,usuarioId).stream().map(SeriesRecomendadasResponseDTO::new).toList();
   }
-
 }
