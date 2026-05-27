@@ -13,4 +13,9 @@ public interface SeriesRepository extends JpaRepository<Series, UUID> {
 
     // o repository utiliza a classe domain Categoria como base e o DB
     List<Series> findByCategoriasId(Long idCategoria);
+
+
+
+
+
 }

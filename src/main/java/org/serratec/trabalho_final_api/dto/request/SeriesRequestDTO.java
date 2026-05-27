@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class SeriesRequestDTO {
 
@@ -15,21 +16,23 @@ public class SeriesRequestDTO {
     @NotNull(message = "descrição pode ser nula")
     private String descricao;
 
-    @NotBlank(message = "temporadas é obrigatório")
+
     @NotNull(message = "temporadas não pode ser nulo")
     private Integer temporadas;
 
-    @NotBlank(message = "episodios é obrigatório")
+
     @NotNull(message = "episodios não pode ser nulo")
     private Integer episodios;
 
-    @NotBlank(message = "Data de lançamento é obrigatório")
+
     @NotNull(message = "Data de lançamento não pode ser nulo")
     private LocalDate dataLancamento;
 
-    @NotBlank(message = "Nota media é obrigatório")
+
     @NotNull(message = "Nota media não pode ser nulo")
     private Double notaMedia;
+
+    private List<Long> idCategorias;
 
     public SeriesRequestDTO() {
     }
@@ -80,5 +83,13 @@ public class SeriesRequestDTO {
 
     public void setNotaMedia(Double notaMedia) {
         this.notaMedia = notaMedia;
+    }
+
+    public List<Long> getIdCategorias() {
+        return idCategorias;
+    }
+
+    public void setIdCategorias(List<Long> idCategorias) {
+        this.idCategorias = idCategorias;
     }
 }
