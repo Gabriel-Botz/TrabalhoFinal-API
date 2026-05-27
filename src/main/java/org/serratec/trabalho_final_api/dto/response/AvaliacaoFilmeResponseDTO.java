@@ -5,12 +5,15 @@ import java.util.UUID;
 
 import org.serratec.trabalho_final_api.domain.AvaliacaoFilme;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@JsonPropertyOrder({ "id", "nomeUsuario", "nomeFilme", "nota", "comentario", "dataAvaliacao" })
 public class AvaliacaoFilmeResponseDTO {
 
     @Schema(description = "ID de avaliação de filme", example = "550e8400-e29b-41d4-a716-446655440000")

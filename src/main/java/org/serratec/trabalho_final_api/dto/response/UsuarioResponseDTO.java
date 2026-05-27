@@ -13,7 +13,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
 @Schema(description = "Modelo de resposta com os dados detalhados do usuário")
-@JsonPropertyOrder({ "id", "nome", "email", "username", "dataCriacao" })
+@JsonPropertyOrder({ "id", "username", "nome", "email", "dataCriacao" })
 public record UsuarioResponseDTO(
         @Schema(description = "Identificador único gerado automaticamente pelo banco de dados", example = "1") UUID id,
         @Schema(description = "Nome do usuario cadastrado", example = "Luna") String nome,
