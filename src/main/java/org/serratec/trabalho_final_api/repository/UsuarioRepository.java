@@ -16,10 +16,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     Optional<Usuario> findByUsername(String username);
 
-    @Query("SELECT u FROM Usuario u WHERE u.tipoUsuario = :tipo")
-    List<Usuario> findByTipoUsuario(@Param("tipo") TipoUsuario tipo);
+    @Query("SELECT u.email FROM Usuario u WHERE u.tipoUsuario = :tipo")
+    List<String> findEmailsByTipoUsuario(@Param("tipo") TipoUsuario tipo);
 
     @Query("SELECT u FROM Usuario u WHERE u.username Like%?1")
     List<Usuario> findByUsernameEndsWith(String username);
+
+    @Query("SELECT u FROM Usuario u WHERE u.tipoUsuario = :tipo")
+    List<Usuario> findByTipoUsername(@Param("tipo") TipoUsuario tipo);
 
 }

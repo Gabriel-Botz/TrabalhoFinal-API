@@ -65,8 +65,7 @@ public class UsuarioService {
     @Transactional
     public List<UsuarioResponseDTO> buscarPorTipoUsuario(String tipo) {
         TipoUsuario tipoEnum = TipoUsuario.valueOf(tipo.toUpperCase());
-        return repository.findByTipoUsuario(
-                tipoEnum).stream()
+        return repository.findByTipoUsername(tipoEnum).stream()
                 .map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
     }
 
