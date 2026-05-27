@@ -42,6 +42,7 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "200",
         description = "Lista de favoritos retornada com sucesso")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/publicas")
     public ResponseEntity<List<ListaFavoritosResponseDTO>> listarPublicas() {
         List<ListaFavoritosResponseDTO> listaFavoritos = listaFavoritosService.listarPublicas();
@@ -62,6 +63,7 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "403", 
         description = "Acesso negado. O usuário não tem permissão para acessar as listas privadas de outros usuários")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/privadas/{username}")
     public ResponseEntity<List<ListaFavoritosResponseDTO>> listarPrivadas(@PathVariable String username) {
         List<ListaFavoritosResponseDTO> listaFavoritos = listaFavoritosService.listarPrivadas(username);
@@ -79,6 +81,7 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "404", 
         description = "Lista de favoritos não encontrada")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{idLista}")
     public ResponseEntity<ListaFavoritosResponseDTO> buscarListaFavoritosPorId(@PathVariable UUID idLista) {
         ListaFavoritosResponseDTO listaFavoritos = listaFavoritosService.buscarPorId(idLista);
@@ -100,6 +103,7 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "404", 
         description = "Lista de favoritos não encontrada")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/busca/?nome={nome}")
     public ResponseEntity<List<ListaFavoritosResponseDTO>> buscarListaFavoritosPorNome(@RequestParam String nome) {
         
@@ -141,6 +145,7 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "404", 
         description = "Lista de favoritos não encontrada")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PutMapping("{username}/{idLista}")
     public ResponseEntity<ListaFavoritosResponseDTO> atualizarListaFavoritos(
             @PathVariable String username,
@@ -168,8 +173,11 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "404", 
         description = "Lista de favoritos não encontrada")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/{username}/{idLista}")
-    public ResponseEntity<Void> deletarListaFavoritos(@PathVariable String username, @PathVariable UUID idLista) {
+    public ResponseEntity<Void> deletarListaFavoritos(
+        @PathVariable String username, 
+        @PathVariable UUID idLista) {
 
         listaFavoritosService.deletar(username, idLista);
         return ResponseEntity.noContent().build();
@@ -186,9 +194,12 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "404",
         description = "Lista de favoritos ou filme não encontrado")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/filmes/{username}")
     public ResponseEntity<ListaFavoritosResponseDTO> adicionarFilme(
-        @PathVariable String username, @RequestParam UUID idLista, UUID idFilme) {
+        @PathVariable String username, 
+        @RequestParam UUID idLista, 
+        @RequestParam UUID idFilme) {
             
             ListaFavoritosResponseDTO lista = listaFavoritosService.adicionarFilme(username, idLista, idFilme);;
 
@@ -209,9 +220,12 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "404",
         description = "Lista de favoritos ou série não encontrada")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/series/{username}")
     public ResponseEntity<ListaFavoritosResponseDTO> adicionarSerie(
-        @PathVariable String username, @RequestParam UUID idLista, UUID idSerie) {
+        @PathVariable String username, 
+        @RequestParam UUID idLista,  
+        @RequestParam UUID idSerie) {
             
             ListaFavoritosResponseDTO lista = listaFavoritosService.adicionarSerie(username, idLista, idSerie);;
 
@@ -232,9 +246,12 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "404",
         description = "Lista de favoritos ou filme não encontrado")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/filmes/{username}")
     public ResponseEntity<ListaFavoritosResponseDTO> removerFilme(
-        @PathVariable String username, @RequestParam UUID idLista, UUID idFilme) {
+        @PathVariable String username, 
+        @RequestParam UUID idLista, 
+        @RequestParam UUID idFilme) {
             
             ListaFavoritosResponseDTO listaDTO = listaFavoritosService.removerFilme(username, idLista, idFilme);
 
@@ -252,9 +269,12 @@ public class ListaFavoritosController {
     @ApiResponse(
         responseCode = "404",
         description = "Lista de favoritos ou série não encontrado")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/series/{username}")
     public ResponseEntity<ListaFavoritosResponseDTO> removerSerie(
-        @PathVariable String username, @RequestParam UUID idLista, UUID idSerie) {
+        @PathVariable String username, 
+        @RequestParam UUID idLista, 
+        @RequestParam UUID idSerie) {
             
             ListaFavoritosResponseDTO listaDTO = listaFavoritosService.removerSerie(username, idLista, idSerie);
 
