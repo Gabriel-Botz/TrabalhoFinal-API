@@ -92,4 +92,30 @@ public class AvaliacaoSerieService {
 
         avaliacaoSerieRepository.delete(avaliacaoSerie);
     }
+
+    public List<AvaliacaoSerieResponseDTO> buscartop5(){
+
+        List<AvaliacaoSerie> avaliacoes = avaliacaoSerieRepository.findAllByOrderByNotaDesc();
+
+        List<AvaliacaoSerieResponseDTO> avaliacoesDTO = new ArrayList<>();
+
+        List<UUID> seriesAdicionados = new ArrayList<>();
+
+        for(AvaliacaoSerie avaliacao:avaliacoes){
+
+            UUID serieId = avaliacao.getSeries().getId();
+
+        if(!seriesAdicionados.contains(serieId)){
+
+        avaliacoesDTO.add(new AvaliacaoSerieResponseDTO(avaliacao));
+
+        seriesAdicionados.add(serieId);
+
+        if(avaliacoesDTO.size() == 5){
+            break;
+        }
+    }
+}
+            return avaliacoesDTO;
+}
 }
