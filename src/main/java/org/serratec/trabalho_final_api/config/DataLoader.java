@@ -73,7 +73,6 @@ public class DataLoader implements CommandLineRunner {
             user.setUsername("user" + i);
             // Exemplo de hash BCrypt para 'senha123'
             user.setSenha("$2a$10$7R7MvEOnBebhWw9Sg7mUvO8L7v79wKkF8NqH3K1t8N3g5L4k3r2sO");
-            user.setFotoPerfil("avatar" + i + ".png");
             user.setTipoUsuario(i == 1 ? TipoUsuario.ADMIN : TipoUsuario.USER); // O primeiro é ADMIN, o resto USER
             user.setDataCriacao(LocalDateTime.now());
             usuarios.add(usuarioRepository.save(user));
@@ -132,7 +131,7 @@ public class DataLoader implements CommandLineRunner {
         for (int i = 0; i < 10; i++) {
             ListaFavoritos lista = new ListaFavoritos();
             lista.setNomeLista("Minhas produções favoritas vol " + (i + 1));
-            lista.setPrivada(i % 2 == 0); // Alterna entre públicas e privadas
+            lista.setPrivada(i % 2 == 0);
             lista.setDataCriacao(LocalDate.now().minusDays(i));
             lista.setUsuario(usuarios.get(i));
             lista.setFilmes(List.of(filmes.get(i), filmes.get((i + 1) % 10)));
