@@ -20,7 +20,8 @@ public class CategoriaRequestDTO {
 	public CategoriaRequestDTO(String nome, String descricao) {
 		super();
 		this.nome = nome;
-		this.descricao = descricao;}
+		this.descricao = descricao;
+	}
 
 	//Getters e Setters
 	public String getNome() {return nome;}
