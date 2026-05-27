@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.serratec.trabalho_final_api.domain.Filme;
 import org.serratec.trabalho_final_api.domain.ListaFavoritos;
+import org.serratec.trabalho_final_api.domain.Series;
 import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.dto.request.ListaFavoritosRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.FilmeResponseDTO;
@@ -13,7 +15,9 @@ import org.serratec.trabalho_final_api.dto.response.ListaFavoritosResponseDTO;
 import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
 import org.serratec.trabalho_final_api.exception.AcessoNegadoException;
 import org.serratec.trabalho_final_api.exception.RecursoNaoEncontradoException;
+import org.serratec.trabalho_final_api.repository.FilmeRepository;
 import org.serratec.trabalho_final_api.repository.ListaFavoritosRepository;
+import org.serratec.trabalho_final_api.repository.SeriesRepository;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +33,14 @@ public class ListaFavoritosService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // Listars públicas
+    @Autowired
+    private FilmeRepository filmeRepository;
+
+    @Autowired
+    private SeriesRepository seriesRepository;
+
+
+    // Listas públicas
     public List<ListaFavoritosResponseDTO> listarPublicas() {
 
         List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
@@ -107,6 +118,7 @@ public class ListaFavoritosService {
     }
 
 
+    // Buscar lista por ID
     public ListaFavoritosResponseDTO buscarPorId(UUID id) {
 
         ListaFavoritos lista = listaFavoritosRepository.findById(id)
@@ -197,6 +209,7 @@ public class ListaFavoritosService {
     // }
 
 
+    // Cria uma nova lista de favoritos
     @Transactional
     public ListaFavoritosResponseDTO criar(String username, ListaFavoritosRequestDTO listaFavoritosRequestDTO) {
 
@@ -224,7 +237,7 @@ public class ListaFavoritosService {
     }
 
 
-    // Atualizar lista de favoritos
+    // Atualiza lista de favoritos
     @Transactional
     public ListaFavoritosResponseDTO atualizar(UUID id, ListaFavoritosRequestDTO listaFavoritosRequestDTO,
             String username) {
@@ -267,6 +280,7 @@ public class ListaFavoritosService {
     }
 
 
+    // Apaga um filme
     @Transactional
     public void deletar(String username, UUID id) {
 
@@ -281,4 +295,207 @@ public class ListaFavoritosService {
 
         listaFavoritosRepository.delete(listaExistente);
     }
+
+
+    // Adiciona um filme à uma lista de favoritos
+    public ListaFavoritosResponseDTO adicionarFilme(String username, UUID idLista, UUID idFilme) {
+        
+        // Verifica se o username existe
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+        
+        // Busca a lista de favoritos pelo ID
+        ListaFavoritos listaFavoritos = listaFavoritosRepository.findById(idLista)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Lista de favoritos não encontrada"));
+        
+        // Verifica se o usuárioi da lista de favoritos é o mesmo do username informado
+        if(!listaFavoritos.getUsuario().equals(usuario))
+            throw new AcessoNegadoException("Você não tem permissão para alterar esta lista.");
+
+        // Filmes presentes na lista de favoritos atual
+        List<Filme> filmes = new ArrayList<>();
+        filmes = listaFavoritos.getFilmes();
+    
+        // Busca o novo filme a ser adicionado pelo ID fornecido
+        Filme novoFilme = filmeRepository.findById(idFilme)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Nenhum filme encontrado com o ID fornecido"));
+
+        // Adiciona o novo filme à lista de filmes
+        filmes.add(novoFilme);
+
+        // Transforma as listas filme e séries em DTO
+        List<FilmeResponseDTO> filmesDTO = new ArrayList<>();
+        List<SeriesResponseDTO> seriesDTO = new ArrayList<>();
+
+        filmes.forEach(filme -> {
+            filmesDTO.add(new FilmeResponseDTO(filme));
+        });
+        listaFavoritos.getSeries().forEach(serie -> {
+            seriesDTO.add(new SeriesResponseDTO(serie));
+        });
+
+        // Retorna a lista de favoritos atualizada com o novo filme
+        return new ListaFavoritosResponseDTO(
+            listaFavoritos.getId(),
+            listaFavoritos.getNomeLista(),
+            listaFavoritos.getPrivada(),
+            listaFavoritos.getDataCriacao(),
+            listaFavoritos.getUsuario(),
+            filmesDTO,
+            seriesDTO
+        );
+        
+
+    }
+
+
+    // Adiciona um filme à uma lista de favoritos
+    public ListaFavoritosResponseDTO adicionarSerie(String username, UUID idLista, UUID idSerie) {
+        
+        // Verifica se o username existe
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+        
+        // Busca a lista de favoritos pelo ID
+        ListaFavoritos listaFavoritos = listaFavoritosRepository.findById(idLista)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Lista de favoritos não encontrada"));
+        
+        // Verifica se o usuárioi da lista de favoritos é o mesmo do username informado
+        if(!listaFavoritos.getUsuario().equals(usuario))
+            throw new AcessoNegadoException("Você não tem permissão para alterar esta lista.");
+
+        // Series presentes na lista de favoritos atual
+        List<Series> series = new ArrayList<>();
+        series = listaFavoritos.getSeries();
+    
+        // Busca a nova série a ser adicionado pelo ID fornecido
+        Series novaSerie = seriesRepository.findById(idSerie)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Nenhuma série encontrado com o ID fornecido"));
+
+        // Adiciona a nova série à lista de filmes
+        series.add(novaSerie);
+
+        // Transforma as listas filme e séries em DTO
+        List<FilmeResponseDTO> filmesDTO = new ArrayList<>();
+        List<SeriesResponseDTO> seriesDTO = new ArrayList<>();
+
+        series.forEach(serie -> {
+            seriesDTO.add(new SeriesResponseDTO(serie));
+        });
+        listaFavoritos.getFilmes().forEach(filme -> {
+            filmesDTO.add(new FilmeResponseDTO(filme));
+        });
+
+        // Retorna a lista de favoritos atualizada com o novo filme
+        return new ListaFavoritosResponseDTO(
+            listaFavoritos.getId(),
+            listaFavoritos.getNomeLista(),
+            listaFavoritos.getPrivada(),
+            listaFavoritos.getDataCriacao(),
+            listaFavoritos.getUsuario(),
+            filmesDTO,
+            seriesDTO
+        );
+        
+
+    }
+
+
+    // Remove um filme de uma lista de favoritos
+    public ListaFavoritosResponseDTO removerFilme(String username, UUID idLista, UUID idFilme) {
+        // Verifica se o username existe
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+        
+        // Busca a lista de favoritos pelo ID
+        ListaFavoritos listaFavoritos = listaFavoritosRepository.findById(idLista)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Lista de favoritos não encontrada"));
+        
+        // Verifica se o usuárioi da lista de favoritos é o mesmo do username informado
+        if(!listaFavoritos.getUsuario().equals(usuario))
+            throw new AcessoNegadoException("Você não tem permissão para alterar esta lista.");
+
+        // Filmes presentes na lista de favoritos atual
+        List<Filme> filmes = new ArrayList<>();
+        filmes = listaFavoritos.getFilmes();
+    
+        // Busca o filme a ser removido pelo ID fornecido
+        Filme filmeRemover = filmeRepository.findById(idFilme)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Nenhum filme encontrado com o ID fornecido"));
+
+        // Remove o filme da lista de filmes
+        filmes.remove(filmeRemover);
+
+        // Transforma as listas filme e séries em DTO
+        List<FilmeResponseDTO> filmesDTO = new ArrayList<>();
+        List<SeriesResponseDTO> seriesDTO = new ArrayList<>();
+
+        filmes.forEach(filme -> {
+            filmesDTO.add(new FilmeResponseDTO(filme));
+        });
+        listaFavoritos.getSeries().forEach(serie -> {
+            seriesDTO.add(new SeriesResponseDTO(serie));
+        });
+
+        // Retorna a lista de favoritos atualizada sem o filme removido
+        return new ListaFavoritosResponseDTO(
+            listaFavoritos.getId(),
+            listaFavoritos.getNomeLista(),
+            listaFavoritos.getPrivada(),
+            listaFavoritos.getDataCriacao(),
+            listaFavoritos.getUsuario(),
+            filmesDTO,
+            seriesDTO
+        );
+    }
+
+    
+     // Remove uma série de uma lista de favoritos
+     public ListaFavoritosResponseDTO removerSerie(String username, UUID idLista, UUID idSerie) {
+        // Verifica se o username existe
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+        
+        // Busca a lista de favoritos pelo ID
+        ListaFavoritos listaFavoritos = listaFavoritosRepository.findById(idLista)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Lista de favoritos não encontrada"));
+        
+        // Verifica se o usuárioi da lista de favoritos é o mesmo do username informado
+        if(!listaFavoritos.getUsuario().equals(usuario))
+            throw new AcessoNegadoException("Você não tem permissão para alterar esta lista.");
+
+        // Series presentes na lista de favoritos atual
+        List<Series> series = new ArrayList<>();
+        series = listaFavoritos.getSeries();
+    
+        // Busca a série a ser removida pelo ID fornecido
+        Series serieRemover = seriesRepository.findById(idSerie)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Nenhuma série encontrado com o ID fornecido"));
+
+        // Remove a série da lista de séries
+        series.remove(serieRemover);
+
+        // Transforma as listas filme e séries em DTO
+        List<FilmeResponseDTO> filmesDTO = new ArrayList<>();
+        List<SeriesResponseDTO> seriesDTO = new ArrayList<>();
+
+        series.forEach(serie -> {
+            seriesDTO.add(new SeriesResponseDTO(serie));
+        });
+        listaFavoritos.getFilmes().forEach(filme -> {
+            filmesDTO.add(new FilmeResponseDTO(filme));
+        });
+
+        // Retorna a lista de favoritos atualizada sem a série removida
+        return new ListaFavoritosResponseDTO(
+            listaFavoritos.getId(),
+            listaFavoritos.getNomeLista(),
+            listaFavoritos.getPrivada(),
+            listaFavoritos.getDataCriacao(),
+            listaFavoritos.getUsuario(),
+            filmesDTO,
+            seriesDTO
+        );
+    }
+
 }
