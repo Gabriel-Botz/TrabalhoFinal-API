@@ -1,8 +1,12 @@
 package org.serratec.trabalho_final_api.security;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.serratec.trabalho_final_api.exception.ErroResposta;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,6 +30,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        // seta o caminho do pedido de autendicacao
         setFilterProcessesUrl("/login");
     }
 
@@ -58,15 +64,35 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().write(String.format("{\"token\": \"Bearer %s\"}", token));
     }
 
-    @Override
+    @Override // Autenticação do usuário
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException failed) throws IOException, ServletException {
+
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write("{\"error\": \"Usuário ou senha inválidos.\"}");
+
+        // Montando o corpo do erro
+        List<String> erros = List.of("Usuário ou senha inválidos. Verifique suas credenciais.");
+
+        ErroResposta erroResposta = new ErroResposta(
+                HttpServletResponse.SC_UNAUTHORIZED,
+                "Falha na autenticação!",
+                LocalDateTime.now(ZoneId.of(
+                        "America/Sao_Paulo")),
+                erros);
+
+        // Converte o erroResposta em arquivo JSON
+        ObjectMapper mapeia = new ObjectMapper();
+        mapeia.registerModule(new JavaTimeModule());
+        String jsonResposta = mapeia.writeValueAsString(erroResposta);
+
+        // Retorna para ocorpo da requisição o arquivo convertido
+        response.getWriter().write(jsonResposta);
     }
 
+    // Método de requisição
     private static class LoginRequest {
         private String username;
         private String senha;
