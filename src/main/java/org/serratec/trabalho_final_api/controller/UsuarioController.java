@@ -59,6 +59,18 @@ public class UsuarioController {
                 return ResponseEntity.ok(service.buscar(id));
         }
 
+        @GetMapping("/username/{username}")
+        public ResponseEntity<List<UsuarioResponseDTO>> buscarUsername(@PathVariable String username)
+                        throws RecursoNaoEncontradoException {
+                return ResponseEntity.ok(service.buscarPorUsername(username));
+        }
+
+        @GetMapping("/username/{tipoUsuario}")
+        public ResponseEntity<List<UsuarioResponseDTO>> buscarPorTipoUsuario(@PathVariable String tipoUsuario)
+                        throws RecursoNaoEncontradoException {
+                return ResponseEntity.ok(service.buscarPorUsername(tipoUsuario));
+        }
+
         /* Métodos POSTs */
 
         @Operation(summary = "Cadastrar novo usuario", description = "Salva um novo usuario no banco de dados e retorna o recurso criado acompanhado da sua URI de localização.")
