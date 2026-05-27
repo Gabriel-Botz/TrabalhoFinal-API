@@ -213,7 +213,7 @@ public class ListaFavoritosController {
     public ResponseEntity<ListaFavoritosResponseDTO> adicionarSerie(
         @PathVariable String username, @RequestParam UUID idLista, UUID idSerie) {
             
-            ListaFavoritosResponseDTO lista = listaFavoritosService.adicionarFilme(username, idLista, idSerie);;
+            ListaFavoritosResponseDTO lista = listaFavoritosService.adicionarSerie(username, idLista, idSerie);;
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(lista.getId()).toUri();
@@ -256,7 +256,7 @@ public class ListaFavoritosController {
     public ResponseEntity<ListaFavoritosResponseDTO> removerSerie(
         @PathVariable String username, @RequestParam UUID idLista, UUID idSerie) {
             
-            ListaFavoritosResponseDTO listaDTO = listaFavoritosService.removerFilme(username, idLista, idSerie);
+            ListaFavoritosResponseDTO listaDTO = listaFavoritosService.removerSerie(username, idLista, idSerie);
 
             return ResponseEntity.ok(listaDTO);
         }

@@ -298,6 +298,7 @@ public class ListaFavoritosService {
 
 
     // Adiciona um filme à uma lista de favoritos
+    @Transactional
     public ListaFavoritosResponseDTO adicionarFilme(String username, UUID idLista, UUID idFilme) {
         
         // Verifica se o username existe
@@ -320,8 +321,11 @@ public class ListaFavoritosService {
         Filme novoFilme = filmeRepository.findById(idFilme)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Nenhum filme encontrado com o ID fornecido"));
 
-        // Adiciona o novo filme à lista de filmes
-        filmes.add(novoFilme);
+        // Verifica se o filme já está presente na lista de favoritos
+        if (!filmes.contains(novoFilme)) {
+            // Adiciona o novo filme à lista de filmes
+            filmes.add(novoFilme);
+        }
 
         // Transforma as listas filme e séries em DTO
         List<FilmeResponseDTO> filmesDTO = new ArrayList<>();
@@ -334,8 +338,11 @@ public class ListaFavoritosService {
             seriesDTO.add(new SeriesResponseDTO(serie));
         });
 
-        // Retorna a lista de favoritos atualizada com o novo filme
-        return new ListaFavoritosResponseDTO(
+        // Salva a lista de favoritos atualizada no banco de dados
+        listaFavoritos = listaFavoritosRepository.save(listaFavoritos);
+
+        // Transforma a lista de favoritos atualizada em DTO para retornar na resposta
+        ListaFavoritosResponseDTO listaFavoritosDTO = new ListaFavoritosResponseDTO(
             listaFavoritos.getId(),
             listaFavoritos.getNomeLista(),
             listaFavoritos.getPrivada(),
@@ -345,11 +352,14 @@ public class ListaFavoritosService {
             seriesDTO
         );
         
+        // Retorna a lista de favoritos atualizada com o novo filme
+        return listaFavoritosDTO;
 
     }
 
 
-    // Adiciona um filme à uma lista de favoritos
+    // Adiciona uma série à uma lista de favoritos
+    @Transactional
     public ListaFavoritosResponseDTO adicionarSerie(String username, UUID idLista, UUID idSerie) {
         
         // Verifica se o username existe
@@ -372,8 +382,15 @@ public class ListaFavoritosService {
         Series novaSerie = seriesRepository.findById(idSerie)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Nenhuma série encontrado com o ID fornecido"));
 
-        // Adiciona a nova série à lista de filmes
-        series.add(novaSerie);
+        // Verifica se a série já está presente na lista de favoritos
+        if (!series.contains(novaSerie)) {
+
+            // Adiciona a nova série à lista de filmes
+            series.add(novaSerie);
+        }
+
+        // Salva a lista de favoritos atualizada no banco de dados
+        listaFavoritos = listaFavoritosRepository.save(listaFavoritos);
 
         // Transforma as listas filme e séries em DTO
         List<FilmeResponseDTO> filmesDTO = new ArrayList<>();
@@ -402,6 +419,7 @@ public class ListaFavoritosService {
 
 
     // Remove um filme de uma lista de favoritos
+    @Transactional
     public ListaFavoritosResponseDTO removerFilme(String username, UUID idLista, UUID idFilme) {
         // Verifica se o username existe
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -426,6 +444,9 @@ public class ListaFavoritosService {
         // Remove o filme da lista de filmes
         filmes.remove(filmeRemover);
 
+        // Salva a lista de favoritos atualizada no banco de dados
+        listaFavoritosRepository.save(listaFavoritos);
+
         // Transforma as listas filme e séries em DTO
         List<FilmeResponseDTO> filmesDTO = new ArrayList<>();
         List<SeriesResponseDTO> seriesDTO = new ArrayList<>();
@@ -449,8 +470,9 @@ public class ListaFavoritosService {
         );
     }
 
-    
+
      // Remove uma série de uma lista de favoritos
+     @Transactional
      public ListaFavoritosResponseDTO removerSerie(String username, UUID idLista, UUID idSerie) {
         // Verifica se o username existe
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -474,6 +496,9 @@ public class ListaFavoritosService {
 
         // Remove a série da lista de séries
         series.remove(serieRemover);
+
+        // Salva a lista de favoritos atualizada no banco de dados
+        listaFavoritosRepository.save(listaFavoritos);
 
         // Transforma as listas filme e séries em DTO
         List<FilmeResponseDTO> filmesDTO = new ArrayList<>();
