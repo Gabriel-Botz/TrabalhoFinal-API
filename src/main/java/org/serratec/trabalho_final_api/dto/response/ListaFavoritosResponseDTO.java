@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.serratec.trabalho_final_api.domain.Usuario;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonPropertyOrder({ "id", "nomeLista", "privada", "dataCriacao", "usuario", "filmes", "series" })
 public class ListaFavoritosResponseDTO {
 
     @Schema(description = "ID da lista de favoritos", example = "550e8400-e29b-41d4-a716-446655440000")

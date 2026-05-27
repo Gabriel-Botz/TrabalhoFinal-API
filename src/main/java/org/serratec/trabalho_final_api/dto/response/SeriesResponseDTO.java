@@ -1,9 +1,13 @@
 package org.serratec.trabalho_final_api.dto.response;
 
-import org.serratec.trabalho_final_api.domain.Series;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import org.serratec.trabalho_final_api.domain.Series;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({ "id", "titulo", "descricao", "temporadas", "episodios", "dataLancamento", "notaMedia" })
 public class SeriesResponseDTO {
     private UUID id;
     private String titulo;
