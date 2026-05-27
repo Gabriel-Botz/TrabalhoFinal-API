@@ -88,7 +88,7 @@ public class UsuarioController {
       public ResponseEntity<List<UsuarioResponseDTO>> buscarPorTipoUsuario(
                   @Parameter(description = "Tipo do usuário (USER ou ADMIN)", example = "USER") @PathVariable String tipoUsuario)
                   throws RecursoNaoEncontradoException {
-            return ResponseEntity.ok(service.buscarPorUsername(tipoUsuario));
+            return ResponseEntity.ok(service.buscarPorTipoUsuario(tipoUsuario));
       }
 
       /* --> Métodos POSTs */
