@@ -78,11 +78,11 @@ public class UsuarioService {
         List<String> usernames = requests.stream().map(UsuarioRequestDTO::username).toList();
         List<String> emails = requests.stream().map(UsuarioRequestDTO::email).toList();
 
-        if (repository.existsByUsernames(usernames))
+        if (repository.existsByUsernameIn(usernames))
             throw new RecursoJaExistenteException(
                     "Já existe usuário cadastrado utilizando um dos usernames enviados:" + usernames + "\n");
 
-        if (repository.existsByEmails(emails))
+        if (repository.existsByEmailIn(emails))
             throw new RecursoJaExistenteException(
                     "Já existe usuário cadastrado utilizando  um dos emails enviados:" + emails + "\n");
 

@@ -19,7 +19,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     @Query("SELECT u.email FROM Usuario u WHERE u.tipoUsuario = :tipo")
     List<String> findEmailsByTipoUsuario(@Param("tipo") TipoUsuario tipo);
 
-    @Query("SELECT u FROM Usuario u WHERE u.username Like%?1")
+    // @Query("SELECT u FROM Usuario u WHERE u.username Like%?1")
     List<Usuario> findByUsernameEndsWith(String username);
 
     @Query("SELECT u FROM Usuario u WHERE u.tipoUsuario = :tipo")
@@ -29,8 +29,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     boolean existsByEmail(String email);
 
-    boolean existsByUsernames(List<String> usernames);
+    boolean existsByUsernameIn(List<String> usernames);
 
-    boolean existsByEmails(List<String> emails);
+    boolean existsByEmailIn(List<String> emails);
 
 }
