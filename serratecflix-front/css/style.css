@@ -968,3 +968,46 @@ body {
     background: var(--accent-color) !important;
     color: black !important;
 }
+
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Empurra esquerda para o canto, direita para o canto e centro no meio */
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espaçamento entre os itens de cada lado */
+}
+
+.nav-center {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaçamento entre os elementos da busca */
+}
+
+/* Estilização para os links da navbar */
+.nav-link {
+    text-decoration: none; /* Remove o sublinhado */
+    color: #ffffff;        /* Define a cor branca ou a cor do seu tema */
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s ease; /* Efeito suave ao passar o mouse */
+    padding: 5px 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.nav-link:hover {
+    color: var(--accent-color); /* Substitua pela variável da sua cor de destaque */
+    cursor: pointer;
+}
+
+/* Opcional: Se quiser que ele tenha um fundo leve ao passar o mouse */
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
