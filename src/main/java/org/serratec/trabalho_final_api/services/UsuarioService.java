@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.serratec.trabalho_final_api.domain.Usuario;
 import org.serratec.trabalho_final_api.dto.request.UsuarioRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.UsuarioResponseDTO;
+import org.serratec.trabalho_final_api.enumerated.TipoUsuario;
+import org.serratec.trabalho_final_api.exception.AcessoNegadoException;
 import org.serratec.trabalho_final_api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,7 +42,7 @@ public class UsuarioService {
                 .stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
 
         if (!isAdmin)
-            throw new org.serratec.trabalho_final_api.exception.AcessoNegadoException(
+            throw new AcessoNegadoException(
                     "Acesso negado: Apenas administradores podem listar todos os usuários.");
 
         return repository.findAll().stream().map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
@@ -52,6 +54,20 @@ public class UsuarioService {
         Usuario usuario = permissao.validarObter(id);
         return UsuarioResponseDTO.toUsuarioResponseDTO(usuario);
 
+    }
+
+    @Transactional
+    public List<UsuarioResponseDTO> buscarPorUsername(String username) {
+        return repository.findByUsernameEndsWith(username.toUpperCase()).stream()
+                .map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
+    }
+
+    @Transactional
+    public List<UsuarioResponseDTO> buscarPorTipoUsuario(String tipo) {
+        TipoUsuario tipoEnum = TipoUsuario.valueOf(tipo.toUpperCase());
+        return repository.findByTipoUsuario(
+                tipoEnum).stream()
+                .map(UsuarioResponseDTO::toUsuarioResponseDTO).toList();
     }
 
     /* Métodos POSTs */
