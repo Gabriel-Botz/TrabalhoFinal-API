@@ -72,4 +72,7 @@ public class Filme {
     @JsonBackReference
     private List<ListaFavoritos> listaFavoritos = new ArrayList<>();
 
+    public String getTitulo() {
+        return this.titulo;
+    }
 }

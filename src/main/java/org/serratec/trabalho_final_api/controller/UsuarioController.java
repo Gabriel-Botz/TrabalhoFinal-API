@@ -37,7 +37,7 @@ public class UsuarioController {
         @Autowired
         private UsuarioService service;
 
-        /* Métodos GETs */
+        /* Métodos GET-s */
 
         @Operation(summary = "Listar todos os usuários", description = "Retorna uma lista contendo todos os usuarios cadastrados no sistema.")
         @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
