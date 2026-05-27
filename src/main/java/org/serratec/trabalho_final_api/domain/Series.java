@@ -20,6 +20,9 @@ public class Series {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(name = "tmdb_id")
+    private Long tmdbId;
     @Column(name = "titulo", nullable = false)
     private String titulo;
     @Column(name = "descricao", nullable = false)
@@ -32,6 +35,10 @@ public class Series {
     private LocalDate dataLancamento;
     @Column(name = "notaMedia", nullable = false)
     private Double notaMedia;
+    @Column(name = "poster")
+    private String poster;
+    @Column(name = "backdrop")
+    private String backdrop;
 
     @OneToMany(mappedBy = "series")
     private List<AvaliacaoSerie> avaliacaoSerie;
