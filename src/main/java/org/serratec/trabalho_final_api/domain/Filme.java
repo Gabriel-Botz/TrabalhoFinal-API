@@ -51,6 +51,9 @@ public class Filme {
     @Column(name = "duracao")
     private Integer duracao;
 
+    @Column(name = "poster") // Ou "imagem_url", veja como está na tabela do banco
+    private String poster;
+
     @Column(name = "data_lancamento")
     private LocalDate dataLancamento;
 

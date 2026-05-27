@@ -26,11 +26,16 @@ public class FilmeResponseDTO {
         this.notaMedia = filme.getNotaMedia();
         this.classificacaoIndicativa = filme.getClassificacaoIndicativa();
         this.tmdbId = filme.getTmdbId();
+        this.poster = filme.getPoster();
     }
 
     private UUID id;
 
     private Long tmdbId;
+
+    private String poster;
+
+    private String backdrop;
 
     @Schema(description = "Titulo do filme", example = "O Poderoso Chefão")
     private String titulo;

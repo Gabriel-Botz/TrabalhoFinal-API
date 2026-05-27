@@ -12,37 +12,29 @@
     <span class="logo">SerratecFlix</span>
 
     <div class="nav-links">
-        <a href="#" onclick="filtrarPorTipo('todos')">Início</a>
-        <a href="#" onclick="filtrarPorTipo('filmes')">Filmes</a>
-        <a href="#" onclick="filtrarPorTipo('series')">Séries</a>
+        <a href="#" onclick="setTipo('todos')">Início</a>
+        <a href="#" onclick="setTipo('filmes')">Filmes</a>
+        <a href="#" onclick="setTipo('series')">Séries</a>
         <a href="#" onclick="abrirListas()">Minhas Listas</a>
     </div>
 
+    <div class="nav-center">
+        <input type="search" class="filter-search" id="input-busca" placeholder="🔍 Buscar..." autocomplete="off"/>
+        <select class="filter-select" id="filter-categoria">
+            <option value="">Categoria</option>
+        </select>
+        <div class="filter-toggle">
+            <button class="toggle-btn active" id="btn-todos" onclick="setTipo('todos')">Todos</button>
+            <button class="toggle-btn" id="btn-filmes" onclick="setTipo('filmes')">Filmes</button>
+            <button class="toggle-btn" id="btn-series" onclick="setTipo('series')">Séries</button>
+        </div>
+        <button class="btn-buscar">Buscar</button>
+    </div>
+
     <div class="nav-right">
-        <button class="btn-login" onclick="abrirModal()">Entrar</button>
+        <button class="btn-login">Entrar</button>
     </div>
 </nav>
-
-<div class="filters-bar">
-    <input type="text" class="filter-search" placeholder="🔍 Buscar filmes e séries..."/>
-
-    <div class="filter-toggle">
-        <button class="toggle-btn active" id="btn-todos" onclick="setTipo('todos')">Todos</button>
-        <button class="toggle-btn" id="btn-filmes" onclick="setTipo('filmes')">Filmes</button>
-        <button class="toggle-btn" id="btn-series" onclick="setTipo('series')">Séries</button>
-    </div>
-
-    <select class="filter-select" id="filter-categoria">
-        <option value="">Categoria</option>
-        <option value="1">Ação</option>
-        <option value="2">Terror</option>
-        <option value="3">Comédia</option>
-        <option value="4">Sci-fi</option>
-        <option value="5">Drama</option>
-    </select>
-
-    <button class="btn-buscar">Buscar</button>
-</div>
 
 <section class="hero">
     <div class="hero-bg"></div>
@@ -58,247 +50,38 @@
         <p class="hero-desc">Uma equipe de exploradores viaja através de um buraco de minhoca no espaço numa tentativa de garantir a sobrevivência da humanidade.</p>
         <div class="hero-buttons">
             <button class="btn-play">▶ Assistir</button>
-            <button class="btn-fav" id="btn-fav-detalhes" onclick="abrirSelecionarLista()">♡ Favoritar</button>
+            <button class="btn-fav" onclick="abrirSelecionarLista()">♡ Favoritar</button>
         </div>
     </div>
 </section>
 
-<!-- SEÇÃO DE FILMES POPULARES (DINÂMICA) -->
+<!-- CARROSSEL DE BUSCA -->
 <section class="carousel-section">
-    <h2 class="carousel-title">Filmes Populares</h2>
-    <!-- Adicionamos o id="container-filmes-api" para o JavaScript injetar os dados aqui -->
+    <h2 class="carousel-title" id="titulo-container-dinamico">Resultados do Catálogo</h2>
     <div class="carousel" id="container-filmes-api">
-        <!-- Os cards de filmes do seu banco de dados serão injetados aqui via JS -->
-        <p style="color: var(--muted); padding: 20px;">Carregando filmes...</p>
+        <p style="color: var(--muted); padding: 20px;">Use a barra de busca acima para explorar mídias unificadas...</p>
     </div>
 </section>
 
-<section class="carousel-section">
-    <h2 class="carousel-title">Séries em Alta</h2>
-    <div class="carousel">
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg" alt="Breaking Bad"/>
-                <span class="card-nota">★ 9.5</span>
-                <span class="card-badge serie">Série</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Breaking Bad</p>
-                <p class="card-year">2008</p>
-            </div>
-        </div>
+<!-- CARROSSÉIS DINÂMICOS (populados pelo JS) -->
+<div id="container-carrosseis"></div>
 
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg" alt="Game of Thrones"/>
-                <span class="card-nota">★ 9.2</span>
-                <span class="card-badge serie">Série</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Game of Thrones</p>
-                <p class="card-year">2011</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/rqeYMLryjcawh2JeRpCVUDXYM5b.jpg" alt="The Last of Us"/>
-                <span class="card-nota">★ 8.9</span>
-                <span class="card-badge serie">Série</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">The Last of Us</p>
-                <p class="card-year">2023</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/56v2KjBlU4XaOv9rVYEQypROD7P.jpg" alt="Stranger Things"/>
-                <span class="card-nota">★ 8.7</span>
-                <span class="card-badge serie">Série</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Stranger Things</p>
-                <p class="card-year">2016</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/q8eejQcg1bAqImEV8jh8RtBD4uH.jpg" alt="The Boys"/>
-                <span class="card-nota">★ 8.7</span>
-                <span class="card-badge serie">Série</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">The Boys</p>
-                <p class="card-year">2019</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="carousel-section">
-    <h2 class="carousel-title">Ação & Aventura</h2>
-    <div class="carousel">
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg" alt="John Wick"/>
-                <span class="card-nota">★ 7.4</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">John Wick</p>
-                <p class="card-year">2014</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg" alt="Mad Max"/>
-                <span class="card-nota">★ 8.1</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Mad Max: Estrada da Fúria</p>
-                <p class="card-year">2015</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/mavMi2zMBQKhGkUP9GXal4zHMoN.jpg" alt="Top Gun"/>
-                <span class="card-nota">★ 8.2</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Top Gun: Maverick</p>
-                <p class="card-year">2022</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/A7AoNT06aRAc4x9TVbj9TM76xXR.jpg" alt="Oppenheimer"/>
-                <span class="card-nota">★ 8.5</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Oppenheimer</p>
-                <p class="card-year">2023</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/hm58fLFl6GEBKbVBkuRiSbEhSwa.jpg" alt="Duna"/>
-                <span class="card-nota">★ 8.0</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Duna</p>
-                <p class="card-year">2021</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="carousel-section">
-    <h2 class="carousel-title">Sci-fi & Fantasia</h2>
-    <div class="carousel">
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg" alt="Matrix Resurrections"/>
-                <span class="card-nota">★ 5.7</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Matrix Resurrections</p>
-                <p class="card-year">2021</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/xJHokMbljvjADYdit5fK5VQsXEG.jpg" alt="Interestelar"/>
-                <span class="card-nota">★ 8.6</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Interestelar</p>
-                <p class="card-year">2014</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/8rpDcsfLJypbO6vREc0547VKqEv.jpg" alt="Avatar"/>
-                <span class="card-nota">★ 7.9</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Avatar</p>
-                <p class="card-year">2009</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/AkJQpZp9WoNdj7pLYSj1L0RcMMN.jpg" alt="Blade Runner"/>
-                <span class="card-nota">★ 8.0</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">Blade Runner 2049</p>
-                <p class="card-year">2017</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-poster">
-                <img src="https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" alt="A Origem"/>
-                <span class="card-nota">★ 8.8</span>
-                <span class="card-badge">Filme</span>
-            </div>
-            <div class="card-info">
-                <p class="card-title">A Origem</p>
-                <p class="card-year">2010</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<script src="js/app.js"></script>
-
-<script>
-    function setTipo(tipo) {
-        document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('btn-' + tipo).classList.add('active');
-
-        const categorySelect = document.getElementById('filter-categoria');
-        categorySelect.disabled = tipo === 'series';
-        categorySelect.style.opacity = tipo === 'series' ? '0.4' : '1';
-    }
-</script>
-
+<!-- MODAL AUTH -->
 <div class="modal-overlay" id="modal-auth">
     <div class="modal-box">
         <button class="modal-close" onclick="fecharModal()">×</button>
         <h1 class="modal-logo">SerratecFlix</h1>
         <p class="modal-sub">Sua plataforma geek de streaming</p>
-
         <div class="auth-tabs">
             <button class="auth-tab active" id="tab-login" onclick="setTab('login')">Entrar</button>
             <button class="auth-tab" id="tab-cadastro" onclick="setTab('cadastro')">Cadastrar</button>
         </div>
-
         <div class="auth-form" id="form-login">
             <input type="text" class="auth-input" placeholder="Username"/>
             <input type="password" class="auth-input" placeholder="Senha"/>
             <div class="auth-error" id="erro-login"></div>
-            <button class="auth-btn" onclick="login()">Entrar</button>
+            <button class="auth-btn" onclick="executarLogin()">Entrar</button>
         </div>
-
         <div class="auth-form hidden" id="form-cadastro">
             <input type="text" class="auth-input" placeholder="Nome completo *"/>
             <input type="email" class="auth-input" placeholder="E-mail *"/>
@@ -306,48 +89,53 @@
             <input type="password" class="auth-input" placeholder="Senha * (mín. 6 caracteres)"/>
             <input type="text" class="auth-input" placeholder="URL da foto de perfil (opcional)"/>
             <div class="auth-error" id="erro-cadastro"></div>
-            <button class="auth-btn" onclick="cadastrar()">Criar conta</button>
+            <button class="auth-btn" onclick="executarCadastro()">Criar conta</button>
         </div>
     </div>
 </div>
 
+<!-- MODAL DETALHES -->
 <div class="modal-overlay" id="modal-detalhes">
     <div class="modal-detalhes-box">
         <button class="modal-close" onclick="fecharDetalhes()">×</button>
         <div class="detalhes-backdrop" id="detalhes-backdrop"></div>
-
-        <div class="detalhes-content">
-            <div class="detalhes-topo">
-                <img class="detalhes-poster" id="detalhes-poster" src="" alt=""/>
-                <div class="detalhes-info">
-                    <h2 class="detalhes-titulo" id="detalhes-titulo"></h2>
-                    <div class="detalhes-meta" id="detalhes-meta"></div>
-                    <p class="detalhes-desc" id="detalhes-desc"></p>
-                    <div class="detalhes-buttons">
-                        <button class="btn-play">▶ Assistir</button>
-                        <button class="btn-fav" id="btn-fav-detalhes">♡ Favoritar</button>
-                    </div>
+        <div class="detalhes-topo">
+            <img class="detalhes-poster" id="detalhes-poster" src="" alt=""/>
+            <div class="detalhes-info">
+                <h2 class="detalhes-titulo" id="detalhes-titulo"></h2>
+                <div class="detalhes-meta" id="detalhes-meta"></div>
+                <p class="detalhes-desc" id="detalhes-desc"></p>
+                <div class="detalhes-buttons">
+                    <button class="btn-play">▶ Assistir</button>
+                    <button class="btn-fav" id="btn-fav-acao" onclick="abrirSelecionarLista()">♡ Favoritar</button>
                 </div>
             </div>
-
-            <div class="detalhes-avaliacoes">
-                <h3 class="avaliacoes-titulo">Avaliações</h3>
-                <div class="avaliacao-form">
-                    <p class="avaliacao-form-label">Sua avaliação</p>
-                    <div class="avaliacao-nota-row">
-                        <span>Nota:</span>
-                        <input type="range" min="0" max="10" step="0.5" value="8" id="input-nota" oninput="atualizarNota(this.value)"/>
-                        <span class="nota-valor" id="nota-valor">8</span>
-                    </div>
-                    <textarea class="avaliacao-textarea" id="input-comentario" placeholder="Escreva um comentário..." rows="2"></textarea>
-                    <button class="auth-btn" onclick="enviarAvaliacao()">Enviar</button>
+        </div>
+        <div class="detalhes-tabs">
+            <button class="detalhes-tab active" id="tab-avaliacoes" onclick="setDetalhesTab('avaliacoes')">Avaliações</button>
+            <button class="detalhes-tab" id="tab-elenco" onclick="setDetalhesTab('elenco')">Elenco</button>
+        </div>
+        <div class="detalhes-tab-content" id="content-avaliacoes">
+            <div class="avaliacao-form">
+                <p class="avaliacao-form-label">Sua avaliação</p>
+                <div class="avaliacao-nota-row">
+                    <span>Nota:</span>
+                    <input type="range" min="0" max="10" step="0.5" value="8" id="input-nota"
+                           oninput="document.getElementById('nota-valor').textContent = this.value"/>
+                    <span class="nota-valor" id="nota-valor">8</span>
                 </div>
-                <div class="avaliacoes-lista" id="avaliacoes-lista"></div>
+                <textarea class="avaliacao-textarea" id="input-comentario" placeholder="Escreva um comentário..." rows="3"></textarea>
+                <button class="auth-btn" onclick="enviarAvaliacaoDoUsuario()">Enviar avaliação</button>
             </div>
+            <div class="avaliacoes-lista" id="avaliacoes-lista"></div>
+        </div>
+        <div class="detalhes-tab-content hidden" id="content-elenco">
+            <div id="container-elenco" class="elenco-grid"></div>
         </div>
     </div>
 </div>
 
+<!-- MODAL MINHAS LISTAS -->
 <div class="modal-overlay" id="modal-listas">
     <div class="modal-detalhes-box">
         <button class="modal-close" onclick="fecharListas()">×</button>
@@ -356,14 +144,13 @@
                 <h2>Minhas Listas</h2>
                 <button class="btn-buscar" onclick="mostrarFormLista()">+ Nova lista</button>
             </div>
-
             <div class="auth-form hidden" id="form-nova-lista">
                 <input type="text" class="auth-input" id="input-nome-lista" placeholder="Nome da lista *"/>
                 <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); cursor:pointer;">
                     <input type="checkbox" id="input-privada"/> Lista privada
                 </label>
                 <div style="display:flex; gap:10px;">
-                    <button class="auth-btn" style="margin-top:0" onclick="criarLista()">Criar</button>
+                    <button class="auth-btn" style="margin-top:0" onclick="criarNovaListaUsuario()">Criar</button>
                     <button class="btn-fav" onclick="ocultarFormLista()">Cancelar</button>
                 </div>
             </div>
@@ -372,6 +159,17 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="modal-selecionar-lista"></div>
+<!-- MODAL SELECIONAR LISTA -->
+<div class="modal-overlay" id="modal-selecionar-lista">
+    <div class="modal-box" style="max-width: 400px;">
+        <button class="modal-close" onclick="document.getElementById('modal-selecionar-lista').classList.remove('ativo')">×</button>
+        <h2>Adicionar a uma lista</h2>
+        <p class="modal-sub" style="margin-bottom: 20px;">Escolha uma das suas listas abaixo:</p>
+        <div id="lista-selecionavel-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
+    </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+
 </body>
 </html>
