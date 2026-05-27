@@ -67,6 +67,7 @@ public class SeriesServices {
         serie.setTemporadas(seriesRequest.getTemporadas());
         serie.setDataLancamento(seriesRequest.getDataLancamento());
         serie.setNotaMedia(seriesRequest.getNotaMedia());
+        serie.setEpisodios(seriesRequest.getEpisodios());
 
         List<Categoria> categorias = categoriaRepository
                 .findAllById(seriesRequest.getIdCategorias());
@@ -77,7 +78,7 @@ public class SeriesServices {
     }
 
     @Transactional
-    public SeriesResponseDTO vincularCategoria(UUID id, UUID idCategoria) {
+    public SeriesResponseDTO vincularCategoria(UUID id, Long idCategoria) {
         Series series = seriesRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Serie não Encontrada"));
         Categoria categoria = categoriaRepository.findById(idCategoria)
