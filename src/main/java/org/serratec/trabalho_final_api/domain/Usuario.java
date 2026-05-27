@@ -43,7 +43,6 @@ public class Usuario implements UserDetails {
     private String email;
     private String username;
     private String senha;
-    private String fotoPerfil;// método será construido após a entrega do trabalho
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
     private LocalDateTime dataCriacao;

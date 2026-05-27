@@ -26,9 +26,7 @@ public record UsuarioRequestDTO(
 
         @Schema(description = "Data e hora em que o pedido de adoção foi feito", example = "2026-05-21T15:00:00", requiredMode = Schema.RequiredMode.REQUIRED) @PastOrPresent(message = "Data de pedido inválido.") LocalDateTime dataCriacao,
 
-        @Enumerated(EnumType.STRING) @NotNull(message = "Campo tipoUsuario deve ser informado como USER ou ADMIN") TipoUsuario tipoUsuario,
-
-        String fotoPerfil
+        @Enumerated(EnumType.STRING) @NotNull(message = "Campo tipoUsuario deve ser informado como USER ou ADMIN") TipoUsuario tipoUsuario
 
 ) {
 
@@ -42,7 +40,6 @@ public record UsuarioRequestDTO(
         usuario.setSenha(this.senha());
         usuario.setDataCriacao(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         usuario.setTipoUsuario(this.tipoUsuario());
-        usuario.setFotoPerfil(this.fotoPerfil());
 
         return usuario;
     }
