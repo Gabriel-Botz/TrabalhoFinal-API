@@ -5,7 +5,6 @@ import org.serratec.trabalho_final_api.domain.Series;
 import java.util.List;
 import java.util.UUID;
 
-
 public class SeriesRecomendadasDTO {
         UUID id;
         String titulo;
