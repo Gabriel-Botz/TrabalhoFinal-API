@@ -91,7 +91,6 @@ public class ListaFavoritosService {
 
 
     // Listas privadas
-    // No seu ListaFavoritosService.java, altere este método:
     public List<ListaFavoritosResponseDTO> listarPrivadas(String username) {
 
         List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();
@@ -191,32 +190,6 @@ public class ListaFavoritosService {
 
         return listasDTO;
     }
-
-    
-    // // Busca por nome, mas somente as listas privadas
-    // public List<ListaFavoritosResponseDTO> buscarPorNomePrivadas(String nome) {
-
-    //     if (nome.isBlank() || nome == null) {
-    //         throw new RecursoNaoEncontradoException("Nenhuma lista contendo \"" + nome + "\"foi encontrada");
-    //     }
-
-    //     List<ListaFavoritos> listas = listaFavoritosRepository.findByNomeListaContainingIgnoreCase(nome);
-    //     List<ListaFavoritosResponseDTO> listasDTO = new ArrayList<>();
-    //     listas.forEach(lista -> {
-
-    //         listasDTO.add(new ListaFavoritosResponseDTO(
-    //                 lista.getId(),
-    //                 lista.getNomeLista(),
-    //                 lista.getPrivada(),
-    //                 lista.getDataCriacao(),
-    //                 lista.getUsuario(),
-    //                 lista.getFilmes(),
-    //                 lista.getSeries()));
-
-    //     });
-
-    //     return listasDTO;
-    // }
 
 
     // Cria uma nova lista de favoritos
