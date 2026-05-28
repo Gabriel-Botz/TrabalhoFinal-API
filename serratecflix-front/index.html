@@ -30,11 +30,16 @@
 
     <div class="nav-right">
         <a href="#" onclick="abrirListas()" class="nav-link">Minhas Listas</a>
+        <button id="btn-gerenciar-midias" class="btn-buscar" style="display: none; background: #eab308; color: #000; margin-left: 5px;" onclick="window.abrirModalGerenciar()">
+            ⚙️ Gerenciar Catálogo
+        </button>
+        <button id="btn-cadastrar-filme" class="btn-buscar" style="display: none;" onclick="abrirModalCadastro()">
+            ➕ Cadastrar Mídia
+        </button>
         <button class="btn-login">Entrar</button>
     </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
@@ -54,7 +59,6 @@
     </div>
 </section>
 
-<!-- CARROSSEL DE BUSCA -->
 <section class="carousel-section">
     <h2 class="carousel-title" id="titulo-container-dinamico">Resultados do Catálogo</h2>
     <div class="carousel" id="container-filmes-api">
@@ -62,10 +66,8 @@
     </div>
 </section>
 
-<!-- CARROSSÉIS DINÂMICOS -->
 <div id="container-carrosseis"></div>
 
-<!-- MODAL AUTH (LOGIN/CADASTRO) -->
 <div class="modal-overlay" id="modal-auth">
     <div class="modal-box">
         <button class="modal-close" onclick="fecharModal()">×</button>
@@ -93,7 +95,6 @@
     </div>
 </div>
 
-<!-- MODAL CENTRAL DE LISTAS -->
 <div class="modal-overlay" id="modal-listas">
     <div class="modal-detalhes-box">
         <button class="modal-close" onclick="fecharListas()">×</button>
@@ -108,7 +109,6 @@
             <button class="detalhes-tab" id="tab-listas-publicas" onclick="setListasTab('publicas')">Listas Públicas</button>
         </div>
 
-        <!-- ABA: MINHAS LISTAS -->
         <div class="detalhes-tab-content" id="content-minhas-listas">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="font-size:16px; color:#fff; font-weight:600;">Suas Coleções</h3>
@@ -129,7 +129,6 @@
             <div id="container-listas" class="listas-grid"></div>
         </div>
 
-        <!-- ABA: LISTAS PÚBLICAS -->
         <div class="detalhes-tab-content hidden" id="content-listas-publicas">
             <div style="margin-bottom:20px;">
                 <h3 style="font-size:16px; color:#fff; font-weight:600;">Feed da Comunidade</h3>
@@ -143,7 +142,6 @@
     </div>
 </div>
 
-<!-- MODAL DETALHES -->
 <div class="modal-overlay" id="modal-detalhes">
     <div class="modal-detalhes-box">
         <button class="modal-close" onclick="fecharDetalhes()">×</button>
@@ -184,13 +182,126 @@
     </div>
 </div>
 
-<!-- MODAL SELECIONAR LISTA -->
 <div class="modal-overlay" id="modal-selecionar-lista">
     <div class="modal-box" style="max-width:400px;">
         <button class="modal-close" onclick="document.getElementById('modal-selecionar-lista').classList.remove('ativo')">×</button>
         <h2>Adicionar a uma lista</h2>
         <p class="modal-sub" style="margin-bottom:20px;">Escolha uma das suas listas abaixo:</p>
         <div id="lista-selecionavel-container" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-cadastro-filme">
+    <div class="modal-box">
+        <button class="modal-close" onclick="fecharModalCadastro()">×</button>
+        <h1 class="modal-logo">Cadastrar Mídia</h1>
+
+        <div class="auth-tabs" style="margin-bottom: 20px;">
+            <button class="auth-tab active" id="tab-cadastro-filme" onclick="setTabCadastro('filme')">Filme</button>
+            <button class="auth-tab" id="tab-cadastro-serie" onclick="setTabCadastro('serie')">Série</button>
+        </div>
+
+        <form id="form-cadastro-filme" onsubmit="event.preventDefault(); enviarNovoFilme();" class="auth-form">
+            <input type="number" id="cad-tmdbId" class="auth-input" placeholder="ID do TMDB (Opcional)">
+            <input type="text" id="cad-titulo" class="auth-input" placeholder="Título do Filme *" required>
+            <textarea id="cad-descricao" class="auth-input" placeholder="Sinopse"></textarea>
+
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="cad-duracao" class="auth-input" placeholder="Duração (min)">
+                <input type="date" id="cad-data" class="auth-input">
+            </div>
+
+            <select id="cad-classificacao" class="auth-input" style="color: white; background: var(--card-bg);">
+                <option value="LIVRE">Livre</option>
+                <option value="DEZ">10 anos</option>
+                <option value="DOZE">12 anos</option>
+                <option value="QUATORZE">14 anos</option>
+                <option value="DEZESSEIS">16 anos</option>
+                <option value="DEZOITO">18 anos</option>
+            </select>
+
+            <button type="submit" class="auth-btn">Salvar Filme</button>
+        </form>
+
+        <form id="form-cadastro-serie" onsubmit="event.preventDefault(); enviarNovaSerie();" class="auth-form hidden">
+            <input type="text" id="cad-serie-titulo" class="auth-input" placeholder="Título da Série *" required>
+            <textarea id="cad-serie-descricao" class="auth-input" placeholder="Sinopse"></textarea>
+
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="cad-serie-temporadas" class="auth-input" placeholder="Nº de Temporadas">
+                <input type="number" id="cad-serie-episodios" class="auth-input" placeholder="Nº de Episódios">
+            </div>
+
+            <label style="color: var(--muted); font-size: 12px; margin-left: 5px;">Data de Lançamento</label>
+            <input type="date" id="cad-serie-data" class="auth-input">
+
+            <button type="submit" class="auth-btn">Salvar Série</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-gerenciar-midias">
+    <div class="modal-box" style="max-width: 600px; max-height: 80vh; overflow-y: auto; text-align: left;">
+        <button class="modal-close" onclick="document.getElementById('modal-gerenciar-midias').classList.remove('ativo')">×</button>
+        <h1 class="modal-logo" style="font-size: 24px; margin-bottom: 5px; text-align: left;">⚙️ Gerenciar Catálogo</h1>
+        <p class="modal-sub" style="margin-bottom: 20px; text-align: left;">Edite ou exclua os títulos do sistema utilizando o ID</p>
+
+        <div id="lista-gerenciamento-container" style="display: flex; flex-direction: column; gap: 10px;">
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-editar-midia">
+    <div class="modal-box" style="max-width: 480px; text-align: left;">
+        <button class="modal-close" onclick="document.getElementById('modal-editar-midia').classList.remove('ativo')">×</button>
+        <h1 class="modal-logo" style="font-size: 24px; margin-bottom: 20px; text-align: left;">✏️ Editar Mídia</h1>
+
+        <form id="form-editar-midia" onsubmit="event.preventDefault(); window.enviarEdicaoMidiaAdmin();" class="auth-form" style="display: flex; flex-direction: column; gap: 10px;">
+            <label style="color: var(--muted); font-size: 12px; margin-bottom: -5px;">Título *</label>
+            <input type="text" id="edit-titulo" class="auth-input" required>
+
+            <label style="color: var(--muted); font-size: 12px; margin-bottom: -5px;">Sinopse</label>
+            <textarea id="edit-descricao" class="auth-input" rows="3"></textarea>
+
+            <div id="edit-campos-filme" class="hidden">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <div style="flex: 1;">
+                        <label style="color: var(--muted); font-size: 12px;">Duração (min)</label>
+                        <input type="number" id="edit-duracao" class="auth-input">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="color: var(--muted); font-size: 12px;">Lançamento</label>
+                        <input type="date" id="edit-data-filme" class="auth-input">
+                    </div>
+                </div>
+                <label style="color: var(--muted); font-size: 12px;">Classificação</label>
+                <select id="edit-classificacao" class="auth-input" style="color: white; background: var(--card-bg);">
+                    <option value="LIVRE">Livre</option>
+                    <option value="DEZ">10 anos</option>
+                    <option value="DOZE">12 anos</option>
+                    <option value="QUATORZE">14 anos</option>
+                    <option value="DEZESSEIS">16 anos</option>
+                    <option value="DEZOITO">18 anos</option>
+                </select>
+            </div>
+
+            <div id="edit-campos-serie" class="hidden">
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label style="color: var(--muted); font-size: 12px;">Temporadas</label>
+                        <input type="number" id="edit-temporadas" class="auth-input">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="color: var(--muted); font-size: 12px;">Episódios</label>
+                        <input type="number" id="edit-episodios" class="auth-input">
+                    </div>
+                </div>
+                <label style="color: var(--muted); font-size: 12px; margin-top: 10px;">Lançamento</label>
+                <input type="date" id="edit-data-serie" class="auth-input">
+            </div>
+
+            <button type="submit" class="auth-btn" style="margin-top: 15px;">Salvar Alterações</button>
+        </form>
     </div>
 </div>
 

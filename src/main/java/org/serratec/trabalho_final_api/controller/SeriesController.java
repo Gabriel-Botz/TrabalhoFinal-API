@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.serratec.trabalho_final_api.dto.request.SeriesRequestDTO;
 import org.serratec.trabalho_final_api.dto.response.SeriesRecomendadasResponseDTO;
 import org.serratec.trabalho_final_api.dto.response.SeriesResponseDTO;
+import org.serratec.trabalho_final_api.dto.response.TmdbCreditosResponseDTO;
 import org.serratec.trabalho_final_api.services.SeriesRecomendadasService;
 import org.serratec.trabalho_final_api.services.SeriesServices;
+import org.serratec.trabalho_final_api.services.TmdbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,9 @@ public class SeriesController {
 
     @Autowired
     private SeriesRecomendadasService seriesRecomendadasService;
+
+    @Autowired
+    private TmdbService serieService;
 
     @Operation(summary = "Busca híbrida de séries", description = "Busca séries por título combinando o banco de dados local com a API do TMDB")
     @ApiResponses(value = {
@@ -155,5 +160,14 @@ public class SeriesController {
     public ResponseEntity<Void> removerSeries(@PathVariable UUID id) {
         seriesServices.removerSeries(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{tmdbId}/elenco")
+    public ResponseEntity<TmdbCreditosResponseDTO> buscarElencoDaSerie(@PathVariable Long tmdbId) {
+        TmdbCreditosResponseDTO elenco = serieService.buscarElencoDaSerie(tmdbId);
+        if (elenco != null) {
+            return ResponseEntity.ok(elenco);
+        }
+        return ResponseEntity.notFound().build();
     }
 }

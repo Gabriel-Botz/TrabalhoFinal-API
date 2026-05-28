@@ -116,4 +116,21 @@ public class TmdbService {
             return null;
         }
     }
+
+    public TmdbCreditosResponseDTO buscarElencoDaSerie(Long tmdbId) {
+        try {
+            return this.webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/tv/" + tmdbId + "/credits")
+                            .queryParam("api_key", apiKey)
+                            .queryParam("language", "pt-BR")
+                            .build())
+                    .retrieve()
+                    .bodyToMono(TmdbCreditosResponseDTO.class)
+                    .block();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

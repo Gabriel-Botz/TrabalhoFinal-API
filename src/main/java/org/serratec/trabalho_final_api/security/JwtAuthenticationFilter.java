@@ -51,14 +51,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-            Authentication authResult) throws IOException, ServletException {
+                                            Authentication authResult) throws IOException, ServletException {
 
-        String username = ((UserDetails) authResult.getPrincipal()).getUsername();
+        // pega os detalhes do usuário logado
+        UserDetails userDetails = (UserDetails) authResult.getPrincipal();
+        String username = userDetails.getUsername();
 
-        String token = jwtUtil.generateToken(username);
+        // extrai a role dele e converte para uma lista de string
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(org.springframework.security.core.GrantedAuthority::getAuthority)
+                .toList();
+
+        // 3. Manda gerar o token passando o username E as roles!
+        String token = jwtUtil.generateToken(username, roles);
 
         response.addHeader("Authorization", "Bearer " + token);
-
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(String.format("{\"token\": \"Bearer %s\"}", token));

@@ -91,6 +91,7 @@ public class ListaFavoritosService {
 
 
     // Listas privadas
+    // No seu ListaFavoritosService.java, altere este método:
     public List<ListaFavoritosResponseDTO> listarPrivadas(String username) {
 
         List<ListaFavoritos> listaFavoritos = listaFavoritosRepository.findAll();

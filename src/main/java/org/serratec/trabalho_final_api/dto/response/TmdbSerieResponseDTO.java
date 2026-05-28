@@ -40,14 +40,14 @@ public class TmdbSerieResponseDTO { // Classe principal casando com o nome do ar
         @JsonProperty("backdrop_path")
         private String backdropPath;
 
-        // Instancia a sua classe de saída oficial: SeriesResponseDTO
+        // Instancia a classe de saída oficial: SeriesResponseDTO
         public SeriesResponseDTO paraSeriesResponseDTO() {
             SeriesResponseDTO dto = new SeriesResponseDTO();
             dto.setTmdbId(this.id);
             dto.setTitulo(this.name);
             dto.setDescricao(this.overview);
 
-            // Constrói a URL completa da capa da série para o seu front
+            // Constrói a URL completa da capa da série para o front
             if (this.posterPath != null && !this.posterPath.isEmpty()) {
                 dto.setPoster("https://image.tmdb.org/t/p/w500" + this.posterPath);
             } else {
@@ -65,7 +65,6 @@ public class TmdbSerieResponseDTO { // Classe principal casando com o nome do ar
                     dto.setDataLancamento(null);
                 }
             }
-
             dto.setNotaMedia(0.0);
             return dto;
         }

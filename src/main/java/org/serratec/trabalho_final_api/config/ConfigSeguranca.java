@@ -85,6 +85,9 @@ public class ConfigSeguranca {
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}", "/filmes/{id}", "/series/{id}")
                         .hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/usuarios/id").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/filmes").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/filmes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/filmes/**").hasRole("ADMIN")
 
                         // =================================================================
                         // 3. REGRAS EXCLUSIVAS ADMIN

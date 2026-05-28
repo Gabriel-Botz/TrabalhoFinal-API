@@ -31,9 +31,10 @@ public class JwtUtil {
         this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generateToken(String username) { 
+    public String generateToken(String username, java.util.List<String> roles) {
         return Jwts.builder()
                 .subject(username)
+                .claim("roles", roles)
                 .expiration(new Date(System.currentTimeMillis() + this.jwtExpirationMsiliseg))
                 .signWith(secretKey)
                 .compact();
