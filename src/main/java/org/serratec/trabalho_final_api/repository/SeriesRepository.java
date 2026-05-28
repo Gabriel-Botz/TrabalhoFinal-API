@@ -13,17 +13,19 @@ public interface SeriesRepository extends JpaRepository<Series, UUID> {
     Series findByTitulo(String titulo);
 
     // o repository utiliza a classe domain Categoria como base e o DB
-    List<Series> findByCategoriasId(UUID idCategoria);
+    List<Series> findByCategoriasId(Long idCategoria);
 
    @Query("SELECT DISTINCT sr FROM Series sr " +
            " JOIN sr.categorias ct " +
            " WHERE ct.id IN :categorias " +
+           " AND sr.notaMedia >=8 " +
            " AND sr.id " +
            " NOT IN (SELECT av.series.id " +
            "         FROM AvaliacaoSerie av " +
            " WHERE av.usuario.id = :usuarioId)" +
            " ORDER BY sr.notaMedia DESC"
    )
- List<Series> recomendarSerie(@Param("categorias") List<UUID> categorias,
-                              @Param("usuarioId") UUID usuarioId);
+
+ List<Series> recomendarSerie(@Param("categorias") List<Long> categorias,
+                              @Param("usuarioId")UUID usuarioId);
 }

@@ -16,7 +16,7 @@ public interface AvaliacaoSerieRepository extends JpaRepository<AvaliacaoSerie, 
              " AND av.nota >=8 " +
              " GROUP BY ct.id " +
              " ORDER BY AVG(av.nota) DESC")
-   List<UUID> buscarCatFavDoUsuario(UUID usuarioId);
+   List<Long> buscarCatFavDoUsuario(UUID usuarioId);
 
     List<AvaliacaoSerie> findAllByOrderByNotaDesc();
 }
