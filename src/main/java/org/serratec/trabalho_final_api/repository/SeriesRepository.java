@@ -25,6 +25,7 @@ public interface SeriesRepository extends JpaRepository<Series, UUID> {
            " WHERE av.usuario.id = :usuarioId)" +
            " ORDER BY sr.notaMedia DESC"
    )
+
  List<Series> recomendarSerie(@Param("categorias") List<Long> categorias,
                               @Param("usuarioId")UUID usuarioId);
 }
