@@ -121,7 +121,7 @@ public class TmdbService {
         try {
             return this.webClient.get()
                     .uri(uriBuilder -> uriBuilder
-                            .path("/tv/" + tmdbId + "/credits") // Aqui muda para /tv/ por ser série
+                            .path("/tv/" + tmdbId + "/credits")
                             .queryParam("api_key", apiKey)
                             .queryParam("language", "pt-BR")
                             .build())

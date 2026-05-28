@@ -25,6 +25,6 @@ public class TmdbCreditosResponseDTO {
         private String nomePersonagem;
 
         @JsonProperty("profile_path")
-        private String caminhoFoto; // Se quiser mandar o link da foto pro front!
+        private String caminhoFoto;
     }
 }
