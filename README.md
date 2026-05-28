@@ -174,13 +174,13 @@ Implementado com @ControllerAdvice:
 
 O projeto foi construído colaborativamente por um grupo de 6 desenvolvedores. Cada integrante ficou responsável por uma entidade core do sistema, sua respectiva regra de negócio, arquitetura em camadas e funcionalidade individual (requisito de 10 pontos).
 
-| Integrante                                                      | Entidade Responsável | Funcionalidade Individual Implementada        |
-| :-------------------------------------------------------------- | :------------------- | :-------------------------------------------- |
-| **[Lucas daSilva](!https://github.com/Phonedison)**             | 👤 `Usuario`         | Envio de e-mails personalizado (CRUD Usuário) |
-| **[Gabriel Botelho](!https://github.com/Gabriel-Botz)**         | 🎬 `Filme`           | Filtro de elenco com base no filme            |
-| **[Paulo Cesar](!https://github.com/paulocesar-neto)**          | 📺 `Serie`           | Sistema de recomendação                       |
-| **[Rafael Albino](!https://github.com/albino57)**               | 🏷️ `Categoria`       | Pedido de mídia física                        |
-| **[Vinícius Lammas](!https://github.com/vLamass)**              | ⭐ `Avaliacao`       | Top 5 conteúdos por nota                      |
-| **[Elionardo dos Santos](!https://github.com/elionardosantos)** | 📋 `ListaFavoritos`  | Manipulação de listas                         |
+| Integrante                                                      | Entidade Responsável | Funcionalidade Individual Implementada                                         |
+| :-------------------------------------------------------------- | :------------------- | :----------------------------------------------------------------------------- |
+| **[Lucas da Silva](https://github.com/Phonedison)**            | 👤 `Usuario`         | Envio de e-mails personalizado (CRUD Usuário)                                  |
+| **[Gabriel Botelho](https://github.com/Gabriel-Botz)**       | 🎬 `Filme`           | Filtro de elenco com base no filme                                             |
+| **[Paulo Cesar](https://github.com/paulocesar-neto)**          | 📺 `Serie`           | Sistema de recomendação de série                                               |
+| **[Rafael Albino](https://github.com/albino57)**               | 🏷️ `Categoria`       | Pedido de mídia física                                                         |
+| **[Vinícius Lammas](https://github.com/vLamass)**             | ⭐ `Avaliacao`       | Lista dos melhores filmes e a sua maior nota de avaliação                      |
+| **[Elionardo dos Santos](https://github.com/elionardosantos)** | 📋 `ListaFavoritos`  | Manipulação de listas (EndPois para adicionar/remover filme/seria a uma lista) |
 
 ---

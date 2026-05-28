@@ -833,6 +833,70 @@ async function inicializarBanner() {
         }, 6000);
     }
 }
+// --- INICIALIZAÇÃO AUTOMÁTICA ---
+document.addEventListener('DOMContentLoaded', () => {
+    gerenciarNavbarUI();
+    carregarCategoriasNoSelect();
+    popularCarrosseis();
+    inicializarBanner();
+
+    const btnBuscar = document.querySelector('.btn-buscar');
+    if (btnBuscar) btnBuscar.addEventListener('click', dispararBuscaCatalogo);
+
+    // filtro por categoria
+    const selectCategoria = document.getElementById('filter-categoria');
+    if (selectCategoria) {
+        selectCategoria.addEventListener('change', async function() {
+            const categoriaId = this.value;
+            if (!categoriaId) {
+                document.getElementById('container-carrosseis').style.display = 'block';
+                document.getElementById('container-filmes-api').innerHTML = '<p style="color:var(--muted);padding:20px;">Use a barra de busca acima para explorar mídias unificadas...</p>';
+                document.getElementById('titulo-container-dinamico').textContent = 'Resultados do Catálogo';
+                return;
+            }
+
+            const container = document.getElementById('container-filmes-api');
+            const titulo = document.getElementById('titulo-container-dinamico');
+            const nomeCategoria = this.options[this.selectedIndex].text;
+
+            titulo.textContent = `Categoria: ${nomeCategoria}`;
+            container.innerHTML = '<p style="color:var(--muted);padding:20px;">Carregando...</p>';
+            document.getElementById('container-carrosseis').style.display = 'none';
+
+            try {
+                const filmes = await midiaService.buscarFilmesPorCategoria(categoriaId);
+                container.innerHTML = '';
+
+                if (!filmes || filmes.length === 0) {
+                    container.innerHTML = '<p style="color:var(--muted);padding:20px;">Nenhum filme nessa categoria.</p>';
+                    return;
+                }
+
+                filmes.forEach(f => {
+                    container.appendChild(cardComponent.criar({ ...f, tipo: 'filme' }));
+                });
+            } catch (err) {
+                container.innerHTML = '<p style="color:#fca5a5;padding:20px;">Erro ao buscar filmes da categoria.</p>';
+            }
+        });
+    }
+});
+
+// --- CONTROLE DAS ABAS DA CENTRAL DE LISTAS (MINHAS VS PÚBLICAS) ---
+window.setListasTab = async function(aba) {
+    const tabMinhas = document.getElementById('tab-minhas-listas');
+    const tabPublicas = document.getElementById('tab-listas-publicas');
+    const contentMinhas = document.getElementById('content-minhas-listas');
+    const contentPublicas = document.getElementById('content-listas-publicas');
+
+    if (!tabMinhas || !tabPublicas || !contentMinhas || !contentPublicas) return;
+
+    if (aba === 'minhas') {
+        // Chaveamento visual das abas
+        tabMinhas.classList.add('active');
+        tabPublicas.classList.remove('active');
+        contentMinhas.classList.remove('hidden');
+        contentPublicas.classList.add('hidden');
 
 function exibirBanner(midia) {
     const bg = document.querySelector('.hero-bg');
