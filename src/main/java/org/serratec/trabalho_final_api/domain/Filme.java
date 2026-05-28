@@ -51,6 +51,12 @@ public class Filme {
     @Column(name = "duracao")
     private Integer duracao;
 
+    @Column(name = "poster")
+    private String poster;
+
+    @Column(name = "backdrop")
+    private String backdrop;
+
     @Column(name = "data_lancamento")
     private LocalDate dataLancamento;
 

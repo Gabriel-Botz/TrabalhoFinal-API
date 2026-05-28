@@ -95,4 +95,11 @@ public class FilmeController {
 
         return ResponseEntity.ok(elenco);
     }
+
+    @GetMapping("/tmdb-detalhes/{tmdbId}")
+    @Operation(summary = "Busca filme pelos detalhes do TMDB")
+    public ResponseEntity<TmdbFilmeDetalhesDTO> buscarFilmePorTmdbId(@PathVariable Long tmdbId) {
+        System.out.println(">>> ESTA MERDA DE REQUISIÇÃO CHEGOU NO BACKEND. ID RECEBIDO: AGORA VAAAAAI POURRA " + tmdbId);
+        return ResponseEntity.ok(tmdbService.buscarFilmeExterno(tmdbId));
+    }
 }

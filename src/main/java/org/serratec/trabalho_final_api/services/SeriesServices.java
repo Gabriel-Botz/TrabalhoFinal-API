@@ -67,6 +67,13 @@ public class SeriesServices {
         serie.setTemporadas(seriesRequest.getTemporadas());
         serie.setDataLancamento(seriesRequest.getDataLancamento());
         serie.setNotaMedia(seriesRequest.getNotaMedia());
+        serie.setEpisodios(seriesRequest.getEpisodios());
+
+        List<Categoria> categorias = categoriaRepository
+                .findAllById(seriesRequest.getIdCategorias());
+
+        serie.setCategorias(categorias);
+
         return new SeriesResponseDTO(seriesRepository.save(serie));
     }
 
@@ -132,7 +139,7 @@ public class SeriesServices {
                                 && itemExterno.getName().equalsIgnoreCase(s.getTitulo()));
 
                 if (!jaExisteLocalmente) {
-                    SeriesResponseDTO dtoExterno = itemExterno.paraSerieResponseDTO();
+                    SeriesResponseDTO dtoExterno = itemExterno.paraSeriesResponseDTO();
 
                     // Chamada extra para buscar o número de temporadas e episódios reais
                     enriquecerTemporadasEEpisodios(dtoExterno, itemExterno.getId());

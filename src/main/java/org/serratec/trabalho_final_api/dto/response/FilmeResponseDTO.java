@@ -1,19 +1,23 @@
 package org.serratec.trabalho_final_api.dto.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.time.LocalDate;
+import java.util.UUID;
 
-import lombok.Setter;
 import org.serratec.trabalho_final_api.domain.Filme;
 import org.serratec.trabalho_final_api.enumerated.ClassificacaoIndicativa;
 
-import java.time.LocalDate;
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonPropertyOrder({ "id", "tmdbId", "titulo", "descricao", "durecao", "dataLancamento", "notaMedia",
+        "classificacaoIndicativa" })
 @Schema(description = "DTO para resposta de filme")
 public class FilmeResponseDTO {
 
@@ -26,11 +30,17 @@ public class FilmeResponseDTO {
         this.notaMedia = filme.getNotaMedia();
         this.classificacaoIndicativa = filme.getClassificacaoIndicativa();
         this.tmdbId = filme.getTmdbId();
+        this.poster = filme.getPoster();
+        this.backdrop = filme.getBackdrop();
     }
 
     private UUID id;
 
     private Long tmdbId;
+
+    private String poster;
+
+    private String backdrop;
 
     @Schema(description = "Titulo do filme", example = "O Poderoso Chefão")
     private String titulo;

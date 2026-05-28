@@ -21,16 +21,20 @@ public class OpenAPIConfig {
         public OpenAPI myOpenAPI() {
 
                 Contact contato = new Contact();
-                contato.setName("Grupo 02");
-                contato.setUrl("https://github.com/");
+                contato.setName("Grupo 02 - Serratec / Turma 37");
+                contato.setUrl("https://github.com/Gabriel-Botz/TrabalhoFinal-API");
+                contato.setEmail("romulo.lima@docente.senai.br");
 
                 License apacheLicense = new License()
                                 .name("Apache 2.0")
                                 .url("https://www.apache.org/licenses/LICENSE-2.0");
 
                 Info info = new Info()
-                                .title("title")
+                                .title("API de Streaming e Avaliação de Filmes/Séries - Serraflix")
                                 .description("description")
+                                .description("Esta API fornece endpoints para gerenciamento de catálogo de produções (filmes e séries), "
+                                                +
+                                                "criação de listas de favoritos, avaliações personalizadas e administração de usuários.")
                                 .version("1.0.0")
                                 .contact(contato)
                                 .license(apacheLicense);
