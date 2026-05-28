@@ -1,15 +1,20 @@
 package org.serratec.trabalho_final_api.dto.response;
 
-import org.serratec.trabalho_final_api.domain.Series;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import org.serratec.trabalho_final_api.domain.Series;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SeriesResponseDTO {
     private UUID id;
     private String titulo;
