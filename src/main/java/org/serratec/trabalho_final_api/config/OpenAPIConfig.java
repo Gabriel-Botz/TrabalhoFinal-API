@@ -36,7 +36,7 @@ public class OpenAPIConfig {
                                 .license(apacheLicense);
 
                 Server localServer = new Server()
-                                .url("http://localhost:8080")
+                                .url("http://localhost:8081")
                                 .description("Servidor Local de Desenvolvimento");
 
                 final String securitySchemeName = "Bearer Authentication";
