@@ -32,24 +32,29 @@ function decodificarJWT(token) {
 function verificarPermissaoAdmin() {
     const token = localStorage.getItem('token');
     const btnCadastro = document.getElementById('btn-cadastrar-filme');
+    const btnGerenciar = document.getElementById('btn-gerenciar-midias'); // Captura o novo botão
 
-    if (!btnCadastro) return;
+    const alternarBotoes = (style) => {
+        if (btnCadastro) btnCadastro.style.display = style;
+        if (btnGerenciar) btnGerenciar.style.display = style;
+    };
+
     if (!token) {
-        btnCadastro.style.display = 'none';
+        alternarBotoes('none');
         return;
     }
 
     const dadosToken = decodificarJWT(token);
     if (!dadosToken) {
-        btnCadastro.style.display = 'none';
+        alternarBotoes('none');
         return;
     }
 
     const payloadTexto = JSON.stringify(dadosToken).toUpperCase();
     if (payloadTexto.includes('ADMIN')) {
-        btnCadastro.style.display = 'block';
+        alternarBotoes('block'); // Exibe ambos se for admin
     } else {
-        btnCadastro.style.display = 'none';
+        alternarBotoes('none');
     }
 }
 
@@ -122,6 +127,80 @@ window.setTab = function(tab) {
         formLogin.classList.add('hidden');
     }
     limparMensagensErro();
+};
+
+// Garante que a função fique global e visível para o HTML
+window.setTabCadastro = function(tipo) {
+    const tabFilme = document.getElementById('tab-cadastro-filme');
+    const tabSerie = document.getElementById('tab-cadastro-serie');
+    const formFilme = document.getElementById('form-cadastro-filme');
+    const formSerie = document.getElementById('form-cadastro-serie');
+
+    if (tipo === 'filme') {
+        tabFilme.classList.add('active');
+        tabSerie.classList.remove('active');
+        formFilme.classList.remove('hidden');
+        formSerie.classList.add('hidden');
+    } else {
+        tabSerie.classList.add('active');
+        tabFilme.classList.remove('active');
+        formSerie.classList.remove('hidden');
+        formFilme.classList.add('hidden');
+    }
+};
+
+window.fecharModalCadastro = function() {
+    document.getElementById('modal-cadastro-filme').style.display = 'none';
+    document.getElementById('form-cadastro-filme').reset();
+    document.getElementById('form-cadastro-serie').reset();
+    window.setTabCadastro('filme');
+};
+
+window.enviarNovaSerie = async function() {
+    const token = localStorage.getItem('token');
+
+    const titulo = document.getElementById('cad-serie-titulo').value.trim();
+    const descricao = document.getElementById('cad-serie-descricao').value.trim();
+    const temporadas = document.getElementById('cad-serie-temporadas').value;
+    const episodios = document.getElementById('cad-serie-episodios').value;
+    const dataLancamento = document.getElementById('cad-serie-data').value || '2000-01-01';
+
+    // Mapeamento EXATO para o SeriesRequestDTO
+    const body = {
+        titulo: titulo,
+        descricao: descricao || 'Sem descrição',
+        temporadas: temporadas ? parseInt(temporadas) : 0,
+        episodios: episodios ? parseInt(episodios) : 0,
+        dataLancamento: dataLancamento,
+        notaMedia: 0.0,    // O DTO exige Double e NotNull
+        idCategorias: []   // O DTO tem a lista, enviamos vazia
+    };
+
+    try {
+        const resp = await fetch('http://localhost:8082/series', {
+            method: 'POST',
+            headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        if (resp.ok) {
+            mostrarAlerta('📺 Série cadastrada com sucesso!', 'sucesso');
+            fecharModalCadastro();
+            if (typeof dispararBuscaCatalogo === 'function') dispararBuscaCatalogo();
+        } else {
+            const erroTxt = await resp.text();
+            mostrarAlerta(`Erro da API (${resp.status}): ${erroTxt}`, 'erro');
+        }
+    } catch (err) {
+        mostrarAlerta('Erro de conexão com o servidor.', 'erro');
+    }
+};
+
+window.fecharModalCadastro = function() {
+    document.getElementById('modal-cadastro-filme').style.display = 'none';
+    document.getElementById('form-cadastro-filme').reset();
+    document.getElementById('form-cadastro-serie').reset();
+    window.setTabCadastro('filme'); // Reseta para a aba Filme ao fechar
 };
 
 function limparMensagensErro() {
@@ -278,6 +357,20 @@ window.abrirDetalhesMidia = function(midia, tipo) {
     setDetalhesTab('avaliacoes');
 
     if (midia.tmdbId) carregarElenco(midia.tmdbId, tipo);
+
+    const containerAdmin = document.getElementById('botoes-admin-detalhes');
+    if (containerAdmin) {
+        const token = localStorage.getItem('token');
+        const dadosToken = decodificarJWT(token);
+        const payloadTexto = dadosToken ? JSON.stringify(dadosToken).toUpperCase() : '';
+
+        // Se for admin, mostra a barra de ferramentas admin, se não, esconde
+        if (payloadTexto.includes('ADMIN')) {
+            containerAdmin.style.display = 'flex';
+        } else {
+            containerAdmin.style.display = 'none';
+        }
+    }
 
     modal.classList.add('ativo');
 };
@@ -595,7 +688,10 @@ async function carregarListasPrivadasDoUsuario() {
 }
 
 window.removerListaReal = async function(id) {
-    if (confirm('Deseja apagar essa lista?')) {
+    // 1. Substitui o confirm nativo pelo seu modal customizado no meio da tela
+    const confirmado = await window.mostrarConfirmacao("Deseja realmente apagar essa lista? Todos os itens salvos nela serão perdidos.");
+
+    if (confirmado) {
         const user = authService.getCurrentUser();
         const token = localStorage.getItem('token');
         try {
@@ -604,9 +700,15 @@ window.removerListaReal = async function(id) {
                 headers: { 'Authorization': token }
             });
             if (!resp.ok) throw new Error();
+
+            // 2. Substitui o alert comum pelo seu Toast Verde Neon de Sucesso
+            window.mostrarAlerta('🗑️ Lista apagada com sucesso!', 'sucesso');
+
+            // Atualiza a tela
             await carregarListasPrivadasDoUsuario();
         } catch (err) {
-            alert('Erro ao remover lista.');
+            // 3. Substitui o alert comum pelo seu Toast Rosa Neon de Erro
+            window.mostrarAlerta('Erro ao remover lista.', 'erro');
         }
     }
 };
@@ -639,7 +741,7 @@ window.criarNovaListaUsuario = async function() {
     const nome = document.getElementById('input-nome-lista').value.trim();
     const privada = document.getElementById('input-privada').checked;
 
-    if (!nome) return alert('Insira o nome da lista!');
+    if (!nome) return window.mostrarAlerta("Insira o nome da lista!", "erro");
 
     const user = authService.getCurrentUser();
     const token = localStorage.getItem('token');
@@ -836,6 +938,196 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- EXCLUSÃO DE MÍDIA (ADMIN) ---
+    window.excluirMidiaAdmin = async function() {
+        if (!midiaSelecionadaAtg) return;
+
+        const tipo = midiaSelecionadaAtg.tipoMidiaCorrente; // 'filme' ou 'serie'
+        const id = midiaSelecionadaAtg.id;
+        const token = localStorage.getItem('token');
+
+        // 1. Pergunta usando seu modal customizado
+        const confirmado = await window.mostrarConfirmacao(`Tem certeza que deseja excluir permanentemente este(a) ${tipo}?`);
+        if (!confirmado) return;
+
+        // 2. Define a rota correta da API baseado no tipo
+        const rota = tipo === 'serie'
+            ? `http://localhost:8082/series/${id}`
+            : `http://localhost:8082/filmes/${id}`;
+
+        try {
+            const resp = await fetch(rota, {
+                method: 'DELETE',
+                headers: { 'Authorization': token }
+            });
+
+            if (resp.ok) {
+                window.mostrarAlerta('🗑️ Título excluído com sucesso!', 'sucesso');
+                window.fecharDetalhes(); // Fecha o modal de detalhes
+
+                // Recarrega o catálogo para sumir com o card da tela
+                if (typeof dispararBuscaCatalogo === 'function') {
+                    dispararBuscaCatalogo();
+                } else {
+                    window.location.reload();
+                }
+            } else {
+                const txt = await resp.text();
+                window.mostrarAlerta(`Erro ao excluir: ${txt}`, 'erro');
+            }
+        } catch (err) {
+            console.error(err);
+            window.mostrarAlerta('Erro de conexão com o servidor.', 'erro');
+        }
+    };
+
+    // --- EDIÇÃO DE MÍDIA (ADMIN) ---
+
+// Abre o modal de edição e joga os dados atuais dentro dos inputs
+    // Ache a função que abre o modal de edição no seu js/app.js
+// Ela deve ser parecida com isso:
+    window.abrirModalEditar = function(midia) {
+        // ... (outros códigos que preenchem o título, sinopse, etc.) ...
+        document.getElementById('edit-titulo').value = midia.titulo;
+        document.getElementById('edit-descricao').value = midia.descricao || '';
+
+        // VEJA SE ESSA PARTE ABAIXO EXISTE NO SEU CÓDIGO. SE NÃO EXISTIR, ADICIONE:
+        const camposFilme = document.getElementById('edit-campos-filme');
+        const camposSerie = document.getElementById('edit-campos-serie');
+
+        // Verifica se a mídia é um Filme (pode ser checando o tipo ou se existe duracao)
+        if (midia.duracao !== undefined || midia.tipo === 'FILME') {
+            // É FILME: Mostra campos de filme e esconde os de série
+            camposFilme.classList.remove('hidden');
+            camposSerie.classList.add('hidden');
+
+            // Preenche os campos específicos de filme
+            document.getElementById('edit-duracao').value = midia.duracao || '';
+            document.getElementById('edit-data-filme').value = midia.dataLancamento ? midia.dataLancamento.substring(0, 10) : '';
+            document.getElementById('edit-classificacao').value = midia.classificacaoIndicativa || 'LIVRE';
+        } else {
+            // É SÉRIE: Mostra campos de série e esconde os de filme
+            camposFilme.classList.add('hidden');
+            camposSerie.classList.remove('hidden');
+
+            // Preenche os campos específicos de série
+            document.getElementById('edit-temporadas').value = midia.temporadas || '';
+            document.getElementById('edit-episodios').value = midia.episodios || '';
+            document.getElementById('edit-data-serie').value = midia.dataLancamento ? midia.dataLancamento.substring(0, 10) : '';
+        }
+
+        // Abre o modal adicionando a classe ativo
+        document.getElementById('modal-editar-midia').classList.add('ativo');
+    }
+
+    window.fecharModalEditarAdmin = function() {
+        document.getElementById('modal-editar-midia').classList.remove('ativo');
+    };
+
+// Dispara o PUT para a API
+    // 4. Envia o PUT mantendo a estrutura exata exigida pelo Java
+    window.enviarEdicaoMidiaAdmin = async function() {
+        if (!midiaSendoEditada) return;
+
+        const { id, tipoMidiaCorrente } = midiaSendoEditada;
+        const token = localStorage.getItem('token');
+        const rota = tipoMidiaCorrente === 'filme' ? `http://localhost:8082/filmes/${id}` : `http://localhost:8082/series/${id}`;
+
+        let body = {};
+
+        if (tipoMidiaCorrente === 'filme') {
+            body = {
+                // 👇 ATENÇÃO: Repare que a linha do "id" foi deletada daqui!
+                tmdbId: midiaSendoEditada.tmdbId || null,
+                titulo: document.getElementById('edit-titulo').value.trim(),
+                descricao: document.getElementById('edit-descricao').value.trim(),
+                duracao: parseInt(document.getElementById('edit-duracao').value) || 0,
+                dataLancamento: document.getElementById('edit-data-filme').value || '2000-01-01',
+                classificacaoIndicativa: document.getElementById('edit-classificacao').value
+            };
+        } else {
+            body = {
+                // 👇 E também não tem "id" aqui na série!
+                titulo: document.getElementById('edit-titulo').value.trim(),
+                descricao: document.getElementById('edit-descricao').value.trim(),
+                temporadas: parseInt(document.getElementById('edit-temporadas').value) || 0,
+                episodios: parseInt(document.getElementById('edit-episodios').value) || 0,
+                dataLancamento: document.getElementById('edit-data-serie').value || '2000-01-01',
+                notaMedia: midiaSendoEditada.notaMedia || 0.0,
+                idCategorias: midiaSendoEditada.idCategorias || []
+            };
+        }
+
+        console.log("JSON que será enviado (verifique no console F12 se tem algum ID infiltrado aqui):", body);
+
+        try {
+            const resp = await fetch(rota, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (resp.ok) {
+                window.mostrarAlerta('✏️ Mídia reconfigurada com sucesso!', 'sucesso');
+                document.getElementById('modal-editar-midia').classList.remove('ativo');
+                window.abrirModalGerenciar(); // Atualiza a lista com as mudanças feitas
+                if (typeof dispararBuscaCatalogo === 'function') dispararBuscaCatalogo();
+            } else {
+                const txtErro = await resp.text();
+                console.error("Resposta detalhada do erro no Java:", txtErro);
+                window.mostrarAlerta(`A API recusou a alteração (Status: ${resp.status}). Abra o Console (F12) para ver o erro.`, 'erro');
+            }
+        } catch (err) {
+            window.mostrarAlerta('Erro na conexão com o servidor do banco.', 'erro');
+        }
+    };
+
+    // Função global para substituir o alert() genérico
+    window.mostrarAlerta = function(mensagem, tipo = 'info') {
+        // Busca o container ou cria um se ele não existir na página
+        let container = document.getElementById('notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notification-container';
+            document.body.appendChild(container);
+        }
+
+        // Cria o elemento da notificação
+        const toast = document.createElement('div');
+        toast.className = `toast-alerta ${tipo}`;
+
+        // Define um ícone baseado no tipo
+        let icone = 'ℹ️';
+        if (tipo === 'sucesso') icone = '⚡';
+        if (tipo === 'erro') icone = '⚠️';
+
+        // Monta o conteúdo estruturado
+        toast.innerHTML = `
+        <span style="font-size: 18px;">${icone}</span>
+        <span style="flex: 1; line-height: 1.4;">${mensagem}</span>
+    `;
+
+        // Adiciona ao container da tela
+        container.appendChild(toast);
+
+        // Pequeno delay para o CSS registrar a animação de entrada
+        setTimeout(() => {
+            toast.classList.add('mostrar');
+        }, 10);
+
+        // Remove automaticamente após 4 segundos
+        setTimeout(() => {
+            toast.classList.remove('mostrar');
+            // Aguarda a animação de saída terminar para remover do HTML definitivamente
+            setTimeout(() => {
+                toast.remove();
+            }, 400);
+        }, 4000);
+    };
     // =======================================================
 // CONTROLE DO MODAL DE CADASTRO DE FILME (ADMIN)
 // =======================================================
@@ -851,7 +1143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.enviarNovoFilme = async function() {
         const token = localStorage.getItem('token');
 
-        // Pega os valores digitados no formulário
         const tmdbId = document.getElementById('cad-tmdbId').value;
         const titulo = document.getElementById('cad-titulo').value.trim();
         const descricao = document.getElementById('cad-descricao').value.trim();
@@ -859,7 +1150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dataLancamento = document.getElementById('cad-data').value || '2000-01-01';
         const classificacao = document.getElementById('cad-classificacao').value;
 
-        // Monta o objeto DTO que o seu Spring Boot espera
+        // Mapeamento EXATO para o FilmeRequestDTO
         const body = {
             tmdbId: tmdbId ? parseInt(tmdbId) : null,
             titulo: titulo,
@@ -872,6 +1163,274 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const resp = await fetch('http://localhost:8082/filmes', {
                 method: 'POST',
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            if (resp.ok) {
+                mostrarAlerta('🎬 Filme cadastrado com sucesso!', 'sucesso');
+                fecharModalCadastro();
+                if (typeof dispararBuscaCatalogo === 'function') dispararBuscaCatalogo();
+            } else {
+                const erroTxt = await resp.text();
+                mostrarAlerta(`Erro da API (${resp.status}): ${erroTxt}`, 'erro');
+            }
+        } catch (err) {
+            mostrarAlerta('Erro de conexão com o servidor.', 'erro');
+        }
+    };
+
+    // Função da INTERFACE (app.js) que é acionada pelo botão "Apagar" do HTML
+    window.tratarExclusaoLista = async function(idLista) {
+
+        // 1. Dispara a nossa janela centralizada e aguarda o clique do usuário (Sim ou Não)
+        const confirmado = await mostrarConfirmacao("Deseja realmente apagar essa lista? Todos os itens salvos nela serão perdidos.");
+
+        // Se o usuário clicou em "Cancelar", a função para aqui e nada acontece
+        if (!confirmado) return;
+
+        try {
+            // 2. Usuário confirmou! Chamamos o seu método do lista.service
+            // (Certifique-se de usar o nome correto do objeto do seu serviço, ex: listaService)
+            await listaService.deletarLista(idLista);
+
+            // 3. Se a API respondeu com sucesso, exibe o Toast Verde Neon
+            mostrarAlerta('🗑️ Lista apagada com sucesso!', 'sucesso');
+
+            // 4. Chame aqui a sua função que atualiza as listas na tela automaticamente
+            if (typeof carregarListasUsuarios === 'function') {
+                carregarListasUsuarios();
+            } else if (typeof dispararBuscaCatalogo === 'function') {
+                dispararBuscaCatalogo(); // ou a função que você usa para recarregar as listas
+            }
+
+        } catch (err) {
+            console.error(err);
+            // 5. Se der erro (ex: Usuário não autenticado ou erro 400/500 da API), exibe o Toast Vermelho Neon
+            mostrarAlerta(`Não foi possível apagar a lista: ${err.message || 'Erro interno'}`, 'erro');
+        }
+    };
+
+    // Função global para substituir o confirm() nativo
+    window.mostrarConfirmacao = function(mensagem) {
+        return new Promise((resolve) => {
+            // Cria o elemento de overlay do modal
+            const overlay = document.createElement('div');
+            overlay.className = 'confirm-overlay';
+
+            overlay.innerHTML = `
+            <div class="confirm-box">
+                <p class="confirm-msg">${mensagem}</p>
+                <div class="confirm-buttons">
+                    <button class="btn-confirm-nao" id="confirm-btn-nao">Cancelar</button>
+                    <button class="btn-confirm-sim" id="confirm-btn-sim">Excluir</button>
+                </div>
+            </div>
+        `;
+
+            document.body.appendChild(overlay);
+
+            // Ativa a animação de entrada
+            setTimeout(() => overlay.classList.add('mostrar'), 10);
+
+            // Trata o fechamento e retorna o resultado
+            const fecharModal = (resposta) => {
+                overlay.classList.remove('mostrar');
+                setTimeout(() => {
+                    overlay.remove();
+                    resolve(resposta); // Retorna true ou false para quem chamou
+                }, 250);
+            };
+
+            // Vincula os cliques aos botões
+            document.getElementById('confirm-btn-nao').onclick = () => fecharModal(false);
+            document.getElementById('confirm-btn-sim').onclick = () => fecharModal(true);
+        });
+    };
+
+// =====================================================================
+    // CONTROLADOR DE GERENCIAMENTO (EDIÇÃO E EXCLUSÃO PELO ID)
+    // =====================================================================
+    let midiaSendoEditada = null; // Guardará o objeto completo vindo do banco para preservar o DTO
+
+    // 1. Abre o modal e busca a lista de mídias direto pelos IDs da API
+    window.abrirModalGerenciar = async function() {
+        const modal = document.getElementById('modal-gerenciar-midias');
+        const container = document.getElementById('lista-gerenciamento-container');
+
+        if (!modal || !container) {
+            console.error("Erro: Verifique se você adicionou os modais correspondentes no index.html");
+            return;
+        }
+
+        // Abre visualmente o modal primeiro
+        modal.classList.add('ativo');
+        container.innerHTML = `<p style="color: var(--muted); font-size: 14px;">Carregando catálogo do sistema...</p>`;
+
+        try {
+            const [resFilmes, resSeries] = await Promise.all([
+                fetch('http://localhost:8082/filmes'),
+                fetch('http://localhost:8082/series')
+            ]);
+
+            const filmes = resFilmes.ok ? await resFilmes.json() : [];
+            const series = resSeries.ok ? await resSeries.json() : [];
+
+            container.innerHTML = '';
+
+            if (filmes.length === 0 && series.length === 0) {
+                container.innerHTML = `<p style="color: var(--muted);">Nenhuma mídia encontrada no banco de dados.</p>`;
+                return;
+            }
+
+            // Renderiza Filmes vinculando o filme.id correto
+            filmes.forEach(filme => {
+                const item = document.createElement('div');
+                item.style = "background: rgba(255,255,255,0.03); padding: 12px 16px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 8px;";
+                item.innerHTML = `
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <span style="color: #fff; font-weight: 500; font-size: 14px;">${filme.titulo}</span>
+                        <span style="color: #00f0ff; font-size: 11px; font-weight: bold; text-transform: uppercase;">FILME (ID: ${filme.id})</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-buscar" style="background: #eab308; color: #000; padding: 6px 12px; font-size: 12px; font-weight: bold;" onclick="window.prepararEdicaoDireta('${filme.id}', 'filme')">✏️ Editar</button>
+                        <button class="btn-fav" style="background: #ef4444; border-color: #ef4444; color: #fff; padding: 6px 12px; font-size: 12px;" onclick="window.executarExclusaoDireta('${filme.id}', 'filme')">🗑️ Excluir</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+
+            // Renderiza Séries vinculando o serie.id correto
+            series.forEach(serie => {
+                const item = document.createElement('div');
+                item.style = "background: rgba(255,255,255,0.03); padding: 12px 16px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 8px;";
+                item.innerHTML = `
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <span style="color: #fff; font-weight: 500; font-size: 14px;">${serie.titulo}</span>
+                        <span style="color: #ff007f; font-size: 11px; font-weight: bold; text-transform: uppercase;">SÉRIE (ID: ${serie.id})</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-buscar" style="background: #eab308; color: #000; padding: 6px 12px; font-size: 12px; font-weight: bold;" onclick="window.prepararEdicaoDireta('${serie.id}', 'serie')">✏️ Editar</button>
+                        <button class="btn-fav" style="background: #ef4444; border-color: #ef4444; color: #fff; padding: 6px 12px; font-size: 12px;" onclick="window.executarExclusaoDireta('${serie.id}', 'serie')">🗑️ Excluir</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = `<p style="color: #ef4444;">Erro ao tentar conectar à API do catálogo.</p>`;
+        }
+    };
+
+    // 2. Executa a exclusão na API baseando-se estritamente no ID da mídia
+    window.executarExclusaoDireta = async function(id, tipo) {
+        const token = localStorage.getItem('token');
+        const confirmado = await window.mostrarConfirmacao(`Tem certeza que deseja deletar este ${tipo} permanentemente (ID do item: ${id})?`);
+        if (!confirmado) return;
+
+        const rota = tipo === 'filme' ? `http://localhost:8082/filmes/${id}` : `http://localhost:8082/series/${id}`;
+
+        try {
+            const resp = await fetch(rota, {
+                method: 'DELETE',
+                headers: { 'Authorization': token }
+            });
+
+            if (resp.ok) {
+                window.mostrarAlerta('🗑️ Mídia removida do banco com sucesso!', 'sucesso');
+                window.abrirModalGerenciar(); // Atualiza a lista em tempo real
+                if (typeof dispararBuscaCatalogo === 'function') dispararBuscaCatalogo();
+            } else {
+                window.mostrarAlerta('A API recusou a exclusão deste ID.', 'erro');
+            }
+        } catch (err) {
+            window.mostrarAlerta('Erro de rede ao tentar deletar.', 'erro');
+        }
+    };
+
+    // 3. Busca os dados atuais e preserva TODAS as propriedades originais do banco (CORRIGIDO)
+    window.prepararEdicaoDireta = async function(id, tipo) {
+        const rota = tipo === 'filme' ? `http://localhost:8082/filmes/${id}` : `http://localhost:8082/series/${id}`;
+
+        try {
+            const resp = await fetch(rota);
+            if (!resp.ok) throw new Error();
+            const midia = await resp.json();
+
+            // GUARDAMOS O OBJETO INTEIRO (Preserva tmdbId, idCategorias, etc.)
+            midiaSendoEditada = { ...midia, tipoMidiaCorrente: tipo };
+
+            document.getElementById('edit-titulo').value = midia.titulo || '';
+            document.getElementById('edit-descricao').value = midia.descricao || '';
+
+            const camposFilme = document.getElementById('edit-campos-filme');
+            const camposSerie = document.getElementById('edit-campos-serie');
+
+            if (tipo === 'filme') {
+                // BLINDAGEM INFALÍVEL: Força a exibição e oculta o outro lado
+                if (camposFilme) camposFilme.style.display = 'block';
+                if (camposSerie) camposSerie.style.display = 'none';
+
+                document.getElementById('edit-duracao').value = midia.duracao || '';
+                document.getElementById('edit-data-filme').value = midia.dataLancamento ? midia.dataLancamento.substring(0, 10) : '';
+                document.getElementById('edit-classificacao').value = midia.classificacaoIndicativa || 'LIVRE';
+            } else {
+                // BLINDAGEM INFALÍVEL: Força a exibição e oculta o outro lado
+                if (camposFilme) camposFilme.style.display = 'none';
+                if (camposSerie) camposSerie.style.display = 'block';
+
+                document.getElementById('edit-temporadas').value = midia.temporadas || '';
+                document.getElementById('edit-episodios').value = midia.episodios || '';
+                document.getElementById('edit-data-serie').value = midia.dataLancamento ? midia.dataLancamento.substring(0, 10) : '';
+            }
+
+            document.getElementById('modal-editar-midia').classList.add('ativo');
+
+        } catch (err) {
+            window.mostrarAlerta('Erro ao resgatar informações do ID fornecido.', 'erro');
+        }
+    };
+
+    // 4. Envia o PUT mantendo a estrutura exata exigida pelo Java (CORRIGIDO)
+    window.enviarEdicaoMidiaAdmin = async function() {
+        if (!midiaSendoEditada) return;
+
+        const { id, tipoMidiaCorrente } = midiaSendoEditada;
+        const token = localStorage.getItem('token');
+        const rota = tipoMidiaCorrente === 'filme' ? `http://localhost:8082/filmes/${id}` : `http://localhost:8082/series/${id}`;
+
+        let body = {};
+
+        // Montamos o JSON mantendo as propriedades necessárias que o banco exige
+        if (tipoMidiaCorrente === 'filme') {
+            body = {
+                id: parseInt(id),
+                tmdbId: midiaSendoEditada.tmdbId || null, // Mantém o tmdbId original se existir
+                titulo: document.getElementById('edit-titulo').value.trim(),
+                descricao: document.getElementById('edit-descricao').value.trim(),
+                duracao: parseInt(document.getElementById('edit-duracao').value) || 0,
+                dataLancamento: document.getElementById('edit-data-filme').value || '2000-01-01',
+                classificacaoIndicativa: document.getElementById('edit-classificacao').value
+            };
+        } else {
+            body = {
+                id: parseInt(id),
+                titulo: document.getElementById('edit-titulo').value.trim(),
+                descricao: document.getElementById('edit-descricao').value.trim(),
+                temporadas: parseInt(document.getElementById('edit-temporadas').value) || 0,
+                episodios: parseInt(document.getElementById('edit-episodios').value) || 0,
+                dataLancamento: document.getElementById('edit-data-serie').value || '2000-01-01',
+                notaMedia: midiaSendoEditada.notaMedia || 0,       // Mantém a nota original do banco
+                idCategorias: midiaSendoEditada.idCategorias || [] // Mantém as categorias originais do banco
+            };
+        }
+
+        console.log("Enviando JSON de atualização:", body);
+
+        try {
+            const resp = await fetch(rota, {
+                method: 'PUT',
                 headers: {
                     'Authorization': token,
                     'Content-Type': 'application/json'
@@ -880,20 +1439,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (resp.ok) {
-                alert('🎬 Filme cadastrado com sucesso no banco de dados!');
-                fecharModalCadastro();
-
-                // Se o usuário estiver na tela de "Todos" ou "Filmes", atualiza a busca para ele ver o filme novo
-                const inputBuscar = document.querySelector('.filter-search');
-                if(inputBuscar && typeof dispararBuscaCatalogo === 'function') {
-                    dispararBuscaCatalogo();
-                }
+                window.mostrarAlerta('✏️ Mídia reconfigurada com sucesso!', 'sucesso');
+                document.getElementById('modal-editar-midia').classList.remove('ativo');
+                window.abrirModalGerenciar(); // Atualiza a lista com as mudanças feitas
+                if (typeof dispararBuscaCatalogo === 'function') dispararBuscaCatalogo();
             } else {
-                alert('Erro ao cadastrar filme. Verifique se os dados estão corretos ou se já não existe.');
+                const txtErro = await resp.text();
+                console.error("Resposta detalhada do erro no Java:", txtErro);
+                window.mostrarAlerta(`A API recusou a alteração (Status: ${resp.status}). Abra o Console (F12) para ver o erro.`, 'erro');
             }
         } catch (err) {
-            console.error(err);
-            alert('Erro de conexão com a API.');
+            window.mostrarAlerta('Erro na conexão com o servidor do banco.', 'erro');
         }
     };
 });

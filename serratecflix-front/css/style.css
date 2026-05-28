@@ -1060,3 +1060,157 @@ body {
     border-bottom: 1px solid var(--border-color); /* Opcional: cria uma linha separadora elegante */
 }
 
+/* =================================================================
+   SISTEMA DE ALERTAS PERSONALIZADOS (TOASTS)
+   ================================================================= */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100000; /* Fica acima de qualquer modal */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none; /* Não bloqueia cliques na página quando vazio */
+}
+
+.toast-alerta {
+    pointer-events: auto; /* Permite interagir com a notificação */
+    background: var(--card-bg, #111827);
+    color: #ffffff;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-family: var(--font-stack);
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 300px;
+    max-width: 420px;
+    border-left: 5px solid var(--accent-color, #00f0ff);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+}
+
+/* Classe de ativação disparada pelo JS */
+.toast-alerta.mostrar {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Variação: Sucesso (Verde Neon) */
+.toast-alerta.sucesso {
+    border-left-color: var(--detail-color, #39ff14);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.15), 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+/* Variação: Erro (Rosa/Vermelho Neon) */
+.toast-alerta.erro {
+    border-left-color: #ff0055;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.2), 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+/* Variação: Informativo (Azul Neon padrão) */
+.toast-alerta.info {
+    border-left-color: var(--accent-color, #00f0ff);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+/* =================================================================
+   MODAL DE CONFIRMAÇÃO PERSONALIZADO (POPUP CENTRAL)
+   ================================================================= */
+.confirm-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(5, 8, 13, 0.8); /* Escurece o fundo */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 200000; /* Fica acima de tudo */
+}
+
+.confirm-overlay.mostrar {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.confirm-box {
+    background-color: var(--card-bg, #111827);
+    border: 1px solid #ff0055; /* Borda rosa/vermelha neon para alertas */
+    padding: 32px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 30px rgba(255, 0, 85, 0.25);
+    text-align: center;
+    transform: scale(0.85);
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.confirm-overlay.mostrar .confirm-box {
+    transform: scale(1);
+}
+
+.confirm-msg {
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 28px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+/* Botão Confirmar (Rosa Neon) */
+.btn-confirm-sim {
+    background-color: #ff0055;
+    color: #000000 !important;
+    border: none;
+    padding: 10px 24px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+}
+
+.btn-confirm-sim:hover {
+    background-color: #ff3377;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
+}
+
+/* Botão Cancelar (Muted / Bordado) */
+.btn-confirm-nao {
+    background-color: transparent;
+    color: var(--text-color, #ffffff);
+    border: 1px solid var(--muted, #64748b);
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+}
+
+.btn-confirm-nao:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #ffffff;
+}
+
+
