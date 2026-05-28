@@ -79,12 +79,15 @@ public class ConfigSeguranca {
                         // =================================================================
                         // Operações de escrita em filmes/séries e gerenciamento de conta exigem
                         // autenticação
-                        .requestMatchers(HttpMethod.POST, "/filmes", "/series").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/filmes", "/series").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/usuarios/{id}", "/filmes/{id}", "/series/{id}")
                         .hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}", "/filmes/{id}", "/series/{id}")
                         .hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/usuarios/id").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/filmes").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/filmes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/filmes/**").hasRole("ADMIN")
 
                         // =================================================================
                         // 3. REGRAS EXCLUSIVAS ADMIN

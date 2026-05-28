@@ -609,7 +609,7 @@ body {
             transparent 0%,
             rgba(10, 15, 24, 0.05) 40%,
             rgba(10, 15, 24, 0.2) 75%,
-            rgba(10, 15, 24, 0.35) 100
+            rgba(10, 15, 24, 0.35) 100%,
     ) !important;
     border-radius: 8px 8px 0 0;
     z-index: 1;
@@ -1011,3 +1011,52 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
 }
+
+/* ==========================================================================
+   CONFIGURAÇÃO GLOBAL: REMOVER BARRAS DE ROLAGEM DE TODO O SITE
+   ========================================================================== */
+
+/* Para Chrome, Safari, Edge moderno e Opera */
+*::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Para Firefox e IE/Edge antigo */
+* {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE/Edge */
+}
+
+/* --- BOTÃO DE ADMINISTRAÇÃO --- */
+/* --- ESTILO DO BOTÃO ADMIN --- */
+.btn-admin-cadastro {
+    margin-left: 15px;
+    padding: 8px 16px;
+    width: auto;
+    font-size: 14px;
+    /* Usa a mesma classe do seu botão de login/registro */
+}
+
+/* --- ESTRUTURA DO MODAL (Fundo escuro) --- */
+.modal-admin-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-admin-overlay.ativo {
+    display: flex;
+}
+
+/* Ajuste de espaçamento para o título dentro do modal */
+.modal-box .modal-logo {
+    margin-bottom: 25px; /* Aumenta o espaço abaixo do título "Cadastrar Filme" */
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color); /* Opcional: cria uma linha separadora elegante */
+}
+

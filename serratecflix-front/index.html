@@ -30,6 +30,9 @@
 
     <div class="nav-right">
         <a href="#" onclick="abrirListas()" class="nav-link">Minhas Listas</a>
+        <button id="btn-cadastrar-filme" class="btn-buscar" style="display: none;" onclick="abrirModalCadastro()">
+            ➕ Cadastrar Filme
+        </button>
         <button class="btn-login">Entrar</button>
     </div>
 </nav>
@@ -191,6 +194,35 @@
         <h2>Adicionar a uma lista</h2>
         <p class="modal-sub" style="margin-bottom:20px;">Escolha uma das suas listas abaixo:</p>
         <div id="lista-selecionavel-container" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-cadastro-filme">
+    <div class="modal-box">
+        <button class="modal-close" onclick="fecharModalCadastro()">×</button>
+        <h1 class="modal-logo">Cadastrar Filme</h1>
+
+        <form id="form-cadastro-filme" onsubmit="event.preventDefault(); enviarNovoFilme();" class="auth-form">
+            <input type="number" id="cad-tmdbId" class="auth-input" placeholder="ID do TMDB (Opcional)">
+            <input type="text" id="cad-titulo" class="auth-input" placeholder="Título *" required>
+            <textarea id="cad-descricao" class="auth-input" placeholder="Sinopse"></textarea>
+
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="cad-duracao" class="auth-input" placeholder="Duração (min)">
+                <input type="date" id="cad-data" class="auth-input">
+            </div>
+
+            <select id="cad-classificacao" class="auth-input" style="color: white; background: var(--card-bg);">
+                <option value="LIVRE">Livre</option>
+                <option value="DEZ">10 anos</option>
+                <option value="DOZE">12 anos</option>
+                <option value="QUATORZE">14 anos</option>
+                <option value="DEZESSEIS">16 anos</option>
+                <option value="DEZOITO">18 anos</option>
+            </select>
+
+            <button type="submit" class="auth-btn">Salvar Filme</button>
+        </form>
     </div>
 </div>
 
